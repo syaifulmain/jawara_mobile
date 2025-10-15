@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jawara_mobile/pages/pengeluaran/daftar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,11 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Daftar(title: 'Daftar Pengeluaran', data: [
+        {'nama': 'Budi', 'jenis_pengeluaran': 'Makan siang', 'tanggal': '2024-06-01', 'nominal': '50000', 'aksi': 'Edit'},
+        {'nama': 'Siti', 'jenis_pengeluaran': 'Transportasi', 'tanggal': '2024-06-02', 'nominal': '30000', 'aksi': 'Hapus'},
+        {'nama': 'Andi', 'jenis_pengeluaran': 'Alat tulis', 'tanggal': '2024-06-03', 'nominal': '20000', 'aksi': 'Edit'},
+      ]),
     );
   }
 }
