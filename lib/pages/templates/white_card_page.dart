@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/constants/colors.dart';
-import 'package:jawara_mobile/constants/rem.dart';
 
 class WhiteCardPage extends StatelessWidget {
   final String title;
@@ -18,19 +17,19 @@ class WhiteCardPage extends StatelessWidget {
 
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Card(
-          color: AppColors.secondaryColor,
+        child: SingleChildScrollView(
+          child: Card(
+            color: AppColors.secondaryColor,
 
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                for (var child in children) ...[
-                  child,
+                children: [
+                  for (var child in children) ...[child],
                 ],
-              ]
+              ),
             ),
           ),
         ),
