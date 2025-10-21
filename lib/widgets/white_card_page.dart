@@ -11,7 +11,6 @@ class WhiteCardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.all(16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: AppColors.backgroundColor,
 
