@@ -13,9 +13,6 @@ class SemuaPengeluaran extends StatelessWidget {
     return WhiteCardPage(
       title: title,
       children: [
-        // Judul tabel
-        Text(title, style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -33,8 +30,6 @@ class SemuaPengeluaran extends StatelessWidget {
             ),
           ],
         ),
-
-        const SizedBox(height: 16),
 
         // Tabel data
         ListView(
