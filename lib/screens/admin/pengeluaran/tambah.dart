@@ -6,6 +6,7 @@ import 'package:jawara_mobile/widgets/white_card_page.dart';
 class Tambah extends StatelessWidget {
   final String title = 'Buat Pengeluaran Baru';
   final DateTime selectedDate = DateTime.now();
+
   Tambah({super.key});
 
   @override
@@ -86,13 +87,16 @@ class Tambah extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
-            child: Text('Klik untuk mengunggah bukti pengeluaran'),
+            child: Container(
+              padding: EdgeInsets.all(Rem.rem1),
+              child: Text('Klik untuk mengunggah bukti pengeluaran'),
+            ),
           ),
         ),
         SizedBox(height: Rem.rem3),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          
+
           children: [
             ElevatedButton(
               onPressed: () {},
@@ -106,7 +110,10 @@ class Tambah extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Submit', style: TextStyle(fontSize: Rem.rem1, color: Colors.white)),
+              child: Text(
+                'Submit',
+                style: TextStyle(fontSize: Rem.rem1, color: Colors.white),
+              ),
             ),
             SizedBox(width: Rem.rem1),
             ElevatedButton(
