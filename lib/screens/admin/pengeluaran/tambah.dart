@@ -3,11 +3,11 @@ import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
 
-class Tambah extends StatelessWidget {
+class TambahPengeluaranScreen extends StatelessWidget {
   final String title = 'Buat Pengeluaran Baru';
   final DateTime selectedDate = DateTime.now();
 
-  Tambah({super.key});
+  TambahPengeluaranScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
