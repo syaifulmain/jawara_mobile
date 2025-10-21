@@ -26,6 +26,15 @@ class WhiteCardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
+                  Text(title, style: 
+                    TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Divider(thickness: 2),
+                  const SizedBox(height: 16),
                   for (var child in children) ...[child],
                 ],
               ),

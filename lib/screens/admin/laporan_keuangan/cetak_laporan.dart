@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/constants/colors.dart';
-import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
+import 'package:jawara_mobile/constants/rem.dart';
 
-class Tambah extends StatelessWidget {
-  final String title = 'Buat Pengeluaran Baru';
-  final DateTime selectedDate = DateTime.now();
+class CetakLaporan extends StatelessWidget {
+  final String title = "Cetak Laporan Keuangan";
+  final DateTime selectedStartDate = DateTime.now();
+  final DateTime selectedEndDate = DateTime.now();
 
-  Tambah({super.key});
+  CetakLaporan({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +16,7 @@ class Tambah extends StatelessWidget {
       title: title,
       children: [
         Text(
-          'Nama Pengeluaran',
-          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: Rem.rem1),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan nama pengeluaran',
-          ),
-        ),
-        SizedBox(height: Rem.rem2),
-        Text(
-          'Tanggal Pengeluaran',
+          'Tanggal Mulai',
           style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: Rem.rem1),
@@ -44,58 +33,51 @@ class Tambah extends StatelessWidget {
             children: [
               Icon(Icons.calendar_today),
               SizedBox(width: Rem.rem1),
-              Text(selectedDate.toLocal().toString().split(' ')[0]),
+              Text(selectedStartDate.toLocal().toString().split(' ')[0]),
             ],
           ),
         ),
         SizedBox(height: Rem.rem2),
         Text(
-          'Kategori Pengeluaran',
+          'Tanggal Selesai',
           style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: Rem.rem1),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan kategori pengeluaran',
+        OutlinedButton(
+          onPressed: () {
+            showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(2015, 8),
+              lastDate: DateTime(2101),
+            );
+          },
+          child: Row(
+            children: [
+              Icon(Icons.calendar_today),
+              SizedBox(width: Rem.rem1),
+              Text(selectedEndDate.toLocal().toString().split(' ')[0]),
+            ],
           ),
         ),
         SizedBox(height: Rem.rem2),
         Text(
-          'Nominal Pengeluaran',
+          'Jenis Laporan',
           style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: Rem.rem1),
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan nominal pengeluaran',
-          ),
-        ),
-        SizedBox(height: Rem.rem2),
-        Text(
-          'Bukti Pengeluaran',
-          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: Rem.rem1),
-        Container(
-          width: double.infinity,
-          height: 150,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.all(Rem.rem1),
-              child: Text('Klik untuk mengunggah bukti pengeluaran'),
-            ),
-          ),
+        DropdownButtonFormField(
+          items: [
+            DropdownMenuItem<String>(value: "Semua", child: Text("Semua"),),
+            DropdownMenuItem<String>(value: "Pengeluaran", child: Text("Pengeluaran"),),
+            DropdownMenuItem<String>(value: "Pemasukan", child: Text("Pemasukan"),),
+          ],
+          onChanged: (context) {},
         ),
         SizedBox(height: Rem.rem3),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+
           children: [
             ElevatedButton(
               onPressed: () {},
@@ -110,7 +92,7 @@ class Tambah extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Submit',
+                'Cetak',
                 style: TextStyle(fontSize: Rem.rem1, color: Colors.white),
               ),
             ),
