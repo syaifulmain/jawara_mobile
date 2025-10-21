@@ -4,27 +4,245 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 
-class AdminLayoutScreen extends StatefulWidget {
-  const AdminLayoutScreen({super.key});
+class KegiatanDaftarScreen extends StatefulWidget {
+  const KegiatanDaftarScreen({super.key});
 
   @override
-  State<AdminLayoutScreen> createState() => AdminLayoutScreenState();
+  State<KegiatanDaftarScreen> createState() => _KegiatanDaftarScreenState();
 }
 
-class AdminLayoutScreenState extends State<AdminLayoutScreen> {
-  String selectedMenu = 'Keuangan';
+class _KegiatanDaftarScreenState extends State<KegiatanDaftarScreen> {
+  String selectedMenu = 'Kegiatan - Daftar';
+  
+  // Data dummy untuk tabel - nanti akan diganti dengan data dari API
+  final List<Map<String, dynamic>> _kegiatanData = [
+    {
+      'no': 1,
+      'nama_kegiatan': 'Musy',
+      'kategori': 'Komunitas & Sosial',
+      'penanggung_jawab': 'Pak',
+      'tanggal_pelaksanaan': '12 Oktober 2025',
+    },
+    // Tambahkan data lain jika diperlukan
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildSidebar(context),
-      appBar: AppBar(backgroundColor: AppColors.backgroundColor, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Colors.black87),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: Text(
+          'Kegiatan - Daftar',
+          style: GoogleFonts.poppins(
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: Container(
         color: AppColors.backgroundColor,
-        child: Center(
-          child: Text(
-            'Halaman $selectedMenu',
-            style: GoogleFonts.poppins(fontSize: 16),
+        child: Card(
+          elevation: 2,
+          margin: const EdgeInsets.all(Rem.rem1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Rem.rem0_75),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(Rem.rem1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header dengan tombol filter
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Daftar Kegiatan',
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem1_25,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // TODO: Implementasi filter
+                      },
+                      icon: const Icon(Icons.filter_list, size: 18),
+                      label: const Text('Filter'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Rem.rem1,
+                          vertical: Rem.rem0_75,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Rem.rem1_5),
+
+                // Tabel
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SingleChildScrollView(
+                      child: DataTable(
+                        headingRowColor: WidgetStateProperty.all(
+                          const Color(0xFFE2E8F0),
+                        ),
+                        headingTextStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          fontSize: Rem.rem0_875,
+                        ),
+                        dataTextStyle: GoogleFonts.poppins(
+                          fontSize: Rem.rem0_875,
+                          color: Colors.black87,
+                        ),
+                        columnSpacing: Rem.rem2,
+                        columns: const [
+                          DataColumn(label: Text('NO')),
+                          DataColumn(label: Text('NAMA KEGIATAN')),
+                          DataColumn(label: Text('KATEGORI')),
+                          DataColumn(label: Text('PENANGGUNG JAWAB')),
+                          DataColumn(label: Text('TANGGAL PELAKSANAAN')),
+                          DataColumn(label: Text('AKSI')),
+                        ],
+                        rows: _kegiatanData.map((data) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Text('${data['no']}')),
+                              DataCell(Text(data['nama_kegiatan'])),
+                              DataCell(Text(data['kategori'])),
+                              DataCell(Text(data['penanggung_jawab'])),
+                              DataCell(Text(data['tanggal_pelaksanaan'])),
+                              DataCell(
+                                PopupMenuButton<String>(
+                                  icon: const Icon(
+                                    Icons.more_vert,
+                                    size: 20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      Rem.rem0_5,
+                                    ),
+                                  ),
+                                  onSelected: (value) {
+                                    // TODO: Implementasi aksi
+                                    if (value == 'edit') {
+                                      // Navigate to edit page
+                                    } else if (value == 'delete') {
+                                      // Show delete confirmation
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: Colors.black87,
+                                          ),
+                                          const SizedBox(width: Rem.rem0_5),
+                                          Text(
+                                            'Edit',
+                                            style: GoogleFonts.poppins(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.delete,
+                                            size: 18,
+                                            color: Colors.red,
+                                          ),
+                                          const SizedBox(width: Rem.rem0_5),
+                                          Text(
+                                            'Hapus',
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Pagination
+                const SizedBox(height: Rem.rem1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        // TODO: Previous page
+                      },
+                      icon: const Icon(Icons.chevron_left),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[200],
+                      ),
+                    ),
+                    const SizedBox(width: Rem.rem0_5),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Rem.rem1,
+                        vertical: Rem.rem0_5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(Rem.rem0_5),
+                      ),
+                      child: Text(
+                        '1',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: Rem.rem0_5),
+                    IconButton(
+                      onPressed: () {
+                        // TODO: Next page
+                      },
+                      icon: const Icon(Icons.chevron_right),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[200],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
