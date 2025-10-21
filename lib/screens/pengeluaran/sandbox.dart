@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jawara_mobile/pages/pengeluaran/daftar.dart';
-import 'package:jawara_mobile/pages/pengeluaran/tambah.dart';
+import 'package:jawara_mobile/screens/pengeluaran/daftar.dart';
+import 'package:jawara_mobile/screens/pengeluaran/tambah.dart';
 
 void main() {
   runApp(const MyApp());

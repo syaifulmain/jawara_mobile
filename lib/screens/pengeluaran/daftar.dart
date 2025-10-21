@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jawara_mobile/pages/templates/white_card_page.dart';
+import 'package:jawara_mobile/widgets/white_card_page.dart';
 
 class Daftar extends StatelessWidget {
   final String title;

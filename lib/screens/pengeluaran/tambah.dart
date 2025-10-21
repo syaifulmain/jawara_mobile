@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
-import 'package:jawara_mobile/pages/templates/white_card_page.dart';
+import 'package:jawara_mobile/widgets/white_card_page.dart';
 
 class Tambah extends StatelessWidget {
   final String title = 'Buat Pengeluaran Baru';
