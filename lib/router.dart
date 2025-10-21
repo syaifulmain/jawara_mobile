@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
+import 'package:jawara_mobile/screens/admin/broadcast/daftar.dart';
+import 'package:jawara_mobile/screens/admin/broadcast/tambah.dart';
+import 'package:jawara_mobile/screens/admin/kegiatan/daftar.dart';
+import 'package:jawara_mobile/screens/admin/kegiatan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
-import 'package:jawara_mobile/screens/broadcast/daftar.dart';
-import 'package:jawara_mobile/screens/broadcast/tambah.dart';
-import 'package:jawara_mobile/screens/kegiatan/daftar.dart';
-import 'package:jawara_mobile/screens/kegiatan/tambah.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
 
 final router = GoRouter(
