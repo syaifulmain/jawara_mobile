@@ -6,10 +6,6 @@ import '../../../data/dashboard_kependudukan_data.dart';
 import '../../../widgets/pie_chart_cart.dart';
 import '../../../widgets/statistic_card.dart';
 
-void main() {
-  runApp(const MaterialApp(home: DashboardKependudukan()));
-}
-
 class DashboardKependudukan extends StatelessWidget {
   const DashboardKependudukan({super.key});
 
@@ -48,7 +44,7 @@ class DashboardKependudukan extends StatelessWidget {
           itemBuilder: (context, index) {
             return dashboardItems[index];
           },
-          separatorBuilder: (context, index) => const SizedBox(height: Rem.rem0_5),
+          separatorBuilder: (context, index) => const SizedBox(height: Rem.rem1),
         ),
       ),
     );

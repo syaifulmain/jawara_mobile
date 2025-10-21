@@ -4,34 +4,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 
-class AdminLayoutScreen extends StatefulWidget {
-  const AdminLayoutScreen({super.key});
+class AdminLayoutScreen extends StatelessWidget {
+  final Widget child;
 
-  @override
-  State<AdminLayoutScreen> createState() => AdminLayoutScreenState();
-}
-
-class AdminLayoutScreenState extends State<AdminLayoutScreen> {
-  String selectedMenu = 'Keuangan';
+  const AdminLayoutScreen({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildSidebar(context),
       appBar: AppBar(backgroundColor: AppColors.backgroundColor, elevation: 0),
-      body: Container(
-        color: AppColors.backgroundColor,
-        child: Center(
-          child: Text(
-            'Halaman $selectedMenu',
-            style: GoogleFonts.poppins(fontSize: 16),
-          ),
-        ),
-      ),
+      body: child,
     );
   }
 
   Widget _buildSidebar(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.toString();
+
     return Drawer(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(0)),
@@ -87,12 +76,14 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
               Expanded(
                 child: ListView(
                   children: [
-                    _buildSubMenu(Icons.terminal, 'Dashboard', [
+                    _buildSubMenu(context, location, Icons.terminal, 'Dashboard', [
                       {'title': 'Keuangan', 'route': '/admin'},
                       {'title': 'Kegiatan', 'route': '/admin'},
-                      {'title': 'Kependudukan', 'route': '/admin'},
+                      {'title': 'Kependudukan', 'route': '/dashboard/kependudukan'},
                     ]),
                     _buildSubMenu(
+                      context,
+                      location,
                       Icons.people_alt_outlined,
                       'Data Warga & Rumah',
                       [
@@ -103,20 +94,22 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
                         {'title': 'Rumah - Tambah', 'route': '/placeholder'},
                       ],
                     ),
-                    _buildSubMenu(Icons.receipt_outlined, 'Pemasukan', [
+                    _buildSubMenu(context, location, Icons.receipt_outlined, 'Pemasukan', [
                       {'title': 'Daftar', 'route': '/placeholder'},
                       {'title': 'Tambah', 'route': '/placeholder'},
                     ]),
-                    _buildSubMenu(Icons.note_add_outlined, 'Pengeluaran', [
-                      {'title': 'Daftar', 'route': '/placeholder'},
-                      {'title': 'Tambah', 'route': '/placeholder'},
+                    _buildSubMenu(context, location, Icons.note_add_outlined, 'Pengeluaran', [
+                      {'title': 'Daftar', 'route': '/pengeluaran/daftar'},
+                      {'title': 'Tambah', 'route': '/pengeluaran/tambah'},
                     ]),
-                    _buildSubMenu(Icons.receipt_long, 'Laporan Keuangan', [
-                      {'title': 'Semua Pemasukan', 'route': '/placeholder'},
-                      {'title': 'Semua Pengeluaran', 'route': '/placeholder'},
-                      {'title': 'Cetak Laporan', 'route': '/placeholder'},
+                    _buildSubMenu(context, location, Icons.receipt_long, 'Laporan Keuangan', [
+                      {'title': 'Semua Pemasukan', 'route': '/laporan_keuangan/semua_pemasukan'},
+                      {'title': 'Semua Pengeluaran', 'route': '/laporan_keuangan/semua_pengeluaran'},
+                      {'title': 'Cetak Laporan', 'route': '/laporan_keuangan/cetak_laporan'},
                     ]),
                     _buildSubMenu(
+                      context,
+                      location,
                       Icons.calendar_month_outlined,
                       'Kegiatan & Broadcast',
                       [
@@ -135,14 +128,16 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
                         },
                       ],
                     ),
-                    _buildSubMenu(Icons.message_outlined, 'Pesan Warga', [
+                    _buildSubMenu(context, location, Icons.message_outlined, 'Pesan Warga', [
                       {'title': 'Informasi Aspirasi', 'route': '/placeholder'},
                     ]),
                     _buildSubMenu(
-                        Icons.person_add_outlined, 'Penerimaan Warga', [
+                        context, location, Icons.person_add_outlined, 'Penerimaan Warga', [
                       {'title': 'Penerimaan Warga', 'route': '/placeholder'},
                     ]),
                     _buildSubMenu(
+                      context,
+                      location,
                       Icons.family_restroom_outlined,
                       'Mutasi Keluarga',
                       [
@@ -150,10 +145,12 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
                         {'title': 'Tambah', 'route': '/placeholder'},
                       ],
                     ),
-                    _buildSubMenu(Icons.history_outlined, 'Log Aktifitas', [
+                    _buildSubMenu(context, location, Icons.history_outlined, 'Log Aktifitas', [
                       {'title': 'Semua Aktifitas', 'route': '/placeholder'},
                     ]),
                     _buildSubMenu(
+                      context,
+                      location,
                       Icons.manage_accounts_outlined,
                       'Manajemen Pengguna',
                       [
@@ -278,17 +275,17 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
     );
   }
 
-  Widget _buildSubMenu(
-      IconData icon, String parent, List<Map<String, String>> items) {
-    final bool hasSelectedChild =
-        items.any((item) => item['title'] == selectedMenu);
+  Widget _buildSubMenu(BuildContext context, String location, IconData icon,
+      String parent, List<Map<String, String>> items) {
+    // A sub-menu is expanded if one of its children is the current active route.
+    final bool hasSelectedChild = items.any((item) => item['route'] == location);
 
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
         dense: true,
-        initiallyExpanded: hasSelectedChild || selectedMenu == parent,
+        initiallyExpanded: hasSelectedChild,
         title: Text(
           parent,
           style: GoogleFonts.poppins(fontWeight: FontWeight.w400),
@@ -298,7 +295,7 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
         children: items.map((item) {
           final String title = item['title'] ?? '';
           final String route = item['route'] ?? '/placeholder';
-          final bool isActive = selectedMenu == title;
+          final bool isActive = location == route;
 
           return Container(
             margin: const EdgeInsets.only(left: Rem.rem0_625),
@@ -318,8 +315,8 @@ class AdminLayoutScreenState extends State<AdminLayoutScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
-                context.go(route);
+                Navigator.pop(context); // Close the drawer
+                context.go(route);      // Navigate to the new page
               },
               dense: true,
               visualDensity: VisualDensity.compact,

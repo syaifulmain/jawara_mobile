@@ -5,11 +5,11 @@ import '../../../data/pengeluaran_data.dart';
 
 
 
-class Daftar extends StatelessWidget {
+class DaftarPengeluaranScreen extends StatelessWidget {
   final String title = "Daftar Pengeluaran";
   final List<Map<String, String>> data;
 
-  const Daftar({super.key, this.data=DummyData.pengeluaran});
+  const DaftarPengeluaranScreen({super.key, this.data=DummyData.pengeluaran});
 
   @override
   Widget build(BuildContext context) {
