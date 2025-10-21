@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/widgets/data_card.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
+import '../../../data/laporan_keuangan_data.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: SemuaPemasukan(),
+      ),
+    ),
+  );
+}
 
 class SemuaPemasukan extends StatelessWidget {
   final String title = "Seluruh Pemasukan";
   final List<Map<String, String>> data;
 
-  const SemuaPemasukan({super.key, required this.data});
+  const SemuaPemasukan({super.key, this.data=DummyData.pemasukan});
 
   @override
   Widget build(BuildContext context) {

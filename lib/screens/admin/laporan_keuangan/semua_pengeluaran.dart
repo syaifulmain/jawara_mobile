@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/widgets/data_card.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
+import '../../../data/laporan_keuangan_data.dart';
 
 class SemuaPengeluaran extends StatelessWidget {
   final String title = "Semua Pengeluaran";
   final List<Map<String, String>> data;
 
-  const SemuaPengeluaran({super.key, required this.data});
+  const SemuaPengeluaran({super.key, this.data=DummyData.pengeluaran});
+
 
   @override
   Widget build(BuildContext context) {
