@@ -16,6 +16,8 @@ import 'package:jawara_mobile/screens/admin/laporan_keuangan/cetak_laporan.dart'
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pengeluaran.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
@@ -104,6 +106,16 @@ final router = GoRouter(
           path: '/laporan_keuangan/semua_pengeluaran',
           name: 'laporan_keuangan-semua_pengeluaran',
           builder: (context, state) => SemuaPengeluaran(),
+        ),
+        GoRoute(
+          path: '/pemasukan/daftar',
+          name: 'pemasukan-daftar',
+          builder: (context, state) => const DaftarPemasukanScreen(),
+        ),
+        GoRoute(
+          path: '/pemasukan/tambah',
+          name: 'pemasukan-tambah',
+          builder: (context, state) => TambahPemasukanScreen(),
         ),
         GoRoute(
           path: '/pengeluaran/daftar',
