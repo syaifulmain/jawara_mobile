@@ -5,6 +5,7 @@ import 'package:jawara_mobile/screens/admin/data_warga/keluarga.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/rumah_daftar.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/rumah_tambah.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/detail_rumah.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/detail_keluarga.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/daftar.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/tambah.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/kegiatan.dart';
@@ -123,6 +124,11 @@ final router = GoRouter(
           path: '/rumah/detail',
           name: 'rumah-detail',
           builder: (context, state) => const DetailRumahScreen(),
+        ),
+        GoRoute(
+          path: '/keluarga/detail',
+          name: 'keluarga-detail',
+          builder: (context, state) => const DetailKeluargaScreen(),
         ),
         GoRoute(
           path: '/keluarga',

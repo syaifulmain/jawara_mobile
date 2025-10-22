@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/detail_keluarga.dart';
 import '../../../widgets/white_card_page.dart';
 
 class KeluargaScreen extends StatelessWidget {
@@ -124,42 +125,27 @@ class KeluargaScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(Rem.rem0_5),
                       ),
                       onSelected: (value) {
-                        if (value == 'edit') {
-                          // TODO: Navigate to edit page
-                        } else if (value == 'delete') {
-                          // TODO: Show delete confirmation
+                        if (value == 'detail') {
+                          // Navigasi ke halaman detail keluarga
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const DetailKeluargaScreen(),
+                            ),
+                          );
                         }
                       },
                       itemBuilder: (context) => [
                         PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.edit,
-                                size: 18,
-                                color: Colors.black87,
-                              ),
-                              const SizedBox(width: Rem.rem0_5),
-                              Text('Edit', style: GoogleFonts.poppins()),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.delete,
-                                size: 18,
-                                color: Colors.red,
-                              ),
-                              const SizedBox(width: Rem.rem0_5),
-                              Text(
-                                'Hapus',
-                                style: GoogleFonts.poppins(color: Colors.red),
-                              ),
-                            ],
+                          value: 'detail',
+                          child: Text(
+                            'Detail',
+                            style: GoogleFonts.poppins(
+                              fontSize: Rem.rem0_875,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ],
