@@ -78,7 +78,7 @@ class AdminLayoutScreen extends StatelessWidget {
                   children: [
                     _buildSubMenu(context, location, Icons.terminal, 'Dashboard', [
                       {'title': 'Keuangan', 'route': '/admin'},
-                      {'title': 'Kegiatan', 'route': '/admin'},
+                      {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
                       {'title': 'Kependudukan', 'route': '/dashboard/kependudukan'},
                     ]),
                     _buildSubMenu(
