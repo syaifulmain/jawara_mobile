@@ -128,36 +128,6 @@ class AdminLayoutScreen extends StatelessWidget {
                         },
                       ],
                     ),
-                    _buildSubMenu(context, location, Icons.message_outlined, 'Pesan Warga', [
-                      {'title': 'Informasi Aspirasi', 'route': '/placeholder'},
-                    ]),
-                    _buildSubMenu(
-                        context, location, Icons.person_add_outlined, 'Penerimaan Warga', [
-                      {'title': 'Penerimaan Warga', 'route': '/placeholder'},
-                    ]),
-                    _buildSubMenu(
-                      context,
-                      location,
-                      Icons.family_restroom_outlined,
-                      'Mutasi Keluarga',
-                      [
-                        {'title': 'Daftar', 'route': '/placeholder'},
-                        {'title': 'Tambah', 'route': '/placeholder'},
-                      ],
-                    ),
-                    _buildSubMenu(context, location, Icons.history_outlined, 'Log Aktifitas', [
-                      {'title': 'Semua Aktifitas', 'route': '/placeholder'},
-                    ]),
-                    _buildSubMenu(
-                      context,
-                      location,
-                      Icons.manage_accounts_outlined,
-                      'Manajemen Pengguna',
-                      [
-                        {'title': 'Daftar Pengguna', 'route': '/placeholder'},
-                        {'title': 'Tambah Pengguna', 'route': '/placeholder'},
-                      ],
-                    ),
                   ],
                 ),
               ),
