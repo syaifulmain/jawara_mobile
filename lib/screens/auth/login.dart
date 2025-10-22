@@ -121,7 +121,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           CustomButton(
                             onPressed: () {
-                              context.pushNamed('placeholder');
+                              
+                              context.goNamed('activities'); 
                             },
                             child: Text(
                               'Login',
