@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/daftar.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/tambah.dart';
+import 'package:jawara_mobile/screens/admin/dashboard/kegiatan.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/kependudukan.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/tambah.dart';
@@ -49,6 +50,13 @@ final router = GoRouter(
           name: 'dashboard-kependudukan',
           builder: (BuildContext context, GoRouterState state) {
             return const DashboardKependudukan();
+          },
+        ),
+        GoRoute(
+          path: '/dashboard/kegiatan',
+          name: 'dashboard-kegiatan',
+          builder: (BuildContext context, GoRouterState state) {
+            return const Kegiatan();
           },
         ),
         GoRoute(
