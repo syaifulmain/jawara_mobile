@@ -20,9 +20,14 @@ import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah.dart';
+import 'package:jawara_mobile/screens/admin/warga/daftar.dart';
+import 'package:jawara_mobile/screens/admin/warga/detail.dart';
+import 'package:jawara_mobile/screens/admin/warga/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
+
+import 'models/data_warga_model.dart';
 
 final router = GoRouter(
   initialLocation: "/login",
@@ -127,11 +132,11 @@ final router = GoRouter(
           name: 'pengeluaran-tambah',
           builder: (context, state) => TambahPengeluaranScreen(),
         ),
-        GoRoute(
-          path: '/warga/tambah',
-          name: 'warga-tambah',
-          builder: (context, state) => const WargaTambahScreen(),
-        ),
+        //GoRoute(
+        //  path: '/warga/tambah',
+        //  name: 'warga-tambah',
+        //  builder: (context, state) => const WargaTambahScreen(),
+        //),
         GoRoute(
           path: '/rumah/detail',
           name: 'rumah-detail',
@@ -157,6 +162,20 @@ final router = GoRouter(
           name: 'rumah-tambah',
           builder: (context, state) => const RumahTambahScreen(),
         ),
+        GoRoute(
+          path: '/warga/daftar',
+          name: 'warga-daftar',
+          builder: (context, state) => const WargaDaftarScreen(),
+        ),
+        GoRoute(
+          path: '/warga/tambah',
+          name: 'warga-tambah',
+          builder: (context, state) => const WargaTambahScreen(),
+        ),
+        GoRoute(path: '/warga/detail',
+            name: 'warga-detail',
+            builder: (context, state) => WargaDetailScreen(dataWarga: state.extra as DataWargaModel)
+        )
       ],
     ),
   ],
