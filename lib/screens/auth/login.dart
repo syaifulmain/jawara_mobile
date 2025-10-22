@@ -121,8 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           CustomButton(
                             onPressed: () {
-                              
-                              context.goNamed('activities'); 
+                              context.goNamed('admin');
                             },
                             child: Text(
                               'Login',
