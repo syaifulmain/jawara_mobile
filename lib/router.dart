@@ -1,10 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
-import 'package:jawara_mobile/screens/dashboard/activity_list_screen.dart';
-import 'package:jawara_mobile/screens/dashboard/add_activity_screen.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
-import 'package:jawara_mobile/screens/dashboard/broadcast_list_screen.dart';
+
 
 final router = GoRouter(
   initialLocation: "/login",
