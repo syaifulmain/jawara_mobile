@@ -32,7 +32,7 @@ class DetailKeluargaScreen extends StatelessWidget {
         'peran': 'Anak',
         'jenisKelamin': 'Laki-laki',
         'tanggalLahir': '05/03/2012',
-        'status': 'Pelajar',
+        'status': 'Nonaktif',
       },
     ];
 
@@ -49,9 +49,15 @@ class DetailKeluargaScreen extends StatelessWidget {
               _buildDetailRow('Kepala Keluarga', 'John Doe'),
               _buildDetailRow('Rumah Saat Ini', 'Jl. Melati No. 12'),
               _buildDetailRow('Status Kepemilikan', 'Milik Sendiri'),
-              _buildDetailRow('Status Keluarga', 'Aktif'),
 
-              const SizedBox(height: Rem.rem1_5),
+              // Status keluarga sebagai bubble
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: Rem.rem1_5,
+                  top: Rem.rem0_5,
+                ),
+                child: Row(children: [_buildStatusBubble('Aktif')]),
+              ),
 
               // Header anggota keluarga
               Text(
@@ -107,7 +113,9 @@ class DetailKeluargaScreen extends StatelessWidget {
                             'Tanggal Lahir',
                             anggota['tanggalLahir'] ?? '',
                           ),
-                          _buildDetailRow('Status', anggota['status'] ?? ''),
+
+                          // Bubble status di bawah tanggal lahir
+                          _buildStatusBubble(anggota['status'] ?? ''),
                         ],
                       ),
                     ),
@@ -148,6 +156,7 @@ class DetailKeluargaScreen extends StatelessWidget {
     );
   }
 
+  // Widget helper detail teks
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: Rem.rem0_75),
@@ -164,6 +173,33 @@ class DetailKeluargaScreen extends StatelessWidget {
           const SizedBox(height: Rem.rem0_25),
           Text(value, style: GoogleFonts.poppins(fontSize: Rem.rem0_875)),
         ],
+      ),
+    );
+  }
+
+  // Widget bubble status
+  Widget _buildStatusBubble(String status) {
+    final bool isAktif = status.toLowerCase() == 'aktif';
+    final Color bgColor = isAktif ? Colors.green[100]! : Colors.red[100]!;
+    final Color textColor = isAktif ? Colors.green[800]! : Colors.red[800]!;
+
+    return Container(
+      margin: const EdgeInsets.only(top: Rem.rem0_25),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Rem.rem1,
+        vertical: Rem.rem0_25,
+      ),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(Rem.rem1),
+      ),
+      child: Text(
+        status,
+        style: GoogleFonts.poppins(
+          color: textColor,
+          fontWeight: FontWeight.w600,
+          fontSize: Rem.rem0_875,
+        ),
       ),
     );
   }
