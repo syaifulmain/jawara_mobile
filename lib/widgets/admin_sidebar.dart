@@ -94,8 +94,8 @@ class AdminSidebar extends StatelessWidget {
                       Icons.receipt_outlined,
                       'Pemasukan',
                       [
-                        {'title': 'Daftar', 'route': '/placeholder'},
-                        {'title': 'Tambah', 'route': '/placeholder'},
+                        {'title': 'Daftar', 'route': '/pemasukan/daftar'},
+                        {'title': 'Tambah', 'route': '/pemasukan/tambah'},
                       ],
                     ),
                     _buildSubMenu(
@@ -103,8 +103,8 @@ class AdminSidebar extends StatelessWidget {
                       Icons.note_add_outlined,
                       'Pengeluaran',
                       [
-                        {'title': 'Daftar', 'route': '/placeholder'},
-                        {'title': 'Tambah', 'route': '/placeholder'},
+                        {'title': 'Daftar', 'route': '/pengeluaran/daftar'},
+                        {'title': 'Tambah', 'route': '/pengeluaran/tambah'},
                       ],
                     ),
                     _buildSubMenu(
