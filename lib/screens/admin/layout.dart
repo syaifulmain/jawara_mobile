@@ -87,8 +87,8 @@ class AdminLayoutScreen extends StatelessWidget {
                       Icons.people_alt_outlined,
                       'Data Warga & Rumah',
                       [
-                        {'title': 'Warga - Daftar', 'route': '/placeholder'},
-                        {'title': 'Warga - Tambah', 'route': '/placeholder'},
+                        {'title': 'Warga - Daftar', 'route': '/warga/daftar'},
+                        {'title': 'Warga - Tambah', 'route': '/warga/tambah'},
                         {'title': 'Keluarga', 'route': '/placeholder'},
                         {'title': 'Rumah - Daftar', 'route': '/placeholder'},
                         {'title': 'Rumah - Tambah', 'route': '/placeholder'},
