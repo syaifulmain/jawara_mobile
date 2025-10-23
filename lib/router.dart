@@ -8,6 +8,7 @@ import 'package:jawara_mobile/screens/admin/data_warga/detail_rumah.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/detail_keluarga.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/daftar.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/tambah.dart';
+import 'package:jawara_mobile/screens/admin/dashboard/keuangan.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/kegiatan.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/kependudukan.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/daftar.dart';
@@ -51,11 +52,18 @@ final router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-          path: '/admin',
-          name: 'admin',
-          // For the default admin page, you can show a placeholder or a default dashboard
-          builder: (BuildContext context, GoRouterState state) {
-            return const PlaceholderScreen(); // Or your default dashboard widget
+  path: '/admin',
+  name: 'admin',
+  builder: (BuildContext context, GoRouterState state) {
+    // Ganti PlaceholderScreen dengan halaman utama dashboard kamu
+    return const KeuanganScreen(); // ✅ tampilkan dashboard keuangan
+  },
+),
+       GoRoute(
+        path: '/dashboard/keuangan',
+        name: 'dashboard-keuangan',
+        builder: (BuildContext context, GoRouterState state) {
+          return const KeuanganScreen();
           },
         ),
         GoRoute(

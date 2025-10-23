@@ -5,7 +5,7 @@ import 'package:jawara_mobile/constants/rem.dart';
 import '../models/pie_chart_data_model.dart';
 
 class PieChartCard extends StatelessWidget {
-  final String title;
+  final String title; 
   final List<PieChartDataModel> data;
   final IconData icon;
 
@@ -31,18 +31,18 @@ class PieChartCard extends StatelessWidget {
                 Text(
                   title,
                   style: GoogleFonts.figtree(
-                      fontSize: Rem.rem1, fontWeight: FontWeight.bold),
+                    fontSize: Rem.rem1, 
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: Rem.rem0_5),
-
             AspectRatio(
               aspectRatio: 1.7,
               child: _buildPieChart(data),
             ),
             const SizedBox(height: Rem.rem0_5),
-
             Align(
               alignment: Alignment.centerLeft,
               child: _buildLegend(data),
@@ -64,7 +64,7 @@ class PieChartCard extends StatelessWidget {
             color: item.color,
             value: item.value,
             title: '${item.value.toStringAsFixed(0)}%',
-            radius: 50,
+            radius: 150,
             titleStyle: GoogleFonts.figtree(
               fontSize: Rem.rem0_75,
               fontWeight: FontWeight.bold,
@@ -77,27 +77,24 @@ class PieChartCard extends StatelessWidget {
   }
 
   Widget _buildLegend(List<PieChartDataModel> data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+    return Wrap(
+      spacing: Rem.rem1, 
+      runSpacing: Rem.rem0_5,
       children: data.map((item) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 10,
-                height: 10,
-                color: item.color,
-              ),
-              const SizedBox(width: Rem.rem0_5),
-              Text(
-                item.label,
-                style: GoogleFonts.figtree(fontSize: Rem.rem0_75),
-              ),
-            ],
-          ),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              color: item.color,
+            ),
+            const SizedBox(width: Rem.rem0_5),
+            Text(
+              item.label,
+              style: GoogleFonts.figtree(fontSize: Rem.rem0_75),
+            ),
+          ],
         );
       }).toList(),
     );
