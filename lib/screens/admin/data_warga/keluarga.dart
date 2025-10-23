@@ -31,9 +31,9 @@ class KeluargaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: 'Daftar Keluarga',
+      // title: 'Daftar Keluarga',
       children: [
-        const SizedBox(height: Rem.rem1),
+        // const SizedBox(height: Rem.rem1),
 
         // Tombol filter
         Row(

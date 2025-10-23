@@ -19,7 +19,7 @@ class RumahDaftarScreen extends StatelessWidget {
     return WhiteCardPage(
       // title: 'Daftar Rumah',
       children: [
-        const SizedBox(height: Rem.rem1),
+        // const SizedBox(height: Rem.rem1),
 
         // Tombol filter
         Row(
