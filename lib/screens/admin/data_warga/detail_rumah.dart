@@ -18,7 +18,7 @@ class DetailRumahScreen extends StatelessWidget {
             children: [
               const SizedBox(height: Rem.rem1),
               _buildDetailRow('Alamat', 'Jl. Melati No. 12'),
-              _buildDetailRow('Status', 'Ditempati'),
+              _buildStatusRow('Status', 'Ditempati'), // Bubble status
             ],
           ),
 
@@ -88,6 +88,41 @@ class DetailRumahScreen extends StatelessWidget {
           ),
           const SizedBox(height: Rem.rem0_5),
           Text(value, style: GoogleFonts.poppins(fontSize: Rem.rem0_875)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusRow(String label, String status) {
+    final isDitempati = status == 'Ditempati';
+    final color = isDitempati ? Colors.blue : Colors.green;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Rem.rem1),
+      child: Row(
+        children: [
+          Text(
+            '$label: ',
+            style: GoogleFonts.poppins(
+              fontSize: Rem.rem0_875,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              status,
+              style: GoogleFonts.poppins(
+                color: color,
+                fontWeight: FontWeight.w600,
+                fontSize: Rem.rem0_75,
+              ),
+            ),
+          ),
         ],
       ),
     );
