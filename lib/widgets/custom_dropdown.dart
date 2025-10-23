@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 
-class CustomDropdown<T> extends StatelessWidget {
+// Converted to a StatefulWidget to properly manage state and handle resets.
+class CustomDropdown<T> extends StatefulWidget {
   final String? labelText;
   final String? hintText;
   final List<DropdownMenuEntry<T>> items;
@@ -20,6 +21,54 @@ class CustomDropdown<T> extends StatelessWidget {
   });
 
   @override
+  State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
+}
+
+class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _updateControllerWithInitialValue();
+  }
+
+  // didUpdateWidget is crucial for reacting to parent state changes (like a reset).
+  @override
+  void didUpdateWidget(CustomDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // If the parent widget provides a new initialSelection, update the controller.
+    if (widget.initialSelection != oldWidget.initialSelection) {
+      _updateControllerWithInitialValue();
+    }
+  }
+
+  void _updateControllerWithInitialValue() {
+    if (widget.initialSelection == null) {
+      // If the initial selection is null (e.g., after a reset), clear the controller.
+      _controller.clear();
+      return;
+    }
+
+    // Find the corresponding label for the initial value and set the controller's text.
+    try {
+      final entry = widget.items.firstWhere(
+        (item) => item.value == widget.initialSelection,
+      );
+      _controller.text = entry.label;
+    } catch (e) {
+      // If no matching entry is found, clear the controller.
+      _controller.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -28,25 +77,22 @@ class CustomDropdown<T> extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (labelText != null && labelText!.isNotEmpty) ...[
+            if (widget.labelText != null && widget.labelText!.isNotEmpty) ...[
               Text(
-                labelText!,
-                style: GoogleFonts.figtree(
-                  fontSize: Rem.rem1,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black87,
+                widget.labelText!,
+                style: GoogleFonts.poppins(
+                  fontSize: Rem.rem0_875,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: Rem.rem0_5),
             ],
-
             DropdownMenu<T>(
+              controller: _controller, // Use the controller to manage the displayed text.
               width: width,
-              initialSelection: initialSelection,
-              onSelected: onSelected,
-              hintText: hintText,
+              onSelected: widget.onSelected,
+              hintText: widget.hintText,
               textStyle: GoogleFonts.poppins(),
-
               menuStyle: MenuStyle(
                 maximumSize: WidgetStateProperty.all(
                   Size(width, double.infinity),
@@ -59,11 +105,10 @@ class CustomDropdown<T> extends StatelessWidget {
                   ),
                 ),
               ),
-
               inputDecorationTheme: InputDecorationTheme(
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: Rem.rem0_75,
-                  vertical: Rem.rem0_25,
+                  vertical: Rem.rem0_75,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Rem.rem0_5),
@@ -75,11 +120,10 @@ class CustomDropdown<T> extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(Rem.rem0_5),
-                  borderSide: BorderSide(color: AppColors.primaryColor),
+                  borderSide: const BorderSide(color: AppColors.primaryColor),
                 ),
               ),
-
-              dropdownMenuEntries: items,
+              dropdownMenuEntries: widget.items,
             ),
           ],
         );

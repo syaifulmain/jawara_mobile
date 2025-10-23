@@ -2,17 +2,84 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
+import 'package:jawara_mobile/data/data_warga_data.dart';
 import 'package:jawara_mobile/widgets/custom_button.dart';
 import 'package:jawara_mobile/widgets/custom_dropdown.dart';
 import 'package:jawara_mobile/widgets/custom_text_field.dart';
 
 import '../../../widgets/custom_select_calender.dart';
 
-class WargaTambahScreen extends StatelessWidget {
+class WargaTambahScreen extends StatefulWidget {
   const WargaTambahScreen({super.key});
+
+  @override
+  State<WargaTambahScreen> createState() => _WargaTambahScreenState();
+}
+
+class _WargaTambahScreenState extends State<WargaTambahScreen> {
+  // --- State Management for Form Fields ---
+
+  // Controllers for TextFields
+  final _namaController = TextEditingController();
+  final _nikController = TextEditingController();
+  final _teleponController = TextEditingController();
+  final _tempatLahirController = TextEditingController();
+
+  // Variables for Dropdowns and Calendar
+  String? _selectedKeluarga;
+  DateTime? _selectedTanggalLahir;
+  String? _selectedJenisKelamin;
+  String? _selectedAgama;
+  String? _selectedGolonganDarah;
+  String? _selectedPeranKeluarga;
+  String? _selectedPendidikan;
+  String? _selectedPekerjaan;
+  String? _selectedStatusPerkawinan;
+
+  @override
+  void dispose() {
+    // Dispose controllers to free up resources
+    _namaController.dispose();
+    _nikController.dispose();
+    _teleponController.dispose();
+    _tempatLahirController.dispose();
+    super.dispose();
+  }
+
+  /// Handles the form submission.
+  void _submitForm() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Data Warga berhasil ditambahkan!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    _resetForm();
+  }
+
+  /// Resets all form fields to their initial state.
+  void _resetForm() {
+    setState(() {
+      _namaController.clear();
+      _nikController.clear();
+      _teleponController.clear();
+      _tempatLahirController.clear();
+
+      _selectedKeluarga = null;
+      _selectedTanggalLahir = null;
+      _selectedJenisKelamin = null;
+      _selectedAgama = null;
+      _selectedGolonganDarah = null;
+      _selectedPeranKeluarga = null;
+      _selectedPendidikan = null;
+      _selectedPekerjaan = null;
+      _selectedStatusPerkawinan = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       body: Padding(
@@ -28,7 +95,7 @@ class WargaTambahScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Rem.rem0_75),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black12.withValues(alpha: 0.05),
+                        color: Colors.black12.withOpacity(0.05),
                         blurRadius: Rem.rem0_625,
                         offset: const Offset(0, 5),
                       ),
@@ -41,14 +108,23 @@ class WargaTambahScreen extends StatelessWidget {
                         labelText: "Pilih Keluarga",
                         hintText: "-- PILIH KELUARGA --",
                         items: const [
-                          DropdownMenuEntry(value: 'k1', label: 'Keluarga '),
-                          DropdownMenuEntry(value: "P", label: "Perempuan"),
+                          DropdownMenuEntry(value: 'k1', label: 'Keluarga Ridwan'),
+                          DropdownMenuEntry(value: "k2", label: "Keluarga Budi"),
+                          DropdownMenuEntry(value: "k3", label: "Keluarga Ani"),
+                          DropdownMenuEntry(value: "k4", label: "Keluarga Indah"),
                         ],
+                        initialSelection: _selectedKeluarga,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedKeluarga = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
 
                       CustomTextField(
+                        controller: _namaController,
                         labelText: "Nama Lengkap",
                         hintText: "Masukkan nama lengkap",
                       ),
@@ -56,6 +132,7 @@ class WargaTambahScreen extends StatelessWidget {
                       const SizedBox(height: Rem.rem1_5),
 
                       CustomTextField(
+                        controller: _nikController,
                         labelText: "NIK",
                         hintText: "Masukkan NIK sesuai KTP",
                       ),
@@ -63,6 +140,7 @@ class WargaTambahScreen extends StatelessWidget {
                       const SizedBox(height: Rem.rem1_5),
 
                       CustomTextField(
+                        controller: _teleponController,
                         labelText: "No Telepon",
                         hintText: "08xxxxxxxx",
                       ),
@@ -70,6 +148,7 @@ class WargaTambahScreen extends StatelessWidget {
                       const SizedBox(height: Rem.rem1_5),
 
                       CustomTextField(
+                        controller: _tempatLahirController,
                         labelText: "Tempat Lahir",
                         hintText: "Masukkan tempat lahir",
                       ),
@@ -79,9 +158,12 @@ class WargaTambahScreen extends StatelessWidget {
                       CustomSelectCalendar(
                         labelText: "Tanggal Lahir",
                         hintText: "Pilih tanggal lahir",
-                          onDateSelected: (DateTime selectedDate) {
-                            // Handle the selected date here
-                          },
+                        initialDate: _selectedTanggalLahir,
+                        onDateSelected: (DateTime selectedDate) {
+                          setState(() {
+                            _selectedTanggalLahir = selectedDate;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -93,6 +175,12 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "L", label: "Laki-laki"),
                           DropdownMenuEntry(value: "P", label: "Perempuan"),
                         ],
+                        initialSelection: _selectedJenisKelamin,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedJenisKelamin = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -108,6 +196,12 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "buddha", label: "Buddha"),
                           DropdownMenuEntry(value: "konghucu", label: "Konghucu"),
                         ],
+                        initialSelection: _selectedAgama,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedAgama = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -122,6 +216,12 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "O", label: "O"),
                           DropdownMenuEntry(value: "tidak_tahu", label: "Tidak Tahu"),
                         ],
+                        initialSelection: _selectedGolonganDarah,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedGolonganDarah = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -134,6 +234,12 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "istri", label: "Istri"),
                           DropdownMenuEntry(value: "anak", label: "Anak"),
                         ],
+                        initialSelection: _selectedPeranKeluarga,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedPeranKeluarga = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -143,14 +249,19 @@ class WargaTambahScreen extends StatelessWidget {
                         hintText: "-- PILIH PENDIDIKAN --",
                         items: const [
                           DropdownMenuEntry(value: "tidak_sekolah", label: "Tidak/Belum Sekolah"),
-                          DropdownMenuEntry(value: "sd", label: "SD/Sederajat"),
-                          DropdownMenuEntry(value: "smp", label: "SMP/Sederajat"),
-                          DropdownMenuEntry(value: "sma", label: "SMA/Sederajat"),
-                          DropdownMenuEntry(value: "d1-d3", label: "Diploma (D1-D3)"),
-                          DropdownMenuEntry(value: "s1", label: "Sarjana (S1)"),
-                          DropdownMenuEntry(value: "s2", label: "Magister (S2)"),
-                          DropdownMenuEntry(value: "s3", label: "Doktor (S3)"),
+                          DropdownMenuEntry(value: "SD", label: "SD/Sederajat"),
+                          DropdownMenuEntry(value: "SMP", label: "SMP/Sederajat"),
+                          DropdownMenuEntry(value: "SMA", label: "SMA/Sederajat"),
+                          DropdownMenuEntry(value: "S1", label: "Sarjana (S1)"),
+                          DropdownMenuEntry(value: "S2", label: "Magister (S2)"),
+                          DropdownMenuEntry(value: "S3", label: "Doktor (S3)"),
                         ],
+                        initialSelection: _selectedPendidikan,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedPendidikan = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -168,6 +279,12 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "petani", label: "Petani"),
                           DropdownMenuEntry(value: "lainnya", label: "Lainnya"),
                         ],
+                        initialSelection: _selectedPekerjaan,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedPekerjaan = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
@@ -181,14 +298,20 @@ class WargaTambahScreen extends StatelessWidget {
                           DropdownMenuEntry(value: "cerai_hidup", label: "Cerai Hidup"),
                           DropdownMenuEntry(value: "cerai_mati", label: "Cerai Mati"),
                         ],
+                        initialSelection: _selectedStatusPerkawinan,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedStatusPerkawinan = value;
+                          });
+                        },
                       ),
 
                       const SizedBox(height: Rem.rem1_5),
 
                       CustomButton(
-                        onPressed: () {},
+                        onPressed: _submitForm, // Connect to submit function
                         child: Text(
-                          'Buat Akun',
+                          'Simpan',
                           style: GoogleFonts.poppins(fontSize: Rem.rem1),
                         ),
                       ),
@@ -196,8 +319,8 @@ class WargaTambahScreen extends StatelessWidget {
                       const SizedBox(height: Rem.rem1),
 
                       CustomButton(
-                          backgroundColor: Colors.grey,
-                        onPressed: () {},
+                        backgroundColor: Colors.grey,
+                        onPressed: _resetForm, // Connect to reset function
                         child: Text(
                           'Reset',
                           style: GoogleFonts.poppins(fontSize: Rem.rem1),
