@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final TextEditingController? controller;
 
   const CustomTextField({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.keyboardType,
     this.obscureText = false,
+    this.controller,
   });
 
   @override
@@ -35,8 +37,8 @@ class CustomTextField extends StatelessWidget {
           ),
           const SizedBox(height: Rem.rem0_5),
         ],
-
         TextField(
+          controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           style: GoogleFonts.poppins(),
@@ -53,9 +55,9 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Rem.rem0_5),
-              borderSide: BorderSide(color: AppColors.primaryColor),
+              borderSide: const BorderSide(color: AppColors.primaryColor),
             ),
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: Rem.rem0_75,
               vertical: Rem.rem0_25,
             ),

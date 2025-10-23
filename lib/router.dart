@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+// import 'package:jawara_mobile/screens/admin/data_warga/warga_tambah.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/keluarga.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/rumah_daftar.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/rumah_tambah.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/detail_rumah.dart';
+import 'package:jawara_mobile/screens/admin/data_warga/detail_keluarga.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/daftar.dart';
 import 'package:jawara_mobile/screens/admin/broadcast/tambah.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/keuangan.dart';
@@ -11,11 +17,18 @@ import 'package:jawara_mobile/screens/admin/laporan_keuangan/cetak_laporan.dart'
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pengeluaran.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah.dart';
+import 'package:jawara_mobile/screens/admin/warga/daftar.dart';
+import 'package:jawara_mobile/screens/admin/warga/detail.dart';
+import 'package:jawara_mobile/screens/admin/warga/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
+
+import 'models/data_warga_model.dart';
 
 final router = GoRouter(
   initialLocation: "/login",
@@ -108,6 +121,16 @@ final router = GoRouter(
           builder: (context, state) => SemuaPengeluaran(),
         ),
         GoRoute(
+          path: '/pemasukan/daftar',
+          name: 'pemasukan-daftar',
+          builder: (context, state) => const DaftarPemasukanScreen(),
+        ),
+        GoRoute(
+          path: '/pemasukan/tambah',
+          name: 'pemasukan-tambah',
+          builder: (context, state) => TambahPemasukanScreen(),
+        ),
+        GoRoute(
           path: '/pengeluaran/daftar',
           name: 'pengeluaran-daftar',
           builder: (context, state) => const DaftarPengeluaranScreen(),
@@ -117,6 +140,50 @@ final router = GoRouter(
           name: 'pengeluaran-tambah',
           builder: (context, state) => TambahPengeluaranScreen(),
         ),
+        //GoRoute(
+        //  path: '/warga/tambah',
+        //  name: 'warga-tambah',
+        //  builder: (context, state) => const WargaTambahScreen(),
+        //),
+        GoRoute(
+          path: '/rumah/detail',
+          name: 'rumah-detail',
+          builder: (context, state) => const DetailRumahScreen(),
+        ),
+        GoRoute(
+          path: '/keluarga/detail',
+          name: 'keluarga-detail',
+          builder: (context, state) => const DetailKeluargaScreen(),
+        ),
+        GoRoute(
+          path: '/keluarga',
+          name: 'keluarga',
+          builder: (context, state) => const KeluargaScreen(),
+        ),
+        GoRoute(
+          path: '/rumah/daftar',
+          name: 'rumah-daftar',
+          builder: (context, state) => const RumahDaftarScreen(),
+        ),
+        GoRoute(
+          path: '/rumah/tambah',
+          name: 'rumah-tambah',
+          builder: (context, state) => const RumahTambahScreen(),
+        ),
+        GoRoute(
+          path: '/warga/daftar',
+          name: 'warga-daftar',
+          builder: (context, state) => const WargaDaftarScreen(),
+        ),
+        GoRoute(
+          path: '/warga/tambah',
+          name: 'warga-tambah',
+          builder: (context, state) => const WargaTambahScreen(),
+        ),
+        GoRoute(path: '/warga/detail',
+            name: 'warga-detail',
+            builder: (context, state) => WargaDetailScreen(dataWarga: state.extra as DataWargaModel)
+        )
       ],
     ),
   ],
