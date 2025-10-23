@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 
 class WhiteCardPage extends StatelessWidget {
-  final String title;
+  final String? title;
   final List<Widget> children;
 
-  const WhiteCardPage({super.key, required this.title, required this.children});
+  const WhiteCardPage({super.key, this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,18 @@ class WhiteCardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-                  Text(title, style: 
-                    TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
+                  if (title != null) ...[
+                    Text(
+                      title!,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Divider(thickness: 2),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    Divider(thickness: 2),
+                    const SizedBox(height: 16),
+                  ],
                   for (var child in children) ...[child],
                 ],
               ),

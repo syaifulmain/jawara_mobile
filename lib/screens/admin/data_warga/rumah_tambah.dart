@@ -52,14 +52,14 @@ class _RumahTambahScreenState extends State<RumahTambahScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
-            Text(
-              'Tambah Rumah',
-              style: GoogleFonts.poppins(
-                fontSize: Rem.rem1_25,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: Rem.rem1_5),
+            // Text(
+            //   'Tambah Rumah',
+            //   style: GoogleFonts.poppins(
+            //     fontSize: Rem.rem1_25,
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            // ),
+            // const SizedBox(height: Rem.rem1_5),
 
             // Form
             Expanded(

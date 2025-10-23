@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Jawara Pintar Mobile',
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       routerConfig: router,
     );
   }

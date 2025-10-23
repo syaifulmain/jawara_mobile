@@ -64,7 +64,7 @@ class PieChartCard extends StatelessWidget {
             color: item.color,
             value: item.value,
             title: '${item.value.toStringAsFixed(0)}%',
-            radius: 150,
+            radius: 50,
             titleStyle: GoogleFonts.figtree(
               fontSize: Rem.rem0_75,
               fontWeight: FontWeight.bold,

@@ -17,7 +17,7 @@ class RumahDaftarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: 'Daftar Rumah',
+      // title: 'Daftar Rumah',
       children: [
         const SizedBox(height: Rem.rem1),
 

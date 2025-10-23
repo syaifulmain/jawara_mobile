@@ -14,11 +14,11 @@ class DaftarPengeluaranScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: title,
+      // title: title,
       children: [
         // Judul tabel
-        Text(title, style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 16),
+        // Text(title, style: Theme.of(context).textTheme.titleLarge),
+        // const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
