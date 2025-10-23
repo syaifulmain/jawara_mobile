@@ -8,7 +8,7 @@ import '../../../widgets/white_card_page.dart';
 class KeluargaScreen extends StatelessWidget {
   const KeluargaScreen({super.key});
 
-  // Dummy data untuk tabel
+  // Dummy data daftar keluarga
   final List<Map<String, dynamic>> _keluargaData = const [
     {
       'no': 1,
@@ -34,6 +34,7 @@ class KeluargaScreen extends StatelessWidget {
       title: 'Daftar Keluarga',
       children: [
         const SizedBox(height: Rem.rem1),
+
         // Tombol filter
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -61,103 +62,18 @@ class KeluargaScreen extends StatelessWidget {
         ),
         const SizedBox(height: Rem.rem1),
 
-        // Tabel
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: MaterialStateProperty.all(const Color(0xFFE2E8F0)),
-            headingTextStyle: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-              fontSize: Rem.rem0_875,
-            ),
-            dataTextStyle: GoogleFonts.poppins(
-              fontSize: Rem.rem0_875,
-              color: Colors.black87,
-            ),
-            columnSpacing: Rem.rem2,
-            columns: const [
-              DataColumn(label: Text('NO')),
-              DataColumn(label: Text('NAMA KELUARGA')),
-              DataColumn(label: Text('KEPALA KELUARGA')),
-              DataColumn(label: Text('ALAMAT RUMAH')),
-              DataColumn(label: Text('STATUS KEPEMILIKAN')),
-              DataColumn(label: Text('STATUS')),
-              DataColumn(label: Text('AKSI')),
-            ],
-            rows: _keluargaData.map((data) {
-              return DataRow(
-                cells: [
-                  DataCell(Text('${data['no']}')),
-                  DataCell(Text(data['nama_keluarga'])),
-                  DataCell(Text(data['kepala_keluarga'])),
-                  DataCell(Text(data['alamat_rumah'])),
-                  DataCell(Text(data['status_kepemilikan'])),
-                  // Status dengan warna
-                  DataCell(
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Rem.rem1,
-                        vertical: Rem.rem0_25,
-                      ),
-                      decoration: BoxDecoration(
-                        color: data['status'] == 'Aktif'
-                            ? Colors.green[100]
-                            : Colors.red[100],
-                        borderRadius: BorderRadius.circular(Rem.rem1),
-                      ),
-                      child: Text(
-                        data['status'],
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: data['status'] == 'Aktif'
-                              ? Colors.green[800]
-                              : Colors.red[800],
-                          fontSize: Rem.rem0_875,
-                        ),
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert, size: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      onSelected: (value) {
-                        if (value == 'detail') {
-                          // Navigasi ke halaman detail keluarga
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const DetailKeluargaScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'detail',
-                          child: Text(
-                            'Detail',
-                            style: GoogleFonts.poppins(
-                              fontSize: Rem.rem0_875,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+        // --- Gaya Kartu untuk Daftar Keluarga ---
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _keluargaData.length,
+          itemBuilder: (context, index) {
+            final data = _keluargaData[index];
+            return _KeluargaCard(data: data);
+          },
         ),
 
-        // Pagination / navigasi
+        // Pagination
         const SizedBox(height: Rem.rem1),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -194,6 +110,158 @@ class KeluargaScreen extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+// --- Komponen Kartu Keluarga ---
+class _KeluargaCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const _KeluargaCard({required this.data});
+
+  Widget _buildStatusBadge(String status) {
+    final isAktif = status == 'Aktif';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: (isAktif ? Colors.green : Colors.red).withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        status,
+        style: GoogleFonts.poppins(
+          color: isAktif ? Colors.green[800] : Colors.red[800],
+          fontWeight: FontWeight.w600,
+          fontSize: Rem.rem0_75,
+        ),
+      ),
+    );
+  }
+
+  void _showActionMenu(BuildContext context, RenderBox button) {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(
+          button.size.topRight(Offset.zero),
+          ancestor: overlay,
+        ),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu<String>(
+      context: context,
+      position: position,
+      items: const [
+        PopupMenuItem<String>(value: 'detail', child: Text('Detail')),
+      ],
+    ).then((value) {
+      if (value == 'detail') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DetailKeluargaScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: AppColors.backgroundColor,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header: Nama Keluarga dan menu aksi
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  data['nama_keluarga'],
+                  style: GoogleFonts.poppins(
+                    fontSize: Rem.rem1,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Builder(
+                  builder: (buttonContext) {
+                    return IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        final button =
+                            buttonContext.findRenderObject() as RenderBox;
+                        _showActionMenu(buttonContext, button);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+            const Divider(height: 16),
+
+            // Kepala keluarga
+            Row(
+              children: [
+                const Icon(Icons.person, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Kepala: ${data['kepala_keluarga']}',
+                    style: GoogleFonts.poppins(fontSize: Rem.rem0_875),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Alamat rumah
+            Row(
+              children: [
+                const Icon(Icons.home, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    data['alamat_rumah'],
+                    style: GoogleFonts.poppins(fontSize: Rem.rem0_875),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Status kepemilikan
+            Row(
+              children: [
+                const Icon(Icons.house_siding, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Kepemilikan: ${data['status_kepemilikan']}',
+                    style: GoogleFonts.poppins(fontSize: Rem.rem0_875),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Status aktif/nonaktif
+            _buildStatusBadge(data['status']),
+          ],
+        ),
+      ),
     );
   }
 }
