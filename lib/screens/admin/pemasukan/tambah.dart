@@ -12,7 +12,7 @@ class TambahPemasukanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: title,
+      // title: title,
       children: [
         Text(
           'Nama Pemasukan',

@@ -6,14 +6,19 @@ import 'package:jawara_mobile/constants/rem.dart';
 
 class AdminLayoutScreen extends StatelessWidget {
   final Widget child;
+  final String title;
 
-  const AdminLayoutScreen({super.key, required this.child});
+  const AdminLayoutScreen({super.key, required this.child, this.title = 'Jawara Mobile'});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildSidebar(context),
-      appBar: AppBar(backgroundColor: AppColors.backgroundColor, elevation: 0),
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: AppColors.backgroundColor,
+        elevation: 0,
+      ),
       body: child,
     );
   }
@@ -76,11 +81,20 @@ class AdminLayoutScreen extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    _buildSubMenu(context, location, Icons.terminal, 'Dashboard', [
-                      {'title': 'Keuangan', 'route': '/dashboard/keuangan'},
-                      {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
-                      {'title': 'Kependudukan', 'route': '/dashboard/kependudukan'},
-                    ]),
+                    _buildSubMenu(
+                      context,
+                      location,
+                      Icons.terminal,
+                      'Dashboard',
+                      [
+                        {'title': 'Keuangan', 'route': '/dashboard/keuangan'},
+                        {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
+                        {
+                          'title': 'Kependudukan',
+                          'route': '/dashboard/kependudukan',
+                        },
+                      ],
+                    ),
                     _buildSubMenu(
                       context,
                       location,

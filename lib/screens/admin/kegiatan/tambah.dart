@@ -112,14 +112,14 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
-            Text(
-              'Buat Kegiatan Baru',
-              style: GoogleFonts.poppins(
-                fontSize: Rem.rem1_25,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: Rem.rem1_5),
+            // Text(
+            //   'Buat Kegiatan Baru',
+            //   style: GoogleFonts.poppins(
+            //     fontSize: Rem.rem1_25,
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            // ),
+            // const SizedBox(height: Rem.rem1_5),
 
             // Form
             Expanded(

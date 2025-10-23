@@ -30,6 +30,33 @@ import 'package:jawara_mobile/screens/placeholder.dart';
 
 import 'models/data_warga_model.dart';
 
+// A map to associate route paths with their titles.
+const Map<String, String> _routeTitles = {
+  '/admin': 'Dashboard Keuangan',
+  '/dashboard/keuangan': 'Dashboard Keuangan',
+  '/dashboard/kependudukan': 'Dashboard Kependudukan',
+  '/dashboard/kegiatan': 'Dashboard Kegiatan',
+  '/kegiatan/daftar': 'Daftar Kegiatan',
+  '/kegiatan/tambah': 'Tambah Kegiatan',
+  '/broadcast/daftar': 'Daftar Broadcast',
+  '/broadcast/tambah': 'Tambah Broadcast',
+  '/laporan_keuangan/cetak_laporan': 'Cetak Laporan Keuangan',
+  '/laporan_keuangan/semua_pemasukan': 'Laporan Semua Pemasukan',
+  '/laporan_keuangan/semua_pengeluaran': 'Laporan Semua Pengeluaran',
+  '/pemasukan/daftar': 'Daftar Pemasukan',
+  '/pemasukan/tambah': 'Tambah Pemasukan',
+  '/pengeluaran/daftar': 'Daftar Pengeluaran',
+  '/pengeluaran/tambah': 'Tambah Pengeluaran',
+  '/rumah/detail': 'Detail Rumah',
+  '/keluarga/detail': 'Detail Keluarga',
+  '/keluarga': 'Data Keluarga',
+  '/rumah/daftar': 'Daftar Rumah',
+  '/rumah/tambah': 'Tambah Rumah',
+  '/warga/daftar': 'Daftar Warga',
+  '/warga/tambah': 'Tambah Warga',
+  '/warga/detail': 'Detail Warga',
+};
+
 final router = GoRouter(
   initialLocation: "/login",
   routes: [
@@ -48,7 +75,10 @@ final router = GoRouter(
     // ShellRoute for the admin layout
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
-        return AdminLayoutScreen(child: child);
+        // Get the current route path and look up its title.
+        final String path = state.uri.toString();
+        final String title = _routeTitles[path] ?? 'Jawara Pintar'; // Default title
+        return AdminLayoutScreen(title: title, child: child);
       },
       routes: <RouteBase>[
         GoRoute(
