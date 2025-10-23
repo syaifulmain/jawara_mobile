@@ -45,7 +45,7 @@ class DaftarPemasukanScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Daftar Pemasukan',
+                      ' ',
                       style: GoogleFonts.poppins(
                         fontSize: Rem.rem1_25,
                         fontWeight: FontWeight.w600,

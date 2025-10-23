@@ -46,7 +46,7 @@ class KegiatanDaftarScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Daftar Kegiatan',
+                      ' ',
                       style: GoogleFonts.poppins(
                         fontSize: Rem.rem1_25,
                         fontWeight: FontWeight.w600,

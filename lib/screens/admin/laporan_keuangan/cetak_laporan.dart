@@ -13,7 +13,7 @@ class CetakLaporan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: title,
+      // title: title,
       children: [
         Text(
           'Tanggal Mulai',
