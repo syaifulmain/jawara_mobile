@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 // import 'package:jawara_mobile/screens/admin/data_warga/warga_tambah.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/keluarga.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/rumah_daftar.dart';
@@ -14,6 +15,7 @@ import 'package:jawara_mobile/screens/admin/dashboard/kependudukan.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/cetak_laporan.dart';
+import 'package:jawara_mobile/screens/admin/laporan_keuangan/detail_laporan_keuangan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pengeluaran.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
@@ -43,6 +45,7 @@ const Map<String, String> _routeTitles = {
   '/laporan_keuangan/cetak_laporan': 'Cetak Laporan Keuangan',
   '/laporan_keuangan/semua_pemasukan': 'Laporan Semua Pemasukan',
   '/laporan_keuangan/semua_pengeluaran': 'Laporan Semua Pengeluaran',
+  '/laporan_keuangan/detail_laporan_keuangan': 'Detail Data Laporan Keuangan',
   '/pemasukan/daftar': 'Daftar Pemasukan',
   '/pemasukan/tambah': 'Tambah Pemasukan',
   '/pengeluaran/daftar': 'Daftar Pengeluaran',
@@ -77,7 +80,8 @@ final router = GoRouter(
       builder: (BuildContext context, GoRouterState state, Widget child) {
         // Get the current route path and look up its title.
         final String path = state.uri.toString();
-        final String title = _routeTitles[path] ?? 'Jawara Pintar'; // Default title
+        final String title =
+            _routeTitles[path] ?? 'Jawara Pintar'; // Default title
         return AdminLayoutScreen(title: title, child: child);
       },
       routes: <RouteBase>[
@@ -139,6 +143,16 @@ final router = GoRouter(
           path: '/laporan_keuangan/cetak_laporan',
           name: 'laporan_keuangan-cetak_laporan',
           builder: (context, state) => CetakLaporan(),
+        ),
+        GoRoute(
+          path: '/laporan_keuangan/detail_laporan_keuangan',
+          name: 'laporan_keuangan-detail_laporan_keuanga',
+          builder: (context, state) {
+            final laporan =
+                state.extra
+                    as Map<String, dynamic>?;
+            return DetailLaporanKeuangan(laporan: laporan ?? {});
+          },
         ),
         GoRoute(
           path: '/laporan_keuangan/semua_pemasukan',
@@ -210,10 +224,12 @@ final router = GoRouter(
           name: 'warga-tambah',
           builder: (context, state) => const WargaTambahScreen(),
         ),
-        GoRoute(path: '/warga/detail',
-            name: 'warga-detail',
-            builder: (context, state) => WargaDetailScreen(dataWarga: state.extra as DataWargaModel)
-        )
+        GoRoute(
+          path: '/warga/detail',
+          name: 'warga-detail',
+          builder: (context, state) =>
+              WargaDetailScreen(dataWarga: state.extra as DataWargaModel),
+        ),
       ],
     ),
   ],
