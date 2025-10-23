@@ -52,18 +52,18 @@ final router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-  path: '/admin',
-  name: 'admin',
-  builder: (BuildContext context, GoRouterState state) {
-    // Ganti PlaceholderScreen dengan halaman utama dashboard kamu
-    return const KeuanganScreen(); // ✅ tampilkan dashboard keuangan
-  },
-),
-       GoRoute(
-        path: '/dashboard/keuangan',
-        name: 'dashboard-keuangan',
-        builder: (BuildContext context, GoRouterState state) {
-          return const KeuanganScreen();
+          path: '/admin',
+          name: 'admin',
+          builder: (BuildContext context, GoRouterState state) {
+            // Ganti PlaceholderScreen dengan halaman utama dashboard kamu
+            return const KeuanganScreen(); // ✅ tampilkan dashboard keuangan
+          },
+        ),
+        GoRoute(
+          path: '/dashboard/keuangan',
+          name: 'dashboard-keuangan',
+          builder: (BuildContext context, GoRouterState state) {
+            return const KeuanganScreen();
           },
         ),
         GoRoute(
