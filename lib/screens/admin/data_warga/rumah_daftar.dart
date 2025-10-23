@@ -8,7 +8,7 @@ import '../../../widgets/white_card_page.dart';
 class RumahDaftarScreen extends StatelessWidget {
   const RumahDaftarScreen({super.key});
 
-  // Dummy data untuk tabel
+  // Dummy data untuk daftar rumah
   final List<Map<String, dynamic>> _rumahData = const [
     {'no': 1, 'alamat': 'Jl. Melati No. 12', 'status': 'Ditempati'},
     {'no': 2, 'alamat': 'Jl. Mawar No. 7', 'status': 'Tersedia'},
@@ -20,6 +20,7 @@ class RumahDaftarScreen extends StatelessWidget {
       title: 'Daftar Rumah',
       children: [
         const SizedBox(height: Rem.rem1),
+
         // Tombol filter
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -47,97 +48,18 @@ class RumahDaftarScreen extends StatelessWidget {
         ),
         const SizedBox(height: Rem.rem1),
 
-        // Tabel
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: MaterialStateProperty.all(const Color(0xFFE2E8F0)),
-            headingTextStyle: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-              fontSize: Rem.rem0_875,
-            ),
-            dataTextStyle: GoogleFonts.poppins(
-              fontSize: Rem.rem0_875,
-              color: Colors.black87,
-            ),
-            columnSpacing: Rem.rem2,
-            columns: const [
-              DataColumn(label: Text('NO')),
-              DataColumn(label: Text('ALAMAT')),
-              DataColumn(label: Text('STATUS')),
-              DataColumn(label: Text('AKSI')),
-            ],
-            rows: _rumahData.map((data) {
-              return DataRow(
-                cells: [
-                  DataCell(Text('${data['no']}')),
-                  DataCell(Text(data['alamat'])),
-                  // Status dengan bubble warna
-                  DataCell(
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Rem.rem1,
-                        vertical: Rem.rem0_25,
-                      ),
-                      decoration: BoxDecoration(
-                        color: data['status'] == 'Ditempati'
-                            ? Colors.blue[100]
-                            : Colors.green[100],
-                        borderRadius: BorderRadius.circular(Rem.rem1),
-                      ),
-                      child: Text(
-                        data['status'],
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: data['status'] == 'Ditempati'
-                              ? Colors.blue[800]
-                              : Colors.green[800],
-                          fontSize: Rem.rem0_875,
-                        ),
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    // PopupMenuButton
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert, size: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      onSelected: (value) {
-                        if (value == 'detail') {
-                          // Navigasi ke halaman detail
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DetailRumahScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'detail',
-                          child: Text(
-                            'Detail',
-                            style: GoogleFonts.poppins(
-                              fontSize: Rem.rem0_875,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+        // --- Gaya Kartu untuk Daftar Rumah ---
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _rumahData.length,
+          itemBuilder: (context, index) {
+            final data = _rumahData[index];
+            return _RumahCard(data: data);
+          },
         ),
 
-        // Pagination / navigasi
+        // Pagination
         const SizedBox(height: Rem.rem1),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -174,6 +96,130 @@ class RumahDaftarScreen extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+// --- Komponen Kartu Rumah ---
+class _RumahCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const _RumahCard({required this.data});
+
+  Widget _buildStatusBadge(String status) {
+    final isDitempati = status == 'Ditempati';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: (isDitempati ? Colors.blue : Colors.green).withValues(
+          alpha: 0.15,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        status,
+        style: GoogleFonts.poppins(
+          color: isDitempati ? Colors.blue[800] : Colors.green[800],
+          fontWeight: FontWeight.w600,
+          fontSize: Rem.rem0_75,
+        ),
+      ),
+    );
+  }
+
+  void _showActionMenu(BuildContext context, RenderBox button) {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(
+          button.size.topRight(Offset.zero),
+          ancestor: overlay,
+        ),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu<String>(
+      context: context,
+      position: position,
+      items: const [
+        PopupMenuItem<String>(value: 'detail', child: Text('Detail')),
+      ],
+    ).then((value) {
+      if (value == 'detail') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DetailRumahScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: AppColors.backgroundColor,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header: Nomor Rumah dan menu aksi
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Rumah No. ${data['no']}',
+                  style: GoogleFonts.poppins(
+                    fontSize: Rem.rem1,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Builder(
+                  builder: (buttonContext) {
+                    return IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        final button =
+                            buttonContext.findRenderObject() as RenderBox;
+                        _showActionMenu(buttonContext, button);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+            const Divider(height: 16),
+
+            // Detail alamat
+            Row(
+              children: [
+                const Icon(Icons.home, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    data['alamat'],
+                    style: GoogleFonts.poppins(fontSize: Rem.rem0_875),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Status
+            _buildStatusBadge(data['status']),
+          ],
+        ),
+      ),
     );
   }
 }
