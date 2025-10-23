@@ -12,36 +12,28 @@ class WhiteCardPage extends StatelessWidget {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: AppColors.backgroundColor,
-
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
-          child: Card(
-            color: AppColors.secondaryColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  if (title != null) ...[
-                    Text(
-                      title!,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Divider(thickness: 2),
-                    const SizedBox(height: 16),
-                  ],
-                  for (var child in children) ...[child],
-                ],
-              ),
-            ),
+            children: [
+              if (title != null) ...[
+                Text(
+                  title!,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Divider(thickness: 2),
+                const SizedBox(height: 16),
+              ],
+              for (var child in children) ...[child],
+            ],
           ),
         ),
       ),
