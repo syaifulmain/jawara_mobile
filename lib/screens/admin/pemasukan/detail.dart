@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/custom_button.dart';
-import 'package:jawara_mobile/widgets/custom_dropdown.dart';
-import 'package:jawara_mobile/widgets/custom_text_field.dart';
 
 import '../../../models/data_pemasukan_model.dart';
-import '../../../widgets/custom_select_calender.dart';
 
 // Converted to a StatefulWidget to manage form state with TextEditingControllers.
 class PemasukanDetailScreen extends StatefulWidget {
@@ -21,7 +17,6 @@ class PemasukanDetailScreen extends StatefulWidget {
 }
 
 class _PemasukanDetailScreenState extends State<PemasukanDetailScreen> {
-  DateTime? _selectedDate;
 
   @override
   void initState() {
