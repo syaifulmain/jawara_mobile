@@ -14,6 +14,7 @@ import 'package:jawara_mobile/screens/admin/dashboard/kegiatan.dart';
 import 'package:jawara_mobile/screens/admin/dashboard/kependudukan.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/kegiatan/tambah.dart';
+import 'package:jawara_mobile/screens/admin/kegiatan/detail.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/cetak_laporan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/detail_laporan_keuangan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
@@ -33,6 +34,7 @@ import 'package:jawara_mobile/screens/placeholder.dart';
 
 import 'models/data_warga_model.dart';
 import 'models/data_pemasukan_model.dart';
+import 'models/data_kegiatan_model.dart';
 
 // A map to associate route paths with their titles.
 const Map<String, String> _routeTitles = {
@@ -126,6 +128,12 @@ final router = GoRouter(
           path: '/kegiatan/tambah',
           name: 'kegiatan-tambah',
           builder: (context, state) => const KegiatanTambahScreen(),
+        ),
+        GoRoute(
+          path: '/kegiatan/detail',
+          name: 'kegiatan-detail',
+          builder: (context, state) =>
+              KegiatanDetailScreen(dataKegiatan: state.extra as DataKegiatanModel),
         ),
         GoRoute(
           path: '/broadcast/daftar',
