@@ -39,7 +39,7 @@ class CustomTextField extends StatelessWidget {
             labelText!,
             style: GoogleFonts.figtree(
               fontSize: Rem.rem1,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
           ),
