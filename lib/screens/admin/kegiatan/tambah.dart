@@ -4,9 +4,6 @@ import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/custom_button.dart';
 import 'package:jawara_mobile/widgets/custom_dropdown.dart';
-import 'package:jawara_mobile/widgets/custom_text_field.dart';
-import 'package:jawara_mobile/widgets/custom_file_upload.dart';
-import 'package:image_picker/image_picker.dart';
 
 class KegiatanTambahScreen extends StatefulWidget {
   const KegiatanTambahScreen({super.key});
@@ -22,8 +19,6 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
   final _penanggungJawabController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _tanggalController = TextEditingController();
-  List<String> selectedPhotos = [];
-
 
   String? _selectedKategori;
   DateTime? _selectedDate;
@@ -99,7 +94,6 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
     setState(() {
       _selectedKategori = null;
       _selectedDate = null;
-      selectedPhotos.clear();
     });
   }
 
@@ -120,7 +114,7 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
             // Header
             // Text(
             //   'Buat Kegiatan Baru',
-            //   style: GoogleFonts.figtree(
+            //   style: GoogleFonts.poppins(
             //     fontSize: Rem.rem1_25,
             //     fontWeight: FontWeight.w600,
             //   ),
@@ -136,18 +130,18 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     // Nama Kegiatan
                     Text(
                       'Nama Kegiatan',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: Rem.rem0_5),
                     TextField(
                       controller: _namaKegiatanController,
-                      style: GoogleFonts.figtree(),
+                      style: GoogleFonts.poppins(),
                       decoration: InputDecoration(
                         hintText: 'Contoh: Musyawarah Warga',
-                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
                           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -172,8 +166,8 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     // Kategori Kegiatan
                     Text(
                       'Kategori kegiatan',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -197,9 +191,9 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
 
                     // Tanggal
                     Text(
-                      'Tanggal Pelaksanaan',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
+                      'Tanggal',
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -207,10 +201,10 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     TextField(
                       controller: _tanggalController,
                       readOnly: true,
-                      style: GoogleFonts.figtree(),
+                      style: GoogleFonts.poppins(),
                       decoration: InputDecoration(
                         hintText: '--/--/---- ',
-                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
                           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -239,18 +233,18 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     // Lokasi
                     Text(
                       'Lokasi',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: Rem.rem0_5),
                     TextField(
                       controller: _lokasiController,
-                      style: GoogleFonts.figtree(),
+                      style: GoogleFonts.poppins(),
                       decoration: InputDecoration(
                         hintText: 'Contoh: Balai RT 03',
-                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
                           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -275,18 +269,18 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     // Penanggung Jawab
                     Text(
                       'Penanggung Jawab',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: Rem.rem0_5),
                     TextField(
                       controller: _penanggungJawabController,
-                      style: GoogleFonts.figtree(),
+                      style: GoogleFonts.poppins(),
                       decoration: InputDecoration(
                         hintText: 'Contoh: Pak RT atau Bu RW',
-                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
                           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -309,19 +303,40 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                     const SizedBox(height: Rem.rem1),
 
                     // Deskripsi
-                    CustomTextField(
-                      labelText: 'Deskripsi',
-                      hintText:
-                          'Tuliskan detail event seperti agenda, keperluan, dll.',
-                      controller: _deskripsiController,
-                      minLines: 4,
-                      maxLines: 5,
+                    Text(
+                      'Deskripsi',
+                      style: GoogleFonts.poppins(
+                        fontSize: Rem.rem0_875,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    const SizedBox(height: Rem.rem1),
-                    CustomFileUpload.photo(
-                      onTap: _handlePhotoUpload,
-                      selectedFiles: selectedPhotos,
-                      onRemoveFile: _removePhoto,
+                    const SizedBox(height: Rem.rem0_5),
+                    TextField(
+                      controller: _deskripsiController,
+                      maxLines: 5,
+                      style: GoogleFonts.poppins(),
+                      decoration: InputDecoration(
+                        hintText:
+                            'Tuliskan detail event seperti agenda, keperluan, dll.',
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide:
+                              const BorderSide(color: AppColors.primaryColor),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: Rem.rem0_75,
+                          vertical: Rem.rem0_75,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: Rem.rem2),
 
@@ -333,7 +348,7 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                             onPressed: _submitForm,
                             child: Text(
                               'Submit',
-                              style: GoogleFonts.figtree(
+                              style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -348,7 +363,7 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                                 color: Colors.grey,
                               ),
                               padding: const EdgeInsets.symmetric(
-                                vertical: 23,
+                                vertical: Rem.rem0_875,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
@@ -358,7 +373,7 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
                             ),
                             child: Text(
                               'Reset',
-                              style: GoogleFonts.figtree(
+                              style: GoogleFonts.poppins(
                                 color: Colors.grey[700],
                                 fontWeight: FontWeight.w600,
                               ),
@@ -375,99 +390,5 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
         ),
       ),
     );
-  }
-  Future<void> _handlePhotoUpload() async {
-    try {
-      // Tampilkan dialog pilihan
-      final String? choice = await showDialog<String>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Pilih Sumber Gambar',
-              style: GoogleFonts.figtree(fontWeight: FontWeight.w600),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: Text(
-                    'Kamera',
-                    style: GoogleFonts.figtree(),
-                  ),
-                  onTap: () => Navigator.of(context).pop('camera'),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: Text(
-                    'Gallery',
-                    style: GoogleFonts.figtree(),
-                  ),
-                  onTap: () => Navigator.of(context).pop('gallery'),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-
-      if (choice != null) {
-        final ImagePicker picker = ImagePicker();
-        
-        if (choice == 'camera') {
-          // Pilih dari camera
-          final XFile? photo = await picker.pickImage(source: ImageSource.camera);
-          
-          if (photo != null) {
-            setState(() {
-              selectedPhotos.add(photo.path);
-            });
-            
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Foto berhasil diambil!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          }
-        } else if (choice == 'gallery') {
-          // Pilih dari gallery (multiple)
-          final List<XFile> images = await picker.pickMultiImage();
-          
-          if (images.isNotEmpty) {
-            setState(() {
-              selectedPhotos.addAll(images.map((image) => image.path));
-            });
-            
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${images.length} foto berhasil dipilih!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          }
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-  
-  void _removePhoto(int index) {
-    setState(() {
-      selectedPhotos.removeAt(index);
-    });
   }
 }

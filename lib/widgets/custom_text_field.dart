@@ -11,11 +11,6 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? controller;
 
-  // Tambahan
-  final int? minLines;
-  final int? maxLines;
-  final bool expands;
-
   const CustomTextField({
     super.key,
     this.labelText,
@@ -24,9 +19,6 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.controller,
-    this.minLines,
-    this.maxLines,
-    this.expands = false,
   });
 
   @override
@@ -39,7 +31,7 @@ class CustomTextField extends StatelessWidget {
             labelText!,
             style: GoogleFonts.figtree(
               fontSize: Rem.rem1,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.normal,
               color: Colors.black87,
             ),
           ),
@@ -50,9 +42,6 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
           style: GoogleFonts.poppins(),
-          minLines: obscureText ? 1 : minLines,
-          maxLines: obscureText ? 1 : maxLines,
-          expands: expands,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: GoogleFonts.poppins(color: Colors.grey),
@@ -79,4 +68,3 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
-

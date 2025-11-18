@@ -1,29 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile/models/pie_chart_data_model.dart';
-import '../models/data_kegiatan_model.dart';
-
-final List<DataKegiatanModel> DummyDataKegiatan = [
-  DataKegiatanModel(
-    nama_kegiatan: 'Musyawarah Warga Bulanan',
-    kategori: 'Komunitas & Sosial',
-    lokasi: 'Balai RW 03',
-    penanggung_jawab: 'Kepala Dusun',
-    deskripsi: 'Monitor Bulanan',
-    dokumentasi: 'null',
-    tanggal_pelaksanaan: '12-10-2025',
-    dibuat_oleh: 'Admin',
-  ),
-  DataKegiatanModel(
-    nama_kegiatan: 'Isra\' Mi\'raj',
-    kategori: 'Keagamaan',
-    lokasi: 'Masjid Raya Malang An-Nur',
-    penanggung_jawab: 'Ketua RW 01',
-    deskripsi: 'Monitor Bulanan',
-    dokumentasi: 'null',
-    tanggal_pelaksanaan: '19-10-2025',
-    dibuat_oleh: 'Admin',
-  ),
-];
 
 class KegiatanData {
   static List<Map<String, dynamic>> kegiatanPerKategori = [
