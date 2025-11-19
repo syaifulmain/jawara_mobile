@@ -204,6 +204,6 @@ dependencies:
   path_provider: ^2.1.1   # Untuk menyimpan file lokal
 
 CONTOH IMPLEMENTASI SUDAH BERJALAN DI:
-- lib/screens/admin/broadcast/tambah.dart
+- lib/screens/admin/broadcast/tambah_pengeluaran_screen.dart
 
 */
