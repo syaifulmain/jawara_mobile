@@ -32,7 +32,7 @@ class CustomFileUpload extends StatelessWidget {
     Function(int index)? onRemoveFile,
     String label = 'Foto',
     String description = 'Maksimal 10 gambar (.png / .jpg), ukuran maksimal 5MB per gambar.',
-    String uploadText = 'Upload foto png/jpg',
+    String uploadText = 'Upload foto .png/.jpg',
     double height = 120,
     double? width,
   }) {

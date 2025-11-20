@@ -180,11 +180,11 @@ final router = GoRouter(
           name: 'pemasukan-daftar',
           builder: (context, state) => const DaftarPemasukanScreen(),
         ),
-        GoRoute(
-          path: '/pemasukan/tambah',
-          name: 'pemasukan-tambah',
-          builder: (context, state) => TambahPemasukanScreen(),
-        ),
+          GoRoute(
+            path: '/pemasukan/tambah',
+            name: 'pemasukan-tambah',
+            builder: (context, state) => const PemasukanTambahScreen(),
+          ),
         GoRoute(
           path: '/pemasukan/detail',
           name: 'pemasukan-detail',
