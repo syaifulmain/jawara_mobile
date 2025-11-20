@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:jawara_mobile/router.dart';
+import 'package:jawara_mobile/providers/kegiatan_form_provider.dart';
+import 'package:jawara_mobile/providers/pemasukan_form_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Jawara Pintar Mobile',
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => KegiatanFormProvider()),
+        ChangeNotifierProvider(create: (_) => PemasukanFormProvider()),
+      ],
+      child: MaterialApp.router(
+        title: 'Jawara Pintar Mobile',
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
+      ),
     );
   }
 }
