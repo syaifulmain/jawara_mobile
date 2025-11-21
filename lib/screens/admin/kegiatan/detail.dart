@@ -104,7 +104,7 @@ class _KegiatanDetailScreenState extends State<KegiatanDetailScreen> {
                   children: [
                     Text(
                       'Detail Kegiatan',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.figtree(
                         fontSize: Rem.rem1_5,
                         fontWeight: FontWeight.w500,
                         color: AppColors.primaryColor,
