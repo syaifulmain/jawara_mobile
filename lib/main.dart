@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jawara_mobile/router.dart';
 import 'package:jawara_mobile/providers/kegiatan_form_provider.dart';
 import 'package:jawara_mobile/providers/pemasukan_form_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
