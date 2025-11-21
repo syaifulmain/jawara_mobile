@@ -11,10 +11,17 @@ import 'package:jawara_mobile/screens/admin/laporan_keuangan/cetak_laporan.dart'
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pengeluaran.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
+import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
+import 'package:jawara_mobile/screens/admin/data_warga_rumah/daftar_warga.dart';
+import 'package:jawara_mobile/screens/admin/data_warga_rumah/tambah_warga.dart';
+import 'package:jawara_mobile/screens/admin/data_warga_rumah/keluraga.dart';
+import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah.dart';
+import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah_tambah.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
 
 final router = GoRouter(
@@ -39,18 +46,18 @@ final router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-  path: '/admin',
-  name: 'admin',
-  builder: (BuildContext context, GoRouterState state) {
-    // Ganti PlaceholderScreen dengan halaman utama dashboard kamu
-    return const KeuanganScreen(); // ✅ tampilkan dashboard keuangan
-  },
-),
-       GoRoute(
-        path: '/dashboard/keuangan',
-        name: 'dashboard-keuangan',
-        builder: (BuildContext context, GoRouterState state) {
-          return const KeuanganScreen();
+          path: '/admin',
+          name: 'admin',
+          builder: (BuildContext context, GoRouterState state) {
+            // Ganti PlaceholderScreen dengan halaman utama dashboard kamu
+            return const KeuanganScreen(); // ✅ tampilkan dashboard keuangan
+          },
+        ),
+        GoRoute(
+          path: '/dashboard/keuangan',
+          name: 'dashboard-keuangan',
+          builder: (BuildContext context, GoRouterState state) {
+            return const KeuanganScreen();
           },
         ),
         GoRoute(
@@ -92,27 +99,70 @@ final router = GoRouter(
           name: 'placeholder',
           builder: (context, state) => const PlaceholderScreen(),
         ),
-        GoRoute(path: '/laporan_keuangan/cetak_laporan',
-            name: 'laporan_keuangan-cetak_laporan',
-            builder: (context, state) => CetakLaporan(),
+        GoRoute(
+          path: '/laporan_keuangan/cetak_laporan',
+          name: 'laporan_keuangan-cetak_laporan',
+          builder: (context, state) => CetakLaporan(),
         ),
-        GoRoute(path: '/laporan_keuangan/semua_pemasukan',
-            name: 'laporan_keuangan-semua_pemasukan',
-            builder: (context, state) => SemuaPemasukan(),
+        GoRoute(
+          path: '/laporan_keuangan/semua_pemasukan',
+          name: 'laporan_keuangan-semua_pemasukan',
+          builder: (context, state) => SemuaPemasukan(),
         ),
-        GoRoute(path: '/laporan_keuangan/semua_pengeluaran',
-            name: 'laporan_keuangan-semua_pengeluaran',
-            builder: (context, state) => SemuaPengeluaran(),
+        GoRoute(
+          path: '/laporan_keuangan/semua_pengeluaran',
+          name: 'laporan_keuangan-semua_pengeluaran',
+          builder: (context, state) => SemuaPengeluaran(),
         ),
-        GoRoute(path: '/pengeluaran/daftar',
-            name: 'pengeluaran-daftar',
-            builder: (context, state) => const DaftarPengeluaranScreen()
+        GoRoute(
+          path: '/pemasukan/daftar',
+          name: 'pemasukan-daftar',
+          builder: (context, state) => DaftarPemasukanScreen(),
         ),
-        GoRoute(path: '/pengeluaran/tambah',
-            name: 'pengeluaran-tambah',
-            builder: (context, state) => TambahPengeluaranScreen()
-        )
-      ],
+        GoRoute(
+          path: '/pemasukan/tambah',
+          name: 'pemasukan-tambah',
+          builder: (context, state) => TambahPemasukanScreen(),
+        ),
+        GoRoute(
+          path: '/pengeluaran/daftar',
+          name: 'pengeluaran-daftar',
+          builder: (context, state) => const DaftarPengeluaranScreen(),
+        ),
+        GoRoute(
+          path: '/pengeluaran/tambah',
+          name: 'pengeluaran-tambah',
+          builder: (context, state) => TambahPengeluaranScreen(),
+        ),
+
+        GoRoute(
+          path: '/data_warga_rumah/daftar_warga',
+          name: 'warga-daftar',
+          builder: (context, state) => const WargaDaftarScreen(),
+        ),
+
+       GoRoute(
+        path: '/data_warga_rumah/tambah_warga',
+        builder: (context, state) => TambahWargaScreen(),
+        ),
+
+        GoRoute(
+          path: '/data_warga_rumah/keluarga',
+          name: 'keluarga-daftar',
+          builder: (context, state) => const KeluargaDaftarPage(),
+        ),
+
+        GoRoute(
+          path: '/data_warga_rumah/rumah',
+          name: 'rumah-daftar',
+          builder: (context, state) => const RumahPage(),
+        ),
+        GoRoute(
+          path: '/data_warga_rumah/rumah_tambah',
+          name: 'rumah-tambah',
+          builder: (context, state) =>  TambahRumahScreen()
+        ),    
+      ]
     ),
   ],
 );

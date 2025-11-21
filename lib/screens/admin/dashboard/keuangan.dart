@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jawara_mobile/widgets/bar_chart_card.dart'; 
+import 'package:jawara_mobile/widgets/bar_chart_card.dart';
 import 'package:jawara_mobile/widgets/pie_chart_cart.dart';
-import 'package:jawara_mobile/models/pie_chart_data_model.dart'; 
+import 'package:jawara_mobile/models/pie_chart_data_model.dart';
 
-const List<Color> _incomeColors = [
-  Colors.blue,
-  Colors.cyan,
-  Colors.lightBlue,
-];
+const List<Color> _incomeColors = [Colors.blue, Colors.cyan, Colors.lightBlue];
 const List<Color> _expenseColors = [
   Colors.red,
   Colors.orange,
@@ -20,14 +16,14 @@ class Keuangan {
       'title': 'Total Pemasukan',
       'value': '100 jt',
       'icon': Icons.trending_up,
-      'color': Colors.blue, 
+      'color': Colors.blue,
       'backgroundColor': Colors.blueAccent.withOpacity(0.1),
     },
     {
       'title': 'Total Pengeluaran',
       'value': '3 jt',
       'icon': Icons.trending_down,
-      'color': Colors.red, 
+      'color': Colors.red,
       'backgroundColor': Colors.redAccent.withOpacity(0.1),
     },
     {
@@ -43,11 +39,11 @@ class Keuangan {
     {
       'title': 'Pemasukan per Bulan',
       'data': {'Agu': 30.0, 'Sep': 20.0, 'Okt': 50.0},
-      'color': Colors.blue, 
+      'color': Colors.blue,
     },
     {
       'title': 'Pengeluaran per Bulan',
-      'data': {'Agu': 850.0, 'Sep': 150.0, 'Okt': 650.0}, 
+      'data': {'Agu': 850.0, 'Sep': 150.0, 'Okt': 650.0},
       'color': Colors.redAccent,
     },
   ];
@@ -69,28 +65,29 @@ class Keuangan {
     return rawPieCharts.map((rawChart) {
       final isIncome = rawChart['title'].toString().contains('Pemasukan');
       final colors = isIncome ? _incomeColors : _expenseColors;
-      
+
       List<PieChartDataModel> models = (rawChart['data'] as Map<String, int>)
           .entries
           .toList()
           .asMap()
           .entries
           .map((entry) {
-        int index = entry.key;
-        MapEntry<String, int> mapEntry = entry.value;
+            int index = entry.key;
+            MapEntry<String, int> mapEntry = entry.value;
 
-        return PieChartDataModel(
-          mapEntry.key, 
-          mapEntry.value.toDouble(), 
-          colors[index % colors.length],
-          mapEntry.key, 
-        );
-      }).toList();
+            return PieChartDataModel(
+              mapEntry.key,
+              mapEntry.value.toDouble(),
+              colors[index % colors.length],
+              mapEntry.key,
+            );
+          })
+          .toList();
 
       return {
         'title': rawChart['title'],
         'icon': rawChart['icon'],
-        'data': models, 
+        'data': models,
       };
     }).toList();
   }
@@ -119,20 +116,22 @@ class KeuanganScreen extends StatelessWidget {
               children: Keuangan.numberStats.map((item) {
                 double cardWidth;
                 final screenWidth = MediaQuery.of(context).size.width;
-                
+
                 const double globalPadding = 32.0;
                 const double spacing = 12.0;
 
                 if (screenWidth > 700) {
                   const double totalInternalSpacing = spacing * 2;
-                  cardWidth = (screenWidth - globalPadding - totalInternalSpacing) / 3; 
+                  cardWidth =
+                      (screenWidth - globalPadding - totalInternalSpacing) / 3;
                 } else {
                   const double totalInternalSpacing = spacing;
-                  cardWidth = (screenWidth - globalPadding - totalInternalSpacing) / 2;
+                  cardWidth =
+                      (screenWidth - globalPadding - totalInternalSpacing) / 2;
                 }
 
                 return Container(
-                  width: cardWidth, 
+                  width: cardWidth,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: item['backgroundColor'],
@@ -144,9 +143,23 @@ class KeuanganScreen extends StatelessWidget {
                     children: [
                       Icon(item['icon'], color: item['color'], size: 30),
                       const SizedBox(height: 8),
-                      Text(item['title'], textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                      Text(
+                        item['title'],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text(item['value'], style: TextStyle(color: item['color'], fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(
+                        item['value'],
+                        style: TextStyle(
+                          color: item['color'],
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -158,21 +171,17 @@ class KeuanganScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 16,
-                children: Keuangan.barCharts.map((chart) {
-                  return SizedBox(
-                    width: 300,
-                    child: BarChartCard(
-                      title: chart['title'],
-                      data: chart['data'] as Map<String, double>,
-                      color: chart['color'],
-                    ),
-                  );
-                }).toList(),
-              ),
+            Column(
+              children: Keuangan.barCharts.map((chart) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: BarChartCard(
+                    title: chart['title'],
+                    data: chart['data'] as Map<String, double>,
+                    color: chart['color'],
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -186,7 +195,7 @@ class KeuanganScreen extends StatelessWidget {
               children: Keuangan.pieCharts.map((chart) {
                 return PieChartCard(
                   title: chart['title'],
-                  data: chart['data'] as List<PieChartDataModel>, 
+                  data: chart['data'] as List<PieChartDataModel>,
                   icon: chart['icon'],
                 );
               }).toList(),

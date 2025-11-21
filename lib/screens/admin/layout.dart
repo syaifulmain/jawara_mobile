@@ -87,16 +87,16 @@ class AdminLayoutScreen extends StatelessWidget {
                       Icons.people_alt_outlined,
                       'Data Warga & Rumah',
                       [
-                        {'title': 'Warga - Daftar', 'route': '/placeholder'},
-                        {'title': 'Warga - Tambah', 'route': '/placeholder'},
-                        {'title': 'Keluarga', 'route': '/placeholder'},
-                        {'title': 'Rumah - Daftar', 'route': '/placeholder'},
-                        {'title': 'Rumah - Tambah', 'route': '/placeholder'},
+                        {'title': 'Warga - Daftar', 'route': '/data_warga_rumah/daftar_warga'},
+                        {'title': 'Warga - Tambah', 'route': '/data_warga_rumah/tambah_warga'},
+                        {'title': 'Keluarga', 'route': '/data_warga_rumah/keluarga'},
+                        {'title': 'Rumah - Daftar', 'route': '/data_warga_rumah/rumah'},
+                        {'title': 'Rumah - Tambah', 'route': '/data_warga_rumah/rumah_tambah'},
                       ],
                     ),
                     _buildSubMenu(context, location, Icons.receipt_outlined, 'Pemasukan', [
-                      {'title': 'Daftar', 'route': '/placeholder'},
-                      {'title': 'Tambah', 'route': '/placeholder'},
+                      {'title': 'Daftar', 'route': '/pemasukan/daftar'},
+                      {'title': 'Tambah', 'route': '/pemasukan/tambah'},
                     ]),
                     _buildSubMenu(context, location, Icons.note_add_outlined, 'Pengeluaran', [
                       {'title': 'Daftar', 'route': '/pengeluaran/daftar'},
