@@ -7,7 +7,7 @@ Versi aplikasi mobile dari aplikasi web  [Jawara Pintar](http://jawara.sytes.net
 2. <a href="http://github.com/VozSoldat">Muhammad Erril Putra Pratidina</a>
 3. <a href="https://github.com/dhanisaptrri">Dhanisa Sasa</a>
 4. <a href="https://github.com/flywithsaturn">Satrio Wisnu Adi Pratama</a>
-5. <a href="https://github.com/Dhnillhaq">Muhammad Dhia RamaDhanil Haq</a>
+5. <a href="https://github.com/Dhnillhaq">Muhammad Dhia Ramadhanil Haq</a>
 
 ## Folder Structures
 ```text

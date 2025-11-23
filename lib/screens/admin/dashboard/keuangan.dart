@@ -3,6 +3,8 @@ import 'package:jawara_mobile/widgets/bar_chart_card.dart';
 import 'package:jawara_mobile/widgets/pie_chart_cart.dart';
 import 'package:jawara_mobile/models/pie_chart_data_model.dart';
 
+import '../../../constants/colors.dart';
+
 const List<Color> _incomeColors = [Colors.blue, Colors.cyan, Colors.lightBlue];
 const List<Color> _expenseColors = [
   Colors.red,
@@ -99,7 +101,8 @@ class KeuanganScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard Keuangan')),
+      // appBar: AppBar(title: const Text('Dashboard Keuangan')),
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

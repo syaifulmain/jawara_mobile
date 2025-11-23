@@ -1,40 +1,20 @@
-class DummyData {
-  static const List<Map<String, String>> pemasukan = [
-    {
-      'nama': 'KAS Bulan Januari',
-      'jenis_pemasukan': 'KAS',
-      'tanggal': '2024-01-01',
-      'nominal': '5000000',
-    },
-    {
-      'nama': 'Iuran Kegiatan',
-      'jenis_pemasukan': 'Iuran',
-      'tanggal': '2024-01-05',
-      'nominal': '750000',
-    },
-    {
-      'nama': 'Sumbangan Anggota',
-      'jenis_pemasukan': 'Sumbangan',
-      'tanggal': '2024-01-10',
-      'nominal': '2000000',
-    },
-    {
-      'nama': 'KAS Bulan Februari',
-      'jenis_pemasukan': 'KAS',
-      'tanggal': '2024-02-01',
-      'nominal': '5200000',
-    },
-    {
-      'nama': 'Iuran Kegiatan',
-      'jenis_pemasukan': 'Iuran',
-      'tanggal': '2024-02-07',
-      'nominal': '800000',
-    },
-    {
-      'nama': 'Sumbangan Anggota',
-      'jenis_pemasukan': 'Sumbangan',
-      'tanggal': '2024-02-12',
-      'nominal': '2500000',
-    },
-  ];
-}
+import '../models/data_pemasukan_model.dart';
+
+final List<DataPemasukanModel> DummyDataPemasukan = [
+  DataPemasukanModel(
+    nama: 'Dana Hibah',
+    jenisPemasukan: 'Dana Bantuan Pemerintah',
+    tanggal: '12-10-2025',
+    nominal: 'Rp. 20.000.000',
+    tanggalVerifikasi: '12-10-2025',
+    verifikator: 'Admin A',
+  ),
+  DataPemasukanModel(
+    nama: 'Gotong Royong Perbaikan Jalan',
+    jenisPemasukan: 'Infrastruktur',
+    tanggal: '19-10-2025',
+    nominal: 'Rp. 15.000.000',
+    tanggalVerifikasi: '20-10-2025',
+    verifikator: 'Admin B',
+  ),
+];

@@ -1,217 +1,197 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
+
+import '../../../constants/colors.dart';
+import '../../../data/kegiatan_data.dart';
+import '../../../models/data_kegiatan_model.dart';
 
 class KegiatanDaftarScreen extends StatelessWidget {
   const KegiatanDaftarScreen({super.key});
 
-  // Dummy data for the table
-  final List<Map<String, dynamic>> _kegiatanData = const [
-    {
-      'no': 1,
-      'nama_kegiatan': 'Musyawarah Warga Bulanan',
-      'kategori': 'Komunitas & Sosial',
-      'penanggung_jawab': 'Kepala Dusun',
-      'tanggal_pelaksanaan': '12 Oktober 2025',
-    },
-    {
-      'no': 2,
-      'nama_kegiatan': 'Gotong Royong Perbaikan Jalan',
-      'kategori': 'Infrastruktur',
-      'penanggung_jawab': 'Ketua RW 01',
-      'tanggal_pelaksanaan': '19 Oktober 2025',
-    },
-  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: Rem.rem1),
+        itemCount: DummyDataKegiatan.length,
+        itemBuilder: (context, index) {
+          final data = DummyDataKegiatan[index];
+          return DataCard(data: data);
+        },
+      ),
+    );
+  }
+}
+
+class DataCard extends StatelessWidget {
+  final DataKegiatanModel data;
+  const DataCard({super.key, required this.data});
+
+  Widget _buildStatusBadge(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.figtree(
+          color: color,
+          fontWeight: FontWeight.bold,
+          fontSize: Rem.rem0_75,
+        ),
+      ),
+    );
+  }
+
+  void _showActionMenu(BuildContext context, DataKegiatanModel data) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: null),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: null,
+        ),
+      ),
+      Offset.zero & MediaQuery.of(context).size,
+    );
+
+    showMenu<String>(
+      context: context,
+      position: position,
+      items: <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'detail',
+          child: const Text('Detail'),
+          onTap: () {
+            context.pushNamed('kegiatan-detail', extra: data);
+          },
+        ),
+        const PopupMenuItem<String>(value: 'edit', child: Text('Edit')),
+        const PopupMenuItem<String>(value: 'hapus', child: Text('Hapus')),
+      ],
+      elevation: 8.0,
+    ).then((value) {
+      if (value != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Aksi ${value.toUpperCase()} dipilih untuk ${data.nama_kegiatan}',
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: AppColors.backgroundColor,
-        child: Card(
-          elevation: 2,
-          margin: const EdgeInsets.all(Rem.rem1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Rem.rem0_75),
-          ),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(Rem.rem1),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with filter button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Daftar Kegiatan',
-                      style: GoogleFonts.poppins(
-                        fontSize: Rem.rem1_25,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // TODO: Implement filter
-                      },
-                      icon: const Icon(Icons.filter_list, size: 18),
-                      label: const Text('Filter'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Rem.rem1,
-                          vertical: Rem.rem0_75,
+    return Card(
+      color: AppColors.backgroundColor,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data.nama_kegiatan,
+                        style: GoogleFonts.figtree(
+                          fontSize: Rem.rem1,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Rem.rem0_5),
-                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: Rem.rem1_5),
-
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    headingRowColor: WidgetStateProperty.all(
-                      const Color(0xFFE2E8F0),
-                    ),
-                    headingTextStyle: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      fontSize: Rem.rem0_875,
-                    ),
-                    dataTextStyle: GoogleFonts.poppins(
-                      fontSize: Rem.rem0_875,
-                      color: Colors.black87,
-                    ),
-                    columnSpacing: Rem.rem2,
-                    columns: const [
-                      DataColumn(label: Text('NO')),
-                      DataColumn(label: Text('NAMA KEGIATAN')),
-                      DataColumn(label: Text('KATEGORI')),
-                      DataColumn(label: Text('PENANGGUNG JAWAB')),
-                      DataColumn(label: Text('TANGGAL PELAKSANAAN')),
-                      DataColumn(label: Text('AKSI')),
                     ],
-                    rows: _kegiatanData.map((data) {
-                      return DataRow(
-                        cells: [
-                          DataCell(Text('${data['no']}')),
-                          DataCell(Text(data['nama_kegiatan'])),
-                          DataCell(Text(data['kategori'])),
-                          DataCell(Text(data['penanggung_jawab'])),
-                          DataCell(Text(data['tanggal_pelaksanaan'])),
-                          DataCell(
-                            PopupMenuButton<String>(
-                              icon: const Icon(Icons.more_vert, size: 20),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(Rem.rem0_5),
-                              ),
-                              onSelected: (value) {
-                                // TODO: Implement actions
-                                if (value == 'edit') {
-                                  // Navigate to edit page
-                                } else if (value == 'delete') {
-                                  // Show delete confirmation
-                                }
-                              },
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  value: 'edit',
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.edit,
-                                        size: 18,
-                                        color: Colors.black87,
-                                      ),
-                                      const SizedBox(width: Rem.rem0_5),
-                                      Text('Edit', style: GoogleFonts.poppins()),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 'delete',
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.delete,
-                                        size: 18,
-                                        color: Colors.red,
-                                      ),
-                                      const SizedBox(width: Rem.rem0_5),
-                                      Text(
-                                        'Hapus',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
                   ),
                 ),
-
-                // Pagination
-                const SizedBox(height: Rem.rem1),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        // TODO: Previous page
-                      },
-                      icon: const Icon(Icons.chevron_left),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.grey[200],
-                      ),
-                    ),
-                    const SizedBox(width: Rem.rem0_5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Rem.rem1,
-                        vertical: Rem.rem0_5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      child: Text(
-                        '1',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: Rem.rem0_5),
-                    IconButton(
-                      onPressed: () {
-                        // TODO: Next page
-                      },
-                      icon: const Icon(Icons.chevron_right),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.grey[200],
-                      ),
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: const Icon(Icons.remove_red_eye_outlined),
+                      onPressed: () =>
+                          context.pushNamed('kegiatan-detail', extra: data),
+                    );
+                  },
                 ),
               ],
             ),
-          ),
+            const Divider(height: 16),
+
+            _buildDataRow(Icons.description, 'Jenis Kegiatan', data.kategori),
+
+            const SizedBox(height: 10),
+
+            //Jenis Kelamin, Status Domisili, Status Hidup ---
+            Row(
+              children: <Widget>[
+                Icon(Icons.person, size: 16, color: Colors.blue),
+                const SizedBox(width: 4),
+                Text(
+                  'Penanggung Jawab:',
+                  style: GoogleFonts.figtree(fontSize: 13),
+                ),
+                Text(
+                  data.penanggung_jawab,
+                  style: GoogleFonts.figtree(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+                const Spacer(),
+                // Tanggal Kegiatan
+                _buildStatusBadge(data.tanggal_pelaksanaan, Colors.blue),
+                const SizedBox(width: 8),
+              ],
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDataRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Icon(icon, size: 16, color: Colors.grey[600]),
+          const SizedBox(width: 8),
+          Text(
+            '$label:',
+            style: GoogleFonts.figtree(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.figtree(fontSize: 13),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jawara_mobile/widgets/data_card.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
 import '../../../data/laporan_keuangan_data.dart';
@@ -12,7 +13,7 @@ class SemuaPemasukan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: title,
+      // title: title,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -44,7 +45,9 @@ class SemuaPemasukan extends StatelessWidget {
                 'Tanggal': item['tanggal'] ?? '',
                 'Nominal': item['nominal'] ?? '',
               }
-            ]);
+            ],
+              detailRoute: 'laporan_keuangan-detail_laporan_keuanga' ,
+            );
           }).toList(),
         )
       ],
