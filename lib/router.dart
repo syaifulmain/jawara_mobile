@@ -199,7 +199,7 @@ final router = GoRouter(
         GoRoute(
           path: '/pengeluaran/tambah',
           name: 'pengeluaran-tambah',
-          builder: (context, state) => TambahPengeluaranScreen(),
+          builder: (context, state) => const PengeluaranTambahScreen(),
         ),
         //GoRoute(
         //  path: '/warga/tambah',

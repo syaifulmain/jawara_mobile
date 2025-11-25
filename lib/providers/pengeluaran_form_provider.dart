@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 
-class PemasukanFormProvider extends ChangeNotifier {
+class PengeluaranFormProvider extends ChangeNotifier {
   // Form controllers
   final TextEditingController namaController = TextEditingController();
   final TextEditingController nominalController = TextEditingController();
   final TextEditingController tanggalController = TextEditingController();
   
   // Form state
-  String? _selectedJenisPemasukan;
+  String? _selectedKategoriPengeluaran;
   DateTime? _selectedDate;
   List<String> _selectedPhotos = [];
   
   // Getters
-  String? get selectedJenisPemasukan => _selectedJenisPemasukan;
+  String? get selectedKategoriPengeluaran => _selectedKategoriPengeluaran;
   DateTime? get selectedDate => _selectedDate;
   List<String> get selectedPhotos => List.from(_selectedPhotos);
   
-  // JenisPemasukan Pemasukan options
-  final List<String> jenisPemasukanOptions = [
-    'Donasi',
-    'Dana Bantuan Pemerintah',
-    'Sumbangan Swadaya',
-    'Hasil Usaha Kampung',
-    'Pendapatan Lainnya',
+  // Kategori Pengeluaran options
+  final List<String> kategoriPengeluaranOptions = [
+    'Operasional',
+    'Pemeliharaan',
+    'Keamanan',
+    'Kebersihan',
+    'Administrasi',
+    'Kegiatan Warga',
+    'Pengeluaran Lainnya',
   ];
   
   // Setters
-  void setSelectedJenisPemasukan(String? jenisPemasukan) {
-    _selectedJenisPemasukan = jenisPemasukan;
+  void setSelectedKategoriPengeluaran(String? kategoriPengeluaran) {
+    _selectedKategoriPengeluaran = kategoriPengeluaran;
     notifyListeners();
   }
   
@@ -66,7 +68,7 @@ class PemasukanFormProvider extends ChangeNotifier {
   // Form validation
   bool get isFormValid {
     return namaController.text.trim().isNotEmpty &&
-           _selectedJenisPemasukan != null &&
+           _selectedKategoriPengeluaran != null &&
            _selectedDate != null &&
            nominalController.text.trim().isNotEmpty;
   }
@@ -76,7 +78,7 @@ class PemasukanFormProvider extends ChangeNotifier {
     namaController.clear();
     nominalController.clear();
     tanggalController.clear();
-    _selectedJenisPemasukan = null;
+    _selectedKategoriPengeluaran = null;
     _selectedDate = null;
     _selectedPhotos.clear();
     notifyListeners();
@@ -85,8 +87,8 @@ class PemasukanFormProvider extends ChangeNotifier {
   // Get form data as Map
   Map<String, dynamic> getFormData() {
     return {
-      'namaPemasukan': namaController.text.trim(),
-      'jenisPemasukan': _selectedJenisPemasukan,
+      'namaPengeluaran': namaController.text.trim(),
+      'kategoriPengeluaran': _selectedKategoriPengeluaran,
       'tanggal': _selectedDate,
       'nominal': nominalController.text.trim(),
       'photos': List.from(_selectedPhotos),
