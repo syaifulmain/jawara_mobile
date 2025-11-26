@@ -4,49 +4,18 @@ import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/custom_button.dart';
 import 'package:jawara_mobile/widgets/custom_dropdown.dart';
-import 'package:jawara_mobile/widgets/custom_file_upload.dart';
-import 'package:jawara_mobile/widgets/custom_text_field.dart';
-import 'package:jawara_mobile/widgets/white_card_page.dart';
-import 'package:jawara_mobile/providers/pemasukan_form_provider.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:jawara_mobile/providers/kategori_iuran_form_provider.dart';
 import 'package:provider/provider.dart';
 
-class PemasukanTambahScreen extends StatefulWidget {
-  // final String title = 'Buat Pemasukan Baru';
-  // final DateTime selectedDate = DateTime.now();
-
-  const PemasukanTambahScreen({super.key});
+class KategoriIuranTambahScreen extends StatefulWidget {
+  const KategoriIuranTambahScreen({super.key});
 
   @override
-  State<PemasukanTambahScreen> createState() => _PemasukanTambahScreenState();
+  State<KategoriIuranTambahScreen> createState() => _KategoriIuranTambahScreenState();
 }
 
-@override
-class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
-  Future<void> _selectDate(PemasukanFormProvider provider) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primaryColor,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      provider.setSelectedDate(picked);
-    }
-  }
-
-  void _submitForm(PemasukanFormProvider provider) {
+class _KategoriIuranTambahScreenState extends State<KategoriIuranTambahScreen> {
+  void _submitForm(KategoriIuranFormProvider provider) {
     if (!provider.isFormValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -63,7 +32,7 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Kegiatan berhasil ditambahkan!'),
+        content: Text('Kategori iuran berhasil ditambahkan!'),
         backgroundColor: Colors.green,
       ),
     );
@@ -72,14 +41,14 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
     provider.resetForm();
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Consumer<PemasukanFormProvider>(
+    return Consumer<KategoriIuranFormProvider>(
       builder: (context, provider, child) => _buildContent(context, provider),
     );
   }
 
-  @override
-  Widget _buildContent(BuildContext context, PemasukanFormProvider provider) {
+  Widget _buildContent(BuildContext context, KategoriIuranFormProvider provider) {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.all(Rem.rem1),
@@ -104,7 +73,7 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                 ),
                 const SizedBox(width: Rem.rem0_75),
                 Text(
-                  'Buat Data Pemasukan Baru',
+                  'Buat Kategori Iuran Baru',
                   style: GoogleFonts.figtree(
                     fontSize: Rem.rem1_5,
                     fontWeight: FontWeight.w500,
@@ -121,9 +90,9 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Nama Pemasukan
+                    // Nama Iuran
                     Text(
-                      'Nama Pemasukan',
+                      'Nama Iuran',
                       style: GoogleFonts.figtree(
                         fontSize: Rem.rem1,
                         fontWeight: FontWeight.w500,
@@ -131,10 +100,10 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                     ),
                     const SizedBox(height: Rem.rem0_5),
                     TextField(
-                      controller: provider.namaController,
+                      controller: provider.namaIuranController,
                       style: GoogleFonts.figtree(),
                       decoration: InputDecoration(
-                        hintText: 'Contoh: Iuran Warga Bulan Juni',
+                        hintText: 'Contoh: Iuran Bulanan RT 03',
                         hintStyle: GoogleFonts.figtree(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
@@ -158,9 +127,9 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                     ),
                     const SizedBox(height: Rem.rem1),
 
-                    // Jenis Pemasukan
+                    // Jenis Iuran
                     Text(
-                      'Jenis Pemasukan',
+                      'Jenis Iuran',
                       style: GoogleFonts.figtree(
                         fontSize: Rem.rem1,
                         fontWeight: FontWeight.w500,
@@ -168,59 +137,17 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                     ),
                     const SizedBox(height: Rem.rem0_5),
                     CustomDropdown<String>(
-                      initialSelection: provider.selectedJenisPemasukan,
-                      hintText: '-- Pilih Jenis Pemasukan --',
-                      items: provider.jenisPemasukanOptions.map((jenis) {
+                      initialSelection: provider.selectedJenisIuran,
+                      hintText: '-- Pilih Jenis Iuran --',
+                      items: provider.jenisIuranOptions.map((jenis) {
                         return DropdownMenuEntry<String>(
                           value: jenis,
                           label: jenis,
                         );
                       }).toList(),
                       onSelected: (value) {
-                        provider.setSelectedJenisPemasukan(value);
+                        provider.setSelectedJenisIuran(value);
                       },
-                    ),
-                    const SizedBox(height: Rem.rem1),
-
-                    // Tanggal
-                    Text(
-                      'Tanggal Pemasukan',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: Rem.rem0_5),
-                    TextField(
-                      controller: provider.tanggalController,
-                      readOnly: true,
-                      style: GoogleFonts.figtree(),
-                      decoration: InputDecoration(
-                        hintText: '--/--/---- ',
-                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Rem.rem0_5),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Rem.rem0_5),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Rem.rem0_5),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: Rem.rem0_75,
-                          vertical: Rem.rem0_75,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () => _selectDate(provider),
-                        ),
-                      ),
                     ),
                     const SizedBox(height: Rem.rem1),
 
@@ -236,8 +163,9 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                     TextField(
                       controller: provider.nominalController,
                       style: GoogleFonts.figtree(),
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        hintText: 'Contoh: 500000',
+                        hintText: 'Contoh: 25000',
                         hintStyle: GoogleFonts.figtree(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Rem.rem0_5),
@@ -259,13 +187,53 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: Rem.rem1),
-                    CustomFileUpload.photo(
-                      label: 'Upload Foto Bukti Pemasukan',
-                      onTap: () => _handlePhotoUpload(provider),
-                      selectedFiles: provider.selectedPhotos,
-                      onRemoveFile: (index) => provider.removePhoto(index),
+                    const SizedBox(height: Rem.rem2),
+
+                    // Info section
+                    Container(
+                      padding: const EdgeInsets.all(Rem.rem1),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        border: Border.all(color: Colors.blue.shade200),
+                        borderRadius: BorderRadius.circular(Rem.rem0_5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.info, color: Colors.blue.shade600, size: 16),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Info Jenis Iuran:',
+                                style: GoogleFonts.figtree(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '• Iuran Bulanan: Dibayar setiap bulan sekali secara rutin',
+                            style: GoogleFonts.figtree(
+                              color: Colors.blue.shade800,
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '• Iuran Khusus: Dibayar sesuai jadwal atau kebutuhan tertentu',
+                            style: GoogleFonts.figtree(
+                              color: Colors.blue.shade800,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+
                     const SizedBox(height: Rem.rem2),
 
                     // Buttons
@@ -312,83 +280,5 @@ class _PemasukanTambahScreenState extends State<PemasukanTambahScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _handlePhotoUpload(PemasukanFormProvider provider) async {
-    try {
-      // Tampilkan dialog pilihan
-      final String? choice = await showDialog<String>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Pilih Sumber Gambar',
-              style: GoogleFonts.figtree(fontWeight: FontWeight.w600),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: Text('Kamera', style: GoogleFonts.figtree()),
-                  onTap: () => Navigator.of(context).pop('camera'),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: Text('Gallery', style: GoogleFonts.figtree()),
-                  onTap: () => Navigator.of(context).pop('gallery'),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-
-      if (choice != null) {
-        final ImagePicker picker = ImagePicker();
-
-        if (choice == 'camera') {
-          // Pilih dari camera
-          final XFile? photo = await picker.pickImage(
-            source: ImageSource.camera,
-          );
-
-          if (photo != null) {
-            provider.addPhoto(photo.path);
-
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Foto berhasil diambil!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          }
-        } else if (choice == 'gallery') {
-          // Pilih dari gallery (multiple)
-          final List<XFile> images = await picker.pickMultiImage();
-
-          if (images.isNotEmpty) {
-            provider.addPhotos(images.map((image) => image.path).toList());
-
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${images.length} foto berhasil dipilih!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          }
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-        );
-      }
-    }
   }
 }
