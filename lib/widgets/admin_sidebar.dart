@@ -94,7 +94,10 @@ class AdminSidebar extends StatelessWidget {
                       Icons.receipt_outlined,
                       'Pemasukan',
                       [
-                        {'title': 'Daftar', 'route': '/pemasukan/daftar'},
+                        {'title': 'Jenis Iuran', 'route': '/iuran/kategori'},
+                        {'title': 'Tagih Iuran Warga', 'route': '/iuran/tagih_iuran'},
+                        {'title': 'Tagihan Iuran', 'route': '/iuran/tagihan'},
+                        {'title': 'Tambah', 'route': '/pemasukan/tambah'},
                         {'title': 'Tambah', 'route': '/pemasukan/tambah'},
                       ],
                     ),
