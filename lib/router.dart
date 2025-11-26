@@ -25,6 +25,9 @@ import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/detail.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar_pengeluaran_screen.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah_pengeluaran_screen.dart';
+import 'package:jawara_mobile/screens/admin/iuran/kategori.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tambah.dart' as iuran_tambah;
+import 'package:jawara_mobile/screens/admin/iuran/detail.dart';
 import 'package:jawara_mobile/screens/admin/warga/daftar.dart';
 import 'package:jawara_mobile/screens/admin/warga/detail.dart';
 import 'package:jawara_mobile/screens/admin/warga/tambah.dart';
@@ -40,6 +43,7 @@ import 'package:jawara_mobile/screens/placeholder.dart';
 import 'models/data_warga_model.dart';
 import 'models/data_pemasukan_model.dart';
 import 'models/data_kegiatan_model.dart';
+import 'models/data_kategori_iuran_model.dart';
 
 // A map to associate route paths with their titles.
 const Map<String, String> _routeTitles = {
@@ -60,6 +64,9 @@ const Map<String, String> _routeTitles = {
   '/pemasukan/detail': 'Detail Pemasukan',
   '/pengeluaran/daftar': 'Daftar Pengeluaran',
   '/pengeluaran/tambah': 'Tambah Pengeluaran',
+  '/iuran/kategori': 'Kategori Iuran',
+  '/iuran/tambah': 'Tambah Kategori Iuran',
+  '/iuran/detail': 'Detail Kategori Iuran',
   '/rumah/detail': 'Detail Rumah',
   '/keluarga/detail': 'Detail Keluarga',
   '/keluarga': 'Data Keluarga',
@@ -205,6 +212,22 @@ final router = GoRouter(
           path: '/pengeluaran/tambah',
           name: 'pengeluaran-tambah',
           builder: (context, state) => TambahPengeluaranScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/kategori',
+          name: 'iuran-kategori',
+          builder: (context, state) => const KategoriIuranScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/tambah',
+          name: 'iuran-tambah',
+          builder: (context, state) => const iuran_tambah.KategoriIuranTambahScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/detail',
+          name: 'iuran-detail',
+          builder: (context, state) =>
+              KategoriIuranDetailScreen(data: state.extra as DataKategoriIuranModel),
         ),
         //GoRoute(
         //  path: '/warga/tambah',
