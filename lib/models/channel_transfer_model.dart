@@ -29,4 +29,8 @@ enum Tipe {
   final String label;
 
   const Tipe(this.value, this.label);
+
+  static List<String> getValuesAsStringList() {
+    return values.map((tipe) => tipe.label).toList();
+  }
 }
