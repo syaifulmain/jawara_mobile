@@ -115,7 +115,13 @@ class _TambahPengeluaranScreenState
     final list = ref.watch(pengeluaranProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Buat Pengeluaran Baru')),
+      appBar: AppBar(
+        title: const Text('Buat Pengeluaran Baru'),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Card(
