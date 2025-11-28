@@ -8,9 +8,12 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final String? labelText;
   final Widget? suffixIcon;
+  final Icon? prefixIcon;
   final TextInputType? keyboardType;
   final bool obscureText;
   final TextEditingController? controller;
+  final bool readOnly;
+  final void Function(String)? onChanged;
 
   // Tambahan
   final int? minLines;
@@ -24,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
     this.labelText,
     this.hintText,
     this.suffixIcon,
+    this.prefixIcon,
     this.keyboardType,
     this.obscureText = false,
     this.controller,
@@ -31,6 +35,8 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLines,
     this.expands = false,
     this.validator,
+    this.readOnly = false,
+    this.onChanged,
   });
 
   @override
@@ -58,6 +64,7 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: obscureText ? 1 : maxLines,
           expands: expands,
           validator: validator,
+          readOnly: readOnly,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: GoogleFonts.poppins(color: Colors.grey),
@@ -78,7 +85,9 @@ class CustomTextFormField extends StatelessWidget {
               vertical: Rem.rem0_25,
             ),
             suffixIcon: suffixIcon,
+            prefixIcon: prefixIcon,
           ),
+          onChanged: onChanged,
         ),
       ],
     );

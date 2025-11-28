@@ -11,6 +11,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final List<DropdownMenuEntry<T>> items;
   final T? initialSelection;
   final Function(T?)? onSelected;
+  final bool enabled;
 
   const CustomDropdown({
     super.key,
@@ -19,6 +20,7 @@ class CustomDropdown<T> extends StatefulWidget {
     required this.items,
     this.initialSelection,
     this.onSelected,
+    this.enabled = true,
   });
 
   @override
@@ -94,6 +96,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
               onSelected: widget.onSelected,
               hintText: widget.hintText,
               textStyle: GoogleFonts.poppins(),
+              enabled: widget.enabled,
               menuStyle: MenuStyle(
                 maximumSize: WidgetStateProperty.all(
                   Size(width, double.infinity),

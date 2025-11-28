@@ -17,13 +17,6 @@ class DashboardMenuScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Menu Dashboard',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
             MenuListTile(
               icon: Icons.account_balance_wallet,
               title: 'Keuangan',

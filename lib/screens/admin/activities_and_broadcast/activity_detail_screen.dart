@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
 import '../../../enums/activity_category.dart';
@@ -12,14 +13,16 @@ import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_form_field.dart';
 
-class AddActivityScreen extends StatefulWidget {
-  const AddActivityScreen({Key? key}) : super(key: key);
+class ActivityDetailScreen extends StatefulWidget {
+  final String activityId;
+
+  const ActivityDetailScreen({Key? key, required this.activityId}) : super(key: key);
 
   @override
-  State<AddActivityScreen> createState() => _AddActivityScreenState();
+  State<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
 }
 
-class _AddActivityScreenState extends State<AddActivityScreen> {
+class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -28,6 +31,38 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   ActivityCategory? _selectedCategory;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  bool _isEditMode = false;
+  Activity? _activity;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_activity == null) {
+      _loadActivity();
+    }
+  }
+
+  void _loadActivity() {
+    final activityProvider = context.read<ActivityProvider>();
+
+    _activity = activityProvider.activities.firstWhere(
+          (a) => a.id.toString() == widget.activityId,
+    );
+
+    if (_activity != null) {
+      _nameController.text = _activity!.name;
+      _descriptionController.text = _activity!.description;
+      _locationController.text = _activity!.location;
+      _personInChargeController.text = _activity!.personInCharge;
+      _selectedCategory = _activity!.category;
+      _selectedDate = _activity!.date;
+      _selectedTime = TimeOfDay.fromDateTime(_activity!.date);
+    }
+  }
 
   @override
   void dispose() {
@@ -39,6 +74,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    if (!_isEditMode) return;
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
@@ -53,6 +90,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
+    if (!_isEditMode) return;
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime ?? TimeOfDay.now(),
@@ -64,28 +103,23 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     }
   }
 
-  Future<void> _submitForm() async {
+  void _toggleEditMode() {
+    setState(() {
+      _isEditMode = !_isEditMode;
+      if (!_isEditMode) {
+        _loadActivity();
+      }
+    });
+  }
+
+  Future<void> _updateActivity() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    if (_selectedCategory == null) {
+    if (_selectedCategory == null || _selectedDate == null || _selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih kategori kegiatan')),
-      );
-      return;
-    }
-
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih tanggal kegiatan')),
-      );
-      return;
-    }
-
-    if (_selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih waktu kegiatan')),
+        const SnackBar(content: Text('Lengkapi semua field')),
       );
       return;
     }
@@ -98,7 +132,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       _selectedTime!.minute,
     );
 
-    final activity = Activity(
+    final updatedActivity = Activity(
+      id: _activity!.id,
       name: _nameController.text,
       description: _descriptionController.text,
       category: _selectedCategory!,
@@ -118,12 +153,74 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       return;
     }
 
-    final success = await activityProvider.createActivity(token, activity);
+    final success = await activityProvider.updateActivity(
+      token,
+      widget.activityId,
+      updatedActivity,
+    );
+
+    if (success) {
+      if (mounted) {
+        setState(() {
+          _isEditMode = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Kegiatan berhasil diperbarui')),
+        );
+        _loadActivity();
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              activityProvider.errorMessage ?? 'Gagal memperbarui kegiatan',
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteActivity() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Hapus Kegiatan'),
+        content: const Text('Apakah Anda yakin ingin menghapus kegiatan ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
+
+    final token = authProvider.token;
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Anda belum login')),
+      );
+      return;
+    }
+
+    final success = await activityProvider.deleteActivity(token, widget.activityId);
 
     if (success) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Kegiatan berhasil ditambahkan')),
+          const SnackBar(content: Text('Kegiatan berhasil dihapus')),
         );
         context.pop();
       }
@@ -132,7 +229,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              activityProvider.errorMessage ?? 'Gagal menambahkan kegiatan',
+              activityProvider.errorMessage ?? 'Gagal menghapus kegiatan',
             ),
           ),
         );
@@ -146,11 +243,25 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: Text(
-          'Tambah Kegiatan',
+          _isEditMode ? 'Edit Kegiatan' : 'Detail Kegiatan',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          if (!_isEditMode)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: _toggleEditMode,
+              tooltip: 'Edit',
+            ),
+          if (!_isEditMode)
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: _deleteActivity,
+              tooltip: 'Hapus',
+            ),
+        ],
       ),
       body: Consumer<ActivityProvider>(
         builder: (context, provider, _) {
@@ -167,6 +278,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         controller: _nameController,
                         labelText: "Nama Kegiatan",
                         hintText: "Masukkan nama kegiatan",
+                        readOnly: !_isEditMode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Nama kegiatan harus diisi';
@@ -180,6 +292,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         labelText: "Deskripsi",
                         hintText: "Masukkan deskripsi kegiatan",
                         maxLines: 4,
+                        readOnly: !_isEditMode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Deskripsi harus diisi';
@@ -191,6 +304,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                       CustomDropdown<ActivityCategory>(
                         labelText: "Kategori Kegiatan",
                         hintText: "-- PILIH KATEGORI --",
+                        initialSelection: _selectedCategory,
+                        enabled: _isEditMode, // Tambahkan parameter enabled
                         items: ActivityCategory.values.map((category) {
                           return DropdownMenuEntry(
                             value: category,
@@ -217,7 +332,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                           ),
                           const SizedBox(height: Rem.rem0_5),
                           InkWell(
-                            onTap: () => _selectDate(context),
+                            onTap: _isEditMode ? () => _selectDate(context) : null,
                             child: Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(
@@ -225,6 +340,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                 vertical: Rem.rem0_875,
                               ),
                               decoration: BoxDecoration(
+                                color: _isEditMode ? Colors.white : Colors.grey.shade100,
                                 border: Border.all(color: Colors.grey.shade300),
                                 borderRadius: BorderRadius.circular(Rem.rem0_5),
                               ),
@@ -234,14 +350,18 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                   Text(
                                     _selectedDate == null
                                         ? 'Pilih tanggal'
-                                        : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+                                        : DateFormat('dd/MM/yyyy').format(_selectedDate!),
                                     style: GoogleFonts.poppins(
                                       color: _selectedDate == null
                                           ? Colors.grey
                                           : Colors.black,
                                     ),
                                   ),
-                                  const Icon(Icons.calendar_today, size: Rem.rem1_25),
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: Rem.rem1_25,
+                                    color: _isEditMode ? Colors.black : Colors.grey,
+                                  ),
                                 ],
                               ),
                             ),
@@ -262,7 +382,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                           ),
                           const SizedBox(height: Rem.rem0_5),
                           InkWell(
-                            onTap: () => _selectTime(context),
+                            onTap: _isEditMode ? () => _selectTime(context) : null,
                             child: Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(
@@ -270,6 +390,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                 vertical: Rem.rem0_875,
                               ),
                               decoration: BoxDecoration(
+                                color: _isEditMode ? Colors.white : Colors.grey.shade100,
                                 border: Border.all(color: Colors.grey.shade300),
                                 borderRadius: BorderRadius.circular(Rem.rem0_5),
                               ),
@@ -286,7 +407,11 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                           : Colors.black,
                                     ),
                                   ),
-                                  const Icon(Icons.access_time, size: Rem.rem1_25),
+                                  Icon(
+                                    Icons.access_time,
+                                    size: Rem.rem1_25,
+                                    color: _isEditMode ? Colors.black : Colors.grey,
+                                  ),
                                 ],
                               ),
                             ),
@@ -298,6 +423,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         controller: _locationController,
                         labelText: "Lokasi",
                         hintText: "Masukkan lokasi kegiatan",
+                        readOnly: !_isEditMode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Lokasi harus diisi';
@@ -310,6 +436,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         controller: _personInChargeController,
                         labelText: "Penanggung Jawab",
                         hintText: "Masukkan nama penanggung jawab",
+                        readOnly: !_isEditMode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Penanggung jawab harus diisi';
@@ -317,23 +444,39 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: Rem.rem1_5),
-                      CustomButton(
-                        onPressed: provider.isLoading ? null : _submitForm,
-                        child: provider.isLoading
-                            ? const SizedBox(
-                          height: Rem.rem1_25,
-                          width: Rem.rem1_25,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                            : Text(
-                          'Simpan Kegiatan',
-                          style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                      if (_isEditMode) ...[
+                        const SizedBox(height: Rem.rem1_5),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: _toggleEditMode,
+                                child: const Text('Batal'),
+                                isOutlined: true, // <-- PENTING: Untuk gaya Outline
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: provider.isLoading ? null : _updateActivity,
+                                child: provider.isLoading
+                                    ? const SizedBox(
+                                  height: Rem.rem1_25,
+                                  width: Rem.rem1_25,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                    : Text(
+                                  'Simpan',
+                                  style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],

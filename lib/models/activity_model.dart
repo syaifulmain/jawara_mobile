@@ -1,3 +1,5 @@
+import '../enums/activity_category.dart';
+
 class Activity {
   final int? id;
   final String name;
@@ -60,24 +62,6 @@ class Activity {
       location: location ?? this.location,
       personInCharge: personInCharge ?? this.personInCharge,
       description: description ?? this.description,
-    );
-  }
-}
-
-enum ActivityCategory {
-  religious('keagamaan', 'Keagamaan'),
-  education('pendidikan', 'Pendidikan'),
-  other('lainnya', 'Lainnya');
-
-  final String value;
-  final String label;
-
-  const ActivityCategory(this.value, this.label);
-
-  static ActivityCategory fromString(String value) {
-    return ActivityCategory.values.firstWhere(
-          (category) => category.value == value,
-      orElse: () => ActivityCategory.other,
     );
   }
 }

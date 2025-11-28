@@ -6,6 +6,7 @@ class MenuListTile extends StatelessWidget {
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
+  final Color backgroundColor;
 
   const MenuListTile({
     required this.icon,
@@ -13,11 +14,13 @@ class MenuListTile extends StatelessWidget {
     required this.subtitle,
     required this.color,
     required this.onTap,
+    this.backgroundColor = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: backgroundColor,
       elevation: 2,
       child: ListTile(
         onTap: onTap,

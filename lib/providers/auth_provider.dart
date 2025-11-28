@@ -3,12 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
+import '../services/api_exception.dart';
 
 class AuthProvider with ChangeNotifier {
   UserModel? _currentUser;
   String? _token;
   bool _isLoading = false;
   bool _isInitialized = false;
+  String? _errorMessage;
 
   final AuthService _apiService = AuthService();
 
@@ -17,10 +19,12 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null && _token != null;
   bool get isInitialized => _isInitialized;
+  String? get errorMessage => _errorMessage;
 
   // Initialize and check for saved session
   Future<void> initialize() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -32,32 +36,53 @@ class AuthProvider with ChangeNotifier {
         _token = savedToken;
         _currentUser = UserModel.fromJson(jsonDecode(savedUserData));
 
-        // Verify token is still valid by fetching fresh user data
-        try {
-          final user = await _apiService.getUserProfile(_token!);
-          _currentUser = user;
-          await _saveSession();
-        } catch (e) {
-          // Token expired or invalid, clear session
-          await clearSession();
-        }
+        // Session restored successfully
+        _isInitialized = true;
+        _isLoading = false;
+        notifyListeners();
+
+        // Optionally verify token in background (non-blocking)
+        _verifyTokenInBackground();
+      } else {
+        // No saved session
+        _isInitialized = true;
+        _isLoading = false;
+        notifyListeners();
       }
     } catch (e) {
-      await clearSession();
+      _errorMessage = 'Initialization error: $e';
+      _isInitialized = true;
+      _isLoading = false;
+      notifyListeners();
     }
+  }
 
-    _isInitialized = true;
-    _isLoading = false;
-    notifyListeners();
+  // Verify token validity in background without blocking UI
+  Future<void> _verifyTokenInBackground() async {
+    if (_token == null) return;
+
+    try {
+      final user = await _apiService.getUserProfile(_token!);
+      _currentUser = user;
+      await _saveSession();
+      notifyListeners();
+    } catch (e) {
+      // Token invalid or expired, clear session
+      if (e is ApiException && e.statusCode == 401) {
+        await clearSession();
+        notifyListeners();
+      }
+      // For other errors, keep existing session
+    }
   }
 
   Future<bool> login(String email, String password) async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
       final response = await _apiService.login(email, password);
-
       _token = response['token'];
       _currentUser = UserModel.fromJson(response['user']);
 
@@ -67,6 +92,11 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Login error: $e';
+      }
       _isLoading = false;
       notifyListeners();
       return false;
@@ -75,6 +105,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -82,7 +113,7 @@ class AuthProvider with ChangeNotifier {
         await _apiService.logout(_token!);
       }
     } catch (e) {
-      // Ignore logout errors
+      // ignore logout errors
     }
 
     await clearSession();

@@ -1,3 +1,5 @@
+import '../enums/user_role.dart';
+
 class UserModel {
   final String id;
   final String name;
@@ -15,8 +17,24 @@ class UserModel {
     this.photoUrl,
   });
 
-  bool get isAdmin => role == 'admin';
-  bool get isActive => is_active;
+  // Helper methods untuk akses menu
+  UserRole get userRole => UserRole.fromString(role);
+
+  bool get isAdmin => userRole == UserRole.admin;
+  bool get isRT => userRole == UserRole.rt;
+  bool get isRW => userRole == UserRole.rw;
+  bool get isBendahara => userRole == UserRole.bendahara;
+  bool get isSekretaris => userRole == UserRole.serketaris;
+  bool get isUser => userRole == UserRole.user;
+
+  // Akses penuh (admin, rt, rw)
+  bool get hasFullAccess => isAdmin || isRT || isRW;
+
+  // Akses fitur keuangan
+  bool get canAccessFinance => hasFullAccess || isBendahara;
+
+  // Akses fitur kegiatan
+  bool get canAccessActivity => hasFullAccess || isSekretaris;
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

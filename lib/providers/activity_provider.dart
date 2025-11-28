@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../enums/activity_category.dart';
 import '../models/activity_model.dart';
 import '../services/activity_service.dart';
+import '../services/api_exception.dart';
 
 class ActivityProvider with ChangeNotifier {
   List<Activity> _activities = [];
@@ -9,6 +11,7 @@ class ActivityProvider with ChangeNotifier {
   String? _errorMessage;
   ActivityCategory? _selectedCategory;
   String _searchQuery = '';
+
 
   final ActivityService _activityService = ActivityService();
 
@@ -38,7 +41,11 @@ class ActivityProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil data aktivitas';
+      }
       _isLoading = false;
       notifyListeners();
     }
@@ -54,7 +61,11 @@ class ActivityProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil detail aktivitas';
+      }
       _isLoading = false;
       notifyListeners();
     }
@@ -72,7 +83,11 @@ class ActivityProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal membuat aktivitas';
+      }
       _isLoading = false;
       notifyListeners();
       return false;
@@ -97,7 +112,11 @@ class ActivityProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal memperbarui aktivitas';
+      }
       _isLoading = false;
       notifyListeners();
       return false;
@@ -119,7 +138,11 @@ class ActivityProvider with ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal menghapus aktivitas';
+      }
       _isLoading = false;
       notifyListeners();
       return false;
@@ -137,7 +160,11 @@ class ActivityProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil aktivitas berdasarkan kategori';
+      }
       _isLoading = false;
       notifyListeners();
     }
@@ -154,7 +181,32 @@ class ActivityProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mencari aktivitas';
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchActivitiesByCategoryOrDate(String token, {ActivityCategory? category, DateTime? date}) async {
+    _isLoading = true;
+    _errorMessage = null;
+    _selectedCategory = category;
+    notifyListeners();
+
+    try {
+      _activities = await _activityService.getActivitiesByCategoryOrDate(token, category: category, date: date);
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil aktivitas berdasarkan kategori atau tanggal';
+      }
       _isLoading = false;
       notifyListeners();
     }

@@ -1,5 +1,6 @@
 class Rem {
   static const double base = 16.0;
+  static const double rem0_125 = base * 0.125; // 2.0
   static const double rem0_25 = base * 0.25; // 4.0
   static const double rem0_5 = base * 0.5; // 8.0
   static const double rem0_625 = base * 0.625; // 10.0

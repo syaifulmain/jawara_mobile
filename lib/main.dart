@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:jawara_mobile_v2/constants/color_constant.dart';
+import 'package:jawara_mobile_v2/providers/broadcast_provider.dart';
 import 'package:provider/provider.dart';
+import 'constants/rem_constant.dart';
 import 'providers/auth_provider.dart';
 import 'providers/activity_provider.dart';
 import 'routers/app_router.dart';
@@ -27,6 +31,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ActivityProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => BroadcastProvider(),
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
@@ -49,7 +56,30 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp.router(
             title: 'Flutter App',
-            theme: ThemeData(primarySwatch: Colors.blue),
+            theme: ThemeData(
+              scaffoldBackgroundColor: AppColors.backgroundColor,
+              primaryColor: AppColors.primaryColor,
+
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppColors.backgroundColor,
+                titleTextStyle: GoogleFonts.poppins(
+                  fontSize: Rem.rem1_5, // Pastikan class 'Rem' Anda sudah diimport
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black, // Warna teks judul
+                ),
+
+                // 3. Menambahkan Garis Bawah (Border Bottom)
+                shape: const Border(
+                  bottom: BorderSide(
+                    color: Colors.grey, // Warna garis bawah
+                    width: 1.0,         // Ketebalan garis
+                  ),
+                ),
+
+                elevation: 0,
+                scrolledUnderElevation: 0,
+              ),
+            ),
             routerConfig: createAppRouter(authProvider),
           );
         },

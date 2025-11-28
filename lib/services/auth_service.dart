@@ -1,7 +1,9 @@
+// language: dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../constants/api_constant.dart';
 import '../models/user_model.dart';
+import 'api_exception.dart';
 
 class AuthService {
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -9,19 +11,22 @@ class AuthService {
       final response = await http.post(
         Uri.parse(ApiConstants.login),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        return body['data'];
       } else {
-        throw Exception('Login failed: ${response.body}');
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Login failed with status ${response.statusCode}';
+        throw ApiException(msg, response.statusCode);
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
     }
   }
 
@@ -35,14 +40,20 @@ class AuthService {
         },
       );
 
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
+        final data = body['data'];
         return UserModel.fromJson(data['user']);
       } else {
-        throw Exception('Failed to get profile');
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to get profile (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
     }
   }
 
@@ -55,8 +66,8 @@ class AuthService {
           'Authorization': 'Bearer $token',
         },
       );
-    } catch (e) {
-      // Ignore logout errors
+    } catch (_) {
+      // ignore logout errors
     }
   }
 }
