@@ -5,9 +5,13 @@ import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 
 class AdminSidebar extends StatelessWidget {
-  final String selectedMenu;
+  /// route path saat ini, misal: "/iuran/kategori"
+  final String currentLocation;
 
-  const AdminSidebar({super.key, required this.selectedMenu});
+  const AdminSidebar({
+    super.key,
+    required this.currentLocation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class AdminSidebar extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+              // === HEADER ===
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Rem.rem0_5),
                 child: Row(
@@ -63,46 +67,59 @@ class AdminSidebar extends StatelessWidget {
               ),
               const SizedBox(height: Rem.rem0_5),
 
-              // Menu Items
+              // === MENU ITEMS ===
               Expanded(
                 child: ListView(
                   children: [
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.terminal,
                       'Dashboard',
                       [
-                        {'title': 'Keuangan', 'route': '/admin'},
-                        {'title': 'Kegiatan', 'route': '/admin'},
-                        {'title': 'Kependudukan', 'route': '/admin'},
+                        {'title': 'Keuangan', 'route': '/dashboard/keuangan'},
+                        {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
+                        {
+                          'title': 'Kependudukan',
+                          'route': '/dashboard/kependudukan',
+                        },
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.people_alt_outlined,
                       'Data Warga & Rumah',
                       [
-                        {'title': 'Warga - Daftar', 'route': '/placeholder'},
-                        {'title': 'Warga - Tambah', 'route': '/placeholder'},
-                        {'title': 'Keluarga', 'route': '/placeholder'},
-                        {'title': 'Rumah - Daftar', 'route': '/placeholder'},
-                        {'title': 'Rumah - Tambah', 'route': '/placeholder'},
+                        {'title': 'Warga - Daftar', 'route': '/warga/daftar'},
+                        {'title': 'Warga - Tambah', 'route': '/warga/tambah'},
+                        {'title': 'Keluarga', 'route': '/keluarga'},
+                        {'title': 'Rumah - Daftar', 'route': '/rumah/daftar'},
+                        {'title': 'Rumah - Tambah', 'route': '/rumah/tambah'},
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.receipt_outlined,
                       'Pemasukan',
                       [
                         {'title': 'Jenis Iuran', 'route': '/iuran/kategori'},
-                        {'title': 'Tagih Iuran Warga', 'route': '/iuran/tagih_iuran'},
-                        {'title': 'Tagihan Iuran', 'route': '/iuran/tagihan'},
-                        {'title': 'Tambah', 'route': '/pemasukan/tambah'},
-                        {'title': 'Tambah', 'route': '/pemasukan/tambah'},
+                        {
+                          'title': 'Tagih Iuran Warga',
+                          'route': '/iuran/tagih',
+                        },
+                        {
+                          'title': 'Tagihan Iuran',
+                          'route': '/placeholder',
+                        },
+                        {'title': 'Pemasukan Lain - Daftar', 'route': '/pemasukan/daftar'},
+                        {'title': 'Pemasukan Lain - Tambah', 'route': '/pemasukan/tambah'},
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.note_add_outlined,
                       'Pengeluaran',
                       [
@@ -112,67 +129,76 @@ class AdminSidebar extends StatelessWidget {
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.receipt_long,
                       'Laporan Keuangan',
                       [
                         {
                           'title': 'Semua Pemasukan',
-                          'route': '/placeholder'
+                          'route': '/laporan_keuangan/semua_pemasukan',
                         },
                         {
                           'title': 'Semua Pengeluaran',
-                          'route': '/placeholder'
+                          'route': '/laporan_keuangan/semua_pengeluaran',
                         },
-                        {'title': 'Cetak Laporan', 'route': '/placeholder'},
+                        {
+                          'title': 'Cetak Laporan',
+                          'route': '/laporan_keuangan/cetak_laporan',
+                        },
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.calendar_month_outlined,
                       'Kegiatan & Broadcast',
                       [
                         {
                           'title': 'Kegiatan - Daftar',
-                          'route': '/kegiatan/daftar'
+                          'route': '/kegiatan/daftar',
                         },
                         {
                           'title': 'Kegiatan - Tambah',
-                          'route': '/placeholder'
+                          'route': '/kegiatan/tambah',
                         },
                         {
                           'title': 'Broadcast - Daftar',
-                          'route': '/placeholder'
+                          'route': '/broadcast/daftar',
                         },
                         {
                           'title': 'Broadcast - Tambah',
-                          'route': '/placeholder'
+                          'route': '/broadcast/tambah',
                         },
                       ],
                     ),
+                    // menu-menu tambahan kamu yang di versi kedua
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.message_outlined,
                       'Pesan Warga',
                       [
                         {
                           'title': 'Informasi Aspirasi',
-                          'route': '/placeholder'
+                          'route': '/placeholder',
                         },
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.person_add_outlined,
                       'Penerimaan Warga',
                       [
                         {
                           'title': 'Penerimaan Warga',
-                          'route': '/placeholder'
+                          'route': '/placeholder',
                         },
                       ],
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.family_restroom_outlined,
                       'Mutasi Keluarga',
                       [
@@ -182,6 +208,7 @@ class AdminSidebar extends StatelessWidget {
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.history_outlined,
                       'Log Aktifitas',
                       [
@@ -190,6 +217,7 @@ class AdminSidebar extends StatelessWidget {
                     ),
                     _buildSubMenu(
                       context,
+                      currentLocation,
                       Icons.manage_accounts_outlined,
                       'Manajemen Pengguna',
                       [
@@ -201,7 +229,7 @@ class AdminSidebar extends StatelessWidget {
                 ),
               ),
 
-              // Profile Admin di Bawah
+              // === PROFILE ADMIN DI BAWAH ===
               Divider(height: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Rem.rem1),
@@ -267,7 +295,9 @@ class AdminSidebar extends StatelessWidget {
                           const SizedBox(width: 10),
                           Text(
                             'Log out',
-                            style: GoogleFonts.poppins(fontSize: Rem.rem0_875),
+                            style: GoogleFonts.poppins(
+                              fontSize: Rem.rem0_875,
+                            ),
                           ),
                         ],
                       ),
@@ -316,19 +346,22 @@ class AdminSidebar extends StatelessWidget {
 
   Widget _buildSubMenu(
     BuildContext context,
+    String currentLocation,
     IconData icon,
     String parent,
     List<Map<String, String>> items,
   ) {
-    // Check if any submenu is selected
-    final bool hasSelectedChild = items.any((item) => item['title'] == selectedMenu);
-    
+    // Expanded kalau salah satu route child == currentLocation
+    final bool hasSelectedChild = items.any(
+      (item) => item['route'] == currentLocation,
+    );
+
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
         dense: true,
-        initiallyExpanded: hasSelectedChild || selectedMenu == parent,
+        initiallyExpanded: hasSelectedChild,
         title: Text(
           parent,
           style: GoogleFonts.poppins(fontWeight: FontWeight.w400),
@@ -338,8 +371,8 @@ class AdminSidebar extends StatelessWidget {
         children: items.map((item) {
           final String title = item['title'] ?? '';
           final String route = item['route'] ?? '/placeholder';
-          final bool isActive = selectedMenu == title;
-          
+          final bool isActive = currentLocation == route;
+
           return Container(
             margin: const EdgeInsets.only(left: Rem.rem0_625),
             padding: const EdgeInsets.only(left: Rem.rem1_75),
@@ -358,8 +391,8 @@ class AdminSidebar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context); // Close drawer
-                context.go(route); // Navigate to route
+                Navigator.pop(context); // tutup drawer
+                context.go(route);       // pindah halaman
               },
               dense: true,
               visualDensity: VisualDensity.compact,
