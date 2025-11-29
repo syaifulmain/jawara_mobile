@@ -87,13 +87,26 @@ class _KegiatanTambahScreenState extends State<KegiatanTambahScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Buat Kegiatan Baru',
-              style: GoogleFonts.figtree(
-                fontSize: Rem.rem1_5,
-                fontWeight: FontWeight.w500,
-                color: AppColors.primaryColor,
-              ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.arrow_back),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.grey.shade100,
+                    foregroundColor: AppColors.primaryColor,
+                  ),
+                ),
+                const SizedBox(width: Rem.rem0_75),
+                Text(
+                  'Buat Kegiatan Baru',
+                  style: GoogleFonts.figtree(
+                    fontSize: Rem.rem1_5,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: Rem.rem1_5),
 
