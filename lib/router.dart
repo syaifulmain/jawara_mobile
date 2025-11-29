@@ -28,22 +28,21 @@ import 'package:jawara_mobile/screens/admin/pengeluaran/tambah_pengeluaran_scree
 import 'package:jawara_mobile/screens/admin/iuran/kategori.dart';
 import 'package:jawara_mobile/screens/admin/iuran/tambah.dart' as iuran_tambah;
 import 'package:jawara_mobile/screens/admin/iuran/detail.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagih_iuran.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagihan.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagihan_detail.dart';
 import 'package:jawara_mobile/screens/admin/warga/daftar.dart';
 import 'package:jawara_mobile/screens/admin/warga/detail.dart';
 import 'package:jawara_mobile/screens/admin/warga/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
-import 'package:jawara_mobile/screens/admin/data_warga_rumah/daftar_warga.dart';
-import 'package:jawara_mobile/screens/admin/data_warga_rumah/tambah_warga.dart';
-import 'package:jawara_mobile/screens/admin/data_warga_rumah/keluraga.dart';
-import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah.dart';
-import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah_tambah.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
 
 import 'models/data_warga_model.dart';
 import 'models/data_pemasukan_model.dart';
 import 'models/data_kegiatan_model.dart';
 import 'models/data_kategori_iuran_model.dart';
+import 'models/data_tagihan_model.dart';
 
 // A map to associate route paths with their titles.
 const Map<String, String> _routeTitles = {
@@ -67,6 +66,9 @@ const Map<String, String> _routeTitles = {
   '/iuran/kategori': 'Kategori Iuran',
   '/iuran/tambah': 'Tambah Kategori Iuran',
   '/iuran/detail': 'Detail Kategori Iuran',
+  '/iuran/tagih': 'Tagih Iuran',
+  '/tagihan': 'Tagihan',
+  '/tagihan/detail': 'Detail Tagihan',
   '/rumah/detail': 'Detail Rumah',
   '/keluarga/detail': 'Detail Keluarga',
   '/keluarga': 'Data Keluarga',
@@ -228,6 +230,22 @@ final router = GoRouter(
           name: 'iuran-detail',
           builder: (context, state) =>
               KategoriIuranDetailScreen(data: state.extra as DataKategoriIuranModel),
+        ),
+        GoRoute(
+          path: '/iuran/tagih',
+          name: 'iuran-tagih',
+          builder: (context, state) => const TagihIuranScreen(),
+        ),
+        GoRoute(
+          path: '/tagihan',
+          name: 'tagihan',
+          builder: (context, state) => const TagihanScreen(),
+        ),
+        GoRoute(
+          path: '/tagihan/detail',
+          name: 'tagihan-detail',
+          builder: (context, state) =>
+              TagihanDetailScreen(data: state.extra as DataTagihanModel),
         ),
         //GoRoute(
         //  path: '/warga/tambah',

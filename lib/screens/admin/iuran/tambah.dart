@@ -55,7 +55,7 @@ class _KategoriIuranTambahScreenState extends State<KategoriIuranTambahScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Rem.rem0_75),
       ),
-      color: Colors.white,
+      color: AppColors.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(Rem.rem1_5),
         child: Column(
