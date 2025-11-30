@@ -30,12 +30,15 @@ import 'package:jawara_mobile/screens/admin/warga/detail.dart';
 import 'package:jawara_mobile/screens/admin/warga/tambah.dart';
 import 'package:jawara_mobile/screens/auth/login.dart';
 import 'package:jawara_mobile/screens/auth/register.dart';
+import 'package:jawara_mobile/screens/dashboard/activity_list_screen.dart';
+import 'package:jawara_mobile/screens/dashboard/add_activity_screen.dart';
 import 'package:jawara_mobile/screens/admin/data_warga_rumah/daftar_warga.dart';
 import 'package:jawara_mobile/screens/admin/data_warga_rumah/tambah_warga.dart';
 import 'package:jawara_mobile/screens/admin/data_warga_rumah/keluraga.dart';
 import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah.dart';
 import 'package:jawara_mobile/screens/admin/data_warga_rumah/rumah_tambah.dart';
 import 'package:jawara_mobile/screens/placeholder.dart';
+import 'package:jawara_mobile/screens/dashboard/broadcast_list_screen.dart';
 
 import 'models/data_warga_model.dart';
 import 'models/data_pemasukan_model.dart';
