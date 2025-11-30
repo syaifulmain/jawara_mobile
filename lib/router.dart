@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jawara_mobile/models/data_pengeluaran_model.dart';
+import 'package:jawara_mobile/screens/admin/channel_transfer/daftar_channel_transfer_screen.dart';
 
 // import 'package:jawara_mobile/screens/admin/data_warga/warga_tambah.dart';
 import 'package:jawara_mobile/screens/admin/data_warga/keluarga.dart';
@@ -24,6 +26,7 @@ import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/detail.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/daftar_pengeluaran_screen.dart';
+import 'package:jawara_mobile/screens/admin/pengeluaran/detail.dart';
 import 'package:jawara_mobile/screens/admin/pengeluaran/tambah_pengeluaran_screen.dart';
 import 'package:jawara_mobile/screens/admin/warga/daftar.dart';
 import 'package:jawara_mobile/screens/admin/warga/detail.dart';
@@ -207,7 +210,12 @@ final router = GoRouter(
         GoRoute(
           path: '/pengeluaran/tambah',
           name: 'pengeluaran-tambah',
-          builder: (context, state) => TambahPengeluaranScreen(),
+          builder: (context, state) => const PengeluaranTambahScreen(),
+        ),
+        GoRoute(
+          path: '/pengeluaran/detail',
+          name: 'pengeluaran-detail',
+          builder: (context, state) => PengeluaranDetailScreen(data: state.extra as DataPengeluaranModel),
         ),
         //GoRoute(
         //  path: '/warga/tambah',
@@ -255,6 +263,11 @@ final router = GoRouter(
           builder: (context, state) =>
               WargaDetailScreen(dataWarga: state.extra as DataWargaModel),
         ),
+        GoRoute(
+          path: '/channel_transfer/daftar_channel_transfer',
+          name: 'channel-transfer-daftar',
+          builder: (context, state) => DaftarChannelTransferScreen(),
+        )
       ],
     ),
   ],

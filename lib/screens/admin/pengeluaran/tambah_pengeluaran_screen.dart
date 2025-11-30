@@ -1,277 +1,377 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jawara_mobile/constants/colors.dart';
+import 'package:jawara_mobile/constants/rem.dart';
+import 'package:jawara_mobile/widgets/custom_button.dart';
+import 'package:jawara_mobile/widgets/custom_dropdown.dart';
+import 'package:jawara_mobile/widgets/custom_file_upload.dart';
+
+import 'package:jawara_mobile/providers/pengeluaran_form_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jawara_mobile/riverpod_providers/pengeluaran/notifiers/pengeluaran_notifiers.dart';
+import 'package:provider/provider.dart';
 
-
-class TambahPengeluaranScreen extends ConsumerStatefulWidget {
-  static const routeName = '/tambah-pengeluaran';
-
-  const TambahPengeluaranScreen({super.key});
+class PengeluaranTambahScreen extends StatefulWidget {
+  const PengeluaranTambahScreen({super.key});
 
   @override
-  ConsumerState<TambahPengeluaranScreen> createState() =>
-      _TambahPengeluaranScreenState();
+  State<PengeluaranTambahScreen> createState() => _PengeluaranTambahScreenState();
 }
 
-class _TambahPengeluaranScreenState
-    extends ConsumerState<TambahPengeluaranScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _namaCtrl = TextEditingController();
-  final _kategoriCtrl = TextEditingController();
-  final _nominalCtrl = TextEditingController();
-
-  DateTime _selectedDate = DateTime.now();
-  XFile? _pickedBukti;
-
-  final ImagePicker _picker = ImagePicker();
-
-  @override
-  void dispose() {
-    _namaCtrl.dispose();
-    _kategoriCtrl.dispose();
-    _nominalCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickTanggal() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
+class _PengeluaranTambahScreenState extends State<PengeluaranTambahScreen> {
+  Future<void> _selectDate(PengeluaranFormProvider provider) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2015, 1, 1),
-      lastDate: DateTime(now.year + 5),
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primaryColor,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null) {
-      setState(() => _selectedDate = picked);
+      provider.setSelectedDate(picked);
     }
   }
 
-  Future<void> _pickBukti() async {
-    final picked = await _picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1200,
-      maxHeight: 1200,
-      imageQuality: 80,
-    );
-    if (picked != null) {
-      setState(() => _pickedBukti = picked);
-    }
-  }
-
-  void _resetForm() {
-    _formKey.currentState?.reset();
-    _namaCtrl.clear();
-    _kategoriCtrl.clear();
-    _nominalCtrl.clear();
-    setState(() {
-      _selectedDate = DateTime.now();
-      _pickedBukti = null;
-    });
-  }
-
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final nama = _namaCtrl.text.trim();
-    final kategori = _kategoriCtrl.text.trim();
-    final nominalStr = _nominalCtrl.text.trim();
-
-    final nominal = int.tryParse(nominalStr.replaceAll(RegExp(r'[^0-9]'), ''));
-
-    if (nominal == null) {
+  void _submitForm(PengeluaranFormProvider provider) {
+    if (!provider.isFormValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nominal harus berupa angka valid')),
+        const SnackBar(
+          content: Text('Mohon lengkapi semua field yang diperlukan'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
-    // Tambah ke provider
-    ref.read(pengeluaranProvider.notifier).tambah(
-      nama: nama,
-      kategori: kategori,
-      tanggal: _selectedDate,
-      nominal: nominal,
-      buktiPath: _pickedBukti?.path,
-    );
+    // TODO: Implementasi submit form dengan data dari provider.getFormData()
+    final formData = provider.getFormData();
+    print('Form data: $formData'); // Debug print
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Pengeluaran ditambahkan')),
+      const SnackBar(
+        content: Text('Pengeluaran berhasil ditambahkan!'),
+        backgroundColor: Colors.green,
+      ),
     );
 
-    // Reset form setelah submit
-    _resetForm();
-
-    // Opsional: kembali ke daftar
-    // Navigator.of(context).pop();
+    // Reset form
+    provider.resetForm();
   }
 
   @override
   Widget build(BuildContext context) {
-    // bisa membaca list jika mau menampilkan preview jumlah
-    final list = ref.watch(pengeluaranProvider);
+    return Consumer<PengeluaranFormProvider>(
+      builder: (context, provider, child) => _buildContent(context, provider),
+    );
+  }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Buat Pengeluaran Baru')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 2,
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Nama Pengeluaran',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _namaCtrl,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      hintText: 'Masukkan nama pengeluaran',
-                    ),
-                    validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Nama wajib diisi' : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  const Text('Tanggal Pengeluaran',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: _pickTanggal,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.calendar_today),
-                        const SizedBox(width: 8),
-                        Text(
-                            _selectedDate.toLocal().toIso8601String().split('T')[0]),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  const Text('Kategori Pengeluaran',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _kategoriCtrl,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      hintText: 'Masukkan kategori pengeluaran',
-                    ),
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Kategori wajib diisi'
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  const Text('Nominal Pengeluaran',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _nominalCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      hintText: 'Masukkan nominal pengeluaran',
-                    ),
-                    validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Nominal wajib diisi' : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  const Text('Bukti Pengeluaran (opsional)',
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: _pickBukti,
-                    child: Container(
-                      width: double.infinity,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: _pickedBukti == null
-                          ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.upload_file, size: 36),
-                            SizedBox(height: 8),
-                            Text('Klik untuk mengunggah bukti pengeluaran'),
-                          ],
-                        ),
-                      )
-                          : ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(_pickedBukti!.path),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: _submit,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text('Submit', style: TextStyle(color: Colors.white)),
-                      ),
-                      const SizedBox(width: 12),
-                      OutlinedButton(
-                        onPressed: _resetForm,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text('Reset'),
-                      ),
-                    ],
-                  ),
-
-                  // preview kecil: total item (opsional)
-                  const SizedBox(height: 12),
-                  Text('Total pengeluaran tersimpan: ${list.length}'),
-                ],
+  Widget _buildContent(BuildContext context, PengeluaranFormProvider provider) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.all(Rem.rem1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Rem.rem0_75),
+      ),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(Rem.rem1_5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Buat Data Pengeluaran Baru',
+              style: GoogleFonts.figtree(
+                fontSize: Rem.rem1_5,
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryColor,
               ),
             ),
-          ),
+            const SizedBox(height: Rem.rem1_5),
+
+            // Form
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Nama Pengeluaran
+                    Text(
+                      'Nama Pengeluaran',
+                      style: GoogleFonts.figtree(
+                        fontSize: Rem.rem1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem0_5),
+                    TextField(
+                      controller: provider.namaController,
+                      style: GoogleFonts.figtree(),
+                      decoration: InputDecoration(
+                        hintText: 'Contoh: Biaya Listrik Bulan November',
+                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: const BorderSide(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: Rem.rem0_75,
+                          vertical: Rem.rem0_75,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem1),
+
+                    // Kategori Pengeluaran
+                    Text(
+                      'Kategori Pengeluaran',
+                      style: GoogleFonts.figtree(
+                        fontSize: Rem.rem1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem0_5),
+                    CustomDropdown<String>(
+                      initialSelection: provider.selectedKategoriPengeluaran,
+                      hintText: '-- Pilih Kategori Pengeluaran --',
+                      items: provider.kategoriPengeluaranOptions.map((kategori) {
+                        return DropdownMenuEntry<String>(
+                          value: kategori,
+                          label: kategori,
+                        );
+                      }).toList(),
+                      onSelected: (value) {
+                        provider.setSelectedKategoriPengeluaran(value);
+                      },
+                    ),
+                    const SizedBox(height: Rem.rem1),
+
+                    // Tanggal
+                    Text(
+                      'Tanggal Pengeluaran',
+                      style: GoogleFonts.figtree(
+                        fontSize: Rem.rem1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem0_5),
+                    TextField(
+                      controller: provider.tanggalController,
+                      readOnly: true,
+                      style: GoogleFonts.figtree(),
+                      decoration: InputDecoration(
+                        hintText: '--/--/---- ',
+                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: const BorderSide(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: Rem.rem0_75,
+                          vertical: Rem.rem0_75,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () => _selectDate(provider),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem1),
+
+                    // Nominal
+                    Text(
+                      'Nominal',
+                      style: GoogleFonts.figtree(
+                        fontSize: Rem.rem1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem0_5),
+                    TextField(
+                      controller: provider.nominalController,
+                      style: GoogleFonts.figtree(),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'Contoh: 1200000',
+                        hintStyle: GoogleFonts.figtree(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          borderSide: const BorderSide(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: Rem.rem0_75,
+                          vertical: Rem.rem0_75,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Rem.rem1),
+                    CustomFileUpload.photo(
+                      label: 'Upload Foto Bukti Pengeluaran',
+                      onTap: () => _handlePhotoUpload(provider),
+                      selectedFiles: provider.selectedPhotos,
+                      onRemoveFile: (index) => provider.removePhoto(index),
+                    ),
+                    const SizedBox(height: Rem.rem2),
+
+                    // Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            onPressed: () => _submitForm(provider),
+                            child: Text(
+                              'Submit',
+                              style: GoogleFonts.figtree(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: Rem.rem1),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: provider.resetForm,
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.grey),
+                              padding: const EdgeInsets.symmetric(vertical: 23),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(Rem.rem0_5),
+                              ),
+                            ),
+                            child: Text(
+                              'Reset',
+                              style: GoogleFonts.figtree(
+                                color: Colors.grey[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _handlePhotoUpload(PengeluaranFormProvider provider) async {
+    try {
+      // Tampilkan dialog pilihan
+      final String? choice = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Pilih Sumber Gambar',
+              style: GoogleFonts.figtree(fontWeight: FontWeight.w600),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: Text('Kamera', style: GoogleFonts.figtree()),
+                  onTap: () => Navigator.of(context).pop('camera'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: Text('Gallery', style: GoogleFonts.figtree()),
+                  onTap: () => Navigator.of(context).pop('gallery'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+      if (choice != null) {
+        final ImagePicker picker = ImagePicker();
+
+        if (choice == 'camera') {
+          // Pilih dari camera
+          final XFile? photo = await picker.pickImage(
+            source: ImageSource.camera,
+          );
+
+          if (photo != null) {
+            provider.addPhoto(photo.path);
+
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Foto berhasil diambil!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+          }
+        } else if (choice == 'gallery') {
+          // Pilih dari gallery (multiple)
+          final List<XFile> images = await picker.pickMultiImage();
+
+          if (images.isNotEmpty) {
+            provider.addPhotos(images.map((image) => image.path).toList());
+
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${images.length} foto berhasil dipilih!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 }
