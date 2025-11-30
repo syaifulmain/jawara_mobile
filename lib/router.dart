@@ -21,6 +21,12 @@ import 'package:jawara_mobile/screens/admin/laporan_keuangan/detail_laporan_keua
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pemasukan.dart';
 import 'package:jawara_mobile/screens/admin/laporan_keuangan/semua_pengeluaran.dart';
 import 'package:jawara_mobile/screens/admin/layout.dart';
+import 'package:jawara_mobile/screens/admin/iuran/kategori.dart';
+import 'package:jawara_mobile/screens/admin/iuran/detail_kategori.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tambah_kategori.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagih_iuran.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagihan.dart';
+import 'package:jawara_mobile/screens/admin/iuran/tagihan_detail.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/daftar.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/tambah.dart';
 import 'package:jawara_mobile/screens/admin/pemasukan/detail.dart';
@@ -37,6 +43,8 @@ import 'package:jawara_mobile/screens/placeholder.dart';
 import 'models/data_warga_model.dart';
 import 'models/data_pemasukan_model.dart';
 import 'models/data_kegiatan_model.dart';
+import 'models/data_kategori_iuran_model.dart';
+import 'models/data_tagihan_model.dart';
 
 // A map to associate route paths with their titles.
 const Map<String, String> _routeTitles = {
@@ -65,6 +73,10 @@ const Map<String, String> _routeTitles = {
   '/warga/daftar': 'Daftar Warga',
   '/warga/tambah': 'Tambah Warga',
   '/warga/detail': 'Detail Warga',
+  '/iuran/kategori': 'Daftar Jenis Iuran',
+  '/iuran/tagih_iuran': 'Tagih Iuran Warga',
+  '/iuran/tagihan': 'Tagihan Iuran',
+  '/iuran/tagihan/detail': 'Detail Tagihan',
 };
 
 final router = GoRouter(
@@ -176,6 +188,38 @@ final router = GoRouter(
           path: '/laporan_keuangan/semua_pengeluaran',
           name: 'laporan_keuangan-semua_pengeluaran',
           builder: (context, state) => SemuaPengeluaran(),
+        ),
+        GoRoute(
+          path: '/iuran/kategori',
+          name: 'iuran-kategori',
+          builder: (context, state) => const KategoriIuranScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/tambah_kategori',
+          name: 'iuran-tambah_kategori',
+          builder: (context, state) => const KategoriIuranTambahScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/detail',
+          name: 'iuran-detail',
+          builder: (context, state) =>
+              KategoriIuranDetailScreen(data: state.extra as DataKategoriIuranModel),
+        ),
+        GoRoute(
+          path: '/iuran/tagih_iuran',
+          name: 'iuran-tagih_iuran',
+          builder: (context, state) => const TagihIuranScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/tagihan',
+          name: 'tagihan',
+          builder: (context, state) => const TagihanIuranScreen(),
+        ),
+        GoRoute(
+          path: '/iuran/tagihan/detail',
+          name: 'tagihan-detail',
+          builder: (context, state) =>
+              TagihanDetailScreen(data: state.extra as DataTagihanModel),
         ),
         GoRoute(
           path: '/pemasukan/daftar',

@@ -5,6 +5,7 @@ import 'package:jawara_mobile/router.dart';
 import 'package:jawara_mobile/providers/kegiatan_form_provider.dart';
 import 'package:jawara_mobile/providers/pemasukan_form_provider.dart';
 import 'package:jawara_mobile/providers/pengeluaran_form_provider.dart';
+import 'package:jawara_mobile/providers/kategori_iuran_form_provider.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => KegiatanFormProvider()),
         ChangeNotifierProvider(create: (_) => PemasukanFormProvider()),
         ChangeNotifierProvider(create: (_) => PengeluaranFormProvider()),
+        ChangeNotifierProvider(create: (_) => KategoriIuranFormProvider()),
       ],
       child: MaterialApp.router(
         title: 'Jawara Pintar Mobile',
