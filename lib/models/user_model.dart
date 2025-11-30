@@ -36,6 +36,8 @@ class UserModel {
   // Akses fitur kegiatan
   bool get canAccessActivity => hasFullAccess || isSekretaris;
 
+  bool get nonUser => !isUser;
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'].toString(),

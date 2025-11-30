@@ -5,11 +5,28 @@ import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_acti
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/broadcasts_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_broadcast_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/dashboard/population_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/family/family_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/house/add_house_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/add_resident_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/resident_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_menu_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
 import '../screens/admin/activities_and_broadcast/broadcast_detail_screen.dart';
 import '../screens/admin/dashboard/activities_screen.dart';
 import '../screens/admin/dashboard/dashboard_menu_screen.dart';
 import '../screens/admin/dashboard/finance_screen.dart';
+import '../screens/admin/expenditure/expenditure_menu_screen.dart';
+import '../screens/admin/family_mutation/family_mutation_menu_screen.dart';
+import '../screens/admin/financial_reports/financial_reports_menu_screen.dart';
+import '../screens/admin/residents_and_houses/family/families_list_screen.dart';
+import '../screens/admin/residents_and_houses/house/house_detail_screen.dart';
+import '../screens/admin/residents_and_houses/house/houses_list_screen.dart';
+import '../screens/admin/residents_and_houses/resident/residents_list_screen.dart';
+import '../screens/admin/residents_and_houses/residents_and_houses_menu_screen.dart';
+import '../screens/admin/transfer_channel/transfer_channel_menu_screen.dart';
+import '../screens/admin/user_management/users_list_screen.dart';
 import 'app_route_item.dart';
 import '../screens/home_screen.dart';
 
@@ -21,55 +38,7 @@ class RoutesConfig {
       label: 'Beranda',
       builder: (context, state) => const HomeScreen(),
     ),
-    // ACTIVITIES AND BROADCAST ROUTES
-    AppRouteItem(
-      path: '/activities-and-broadcast-menu',
-      name: 'activities_and_broadcast_menu',
-      label: 'Kegiatan & Broadcast',
-      builder: (context, state) => const ActivitiesAndBroadcastMenuScreen(),
-    ),
-    AppRouteItem(
-      path: '/activities-list',
-      name: 'activities_list',
-      label: 'Daftar Kegiatan',
-      builder: (context, state) => const ActivitiesListScreen(),
-    ),
-    AppRouteItem(
-      path: '/add-activity',
-      name: 'add_activity',
-      label: 'Tambah Kegiatan',
-      builder: (context, state) => const AddActivityScreen(),
-    ),
-    AppRouteItem(
-      path: '/activities/:id',  // tanpa leading slash jika nested
-      name: 'activity_detail',
-      label: 'Detail Kegiatan',
-      builder: (context, state) {
-        final activityId = state.pathParameters['id']!;
-        return ActivityDetailScreen(activityId: activityId);
-      },
-    ),
-    AppRouteItem(
-      path: '/broadcasts-list',
-      name: 'broadcasts_list',
-      label: 'Daftar Broadcast',
-      builder: (context, state) => const BroadcastsListScreen(),
-    ),
-    AppRouteItem(
-      path: '/add-broadcast',
-      name: 'add_broadcast',
-      label: 'Tambah Broadcast',
-      builder: (context, state) => const AddBroadcastScreen(),
-    ),
-    AppRouteItem(
-      path: '/broadcasts/:id',  // tanpa leading slash jika nested
-      name: 'broadcast_detail',
-      label: 'Detail Broadcast',
-      builder: (context, state) {
-        final broadcastId = state.pathParameters['id']!;
-        return BroadcastDetailScreen(broadcastId: broadcastId);
-      }
-    ),
+
     // DASHBOARD SUB-ROUTES
     AppRouteItem(
       path: '/dashboard-menu',
@@ -94,6 +63,194 @@ class RoutesConfig {
       name: 'dashboard-population',
       label: 'Kependudukan',
       builder: (context, state) => const PopulationScreen(),
+    ),
+
+    // RESIDENTS AND HOUSE ROUTES
+    AppRouteItem(
+      path: '/residents-and-houses-menu',
+      name: 'residents_and_houses_menu',
+      label: 'Data Warga dan Rumah',
+      builder: (context, state) => const ResidentsAndHousesMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/residents-list',
+      name: 'residents_list',
+      label: 'Daftar Warga',
+      builder: (context, state) => const ResidentsListScreen(),
+    ),
+    AppRouteItem(
+      path: '/resident-detail/:id',
+      name: 'resident_detail',
+      label: 'Detail Warga',
+      builder: (context, state) {
+        final residentId = state.pathParameters['id']!;
+        return ResidentDetailScreen(id: residentId);
+      },
+    ),
+    AppRouteItem(
+      path: '/add-resident',
+      name: 'add_resident',
+      label: 'Tambah Warga',
+      builder: (context, state) => const AddResidentScreen(),
+    ),
+    AppRouteItem(
+      path: '/families-list',
+      name: 'families_list',
+      label: 'Daftar Keluarga',
+      builder: (context, state) => const FamiliesListScreen(),
+    ),
+    AppRouteItem(
+      path: '/family-detail/:id',
+      name: 'family_detail',
+      label: 'Detail Keluarga',
+      builder: (context, state) {
+        final familyId = state.pathParameters['id']!;
+        return FamilyDetailScreen(id: familyId);
+      },
+    ),
+
+    AppRouteItem(
+      path: '/houses-list',
+      name: 'houses_list',
+      label: 'Daftar Alamat',
+      builder: (context, state) => const HousesListScreen(),
+    ),
+    AppRouteItem(
+      path: '/house-detail/:id',
+      name: 'house_detail',
+      label: 'Detail Rumah',
+      builder: (context, state) {
+        final houseId = state.pathParameters['id']!;
+        return HouseDetailScreen(id: houseId);
+      },
+    ),
+    AppRouteItem(
+      path: '/add-house',
+      name: 'add_house',
+      label: 'Tambah Rumah',
+      builder: (context, state) => const AddHouseScreen(),
+    ),
+
+    // INCOME ROUTES
+    AppRouteItem(
+      path: '/income_menu',
+      name: 'income_menu',
+      label: 'Pemasukan',
+      builder: (context, state) => const IncomeMenuScreen(),
+    ),
+
+    // EXPENDITURE ROUTES
+    AppRouteItem(
+      path: '/expenditure_menu',
+      name: 'expenditure_menu',
+      label: 'Pengeluaran',
+      builder: (context, state) => const ExpenditureMenuScreen(),
+    ),
+
+    // FINANCIAL REPORTS ROUTES
+    AppRouteItem(
+      path: '/financial_reports_menu',
+      name: 'financial_reports_menu',
+      label: 'Laporan Keuangan',
+      builder: (context, state) => const FinancialReportsMenuScreen(),
+    ),
+
+    // ACTIVITIES AND BROADCAST ROUTES
+    AppRouteItem(
+      path: '/activities-and-broadcast-menu',
+      name: 'activities_and_broadcast_menu',
+      label: 'Kegiatan & Broadcast',
+      builder: (context, state) => const ActivitiesAndBroadcastMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/activities-list',
+      name: 'activities_list',
+      label: 'Daftar Kegiatan',
+      builder: (context, state) => const ActivitiesListScreen(),
+    ),
+    AppRouteItem(
+      path: '/add-activity',
+      name: 'add_activity',
+      label: 'Tambah Kegiatan',
+      builder: (context, state) => const AddActivityScreen(),
+    ),
+    AppRouteItem(
+      path: '/activities/:id',
+      name: 'activity_detail',
+      label: 'Detail Kegiatan',
+      builder: (context, state) {
+        final activityId = state.pathParameters['id']!;
+        return ActivityDetailScreen(activityId: activityId);
+      },
+    ),
+    AppRouteItem(
+      path: '/broadcasts-list',
+      name: 'broadcasts_list',
+      label: 'Daftar Broadcast',
+      builder: (context, state) => const BroadcastsListScreen(),
+    ),
+    AppRouteItem(
+      path: '/add-broadcast',
+      name: 'add_broadcast',
+      label: 'Tambah Broadcast',
+      builder: (context, state) => const AddBroadcastScreen(),
+    ),
+    AppRouteItem(
+      path: '/broadcasts/:id',
+      name: 'broadcast_detail',
+      label: 'Detail Broadcast',
+      builder: (context, state) {
+        final broadcastId = state.pathParameters['id']!;
+        return BroadcastDetailScreen(broadcastId: broadcastId);
+      },
+    ),
+
+    // CITIZEN MESSAGE ROUTES
+    // (To be added in the future)
+
+    // CITIZEN RECIPIENT ROUTES
+    // (To be added in the future)
+
+    // FAMILY MUTATION ROUTES
+    AppRouteItem(
+      path: '/family-mutation-menu',
+      name: 'family_mutation_menu',
+      label: 'Mutasi Keluarga',
+      builder: (context, state) => const FamilyMutationMenuScreen(),
+    ),
+
+    // LOG ACTIVITY ROUTES
+    // (To be added in the future)
+
+    // USER MANAGEMENT
+    AppRouteItem(
+      path: '/user-management-menu',
+      name: 'user_management_menu',
+      label: 'Manajemen Pengguna',
+      builder: (context, state) => const UserManagementMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/users-list',
+      name: 'users_list',
+      label: 'Daftar Pengguna',
+      builder: (context, state) => const UsersListScreen(),
+    ),
+    AppRouteItem(
+      path: '/user-detail/:id',
+      name: 'user_detail',
+      label: 'Detail Pengguna',
+      builder: (context, state) {
+        final userId = state.pathParameters['id']!;
+        return UserDetailScreen(id: userId);
+      }
+    ),
+
+    // TRANSFER CHANNEL ROUTES
+    AppRouteItem(
+      path: '/transfer-channel-menu',
+      name: 'transfer_channel_menu',
+      label: 'Saluran Transfer',
+      builder: (context, state) => const TransferChannelMenuScreen(),
     ),
   ];
 }

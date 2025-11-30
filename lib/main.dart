@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jawara_mobile_v2/constants/color_constant.dart';
+import 'package:jawara_mobile_v2/providers/address_provider.dart';
 import 'package:jawara_mobile_v2/providers/broadcast_provider.dart';
+import 'package:jawara_mobile_v2/providers/family_provider.dart';
+import 'package:jawara_mobile_v2/providers/resident_provider.dart';
+import 'package:jawara_mobile_v2/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'constants/rem_constant.dart';
 import 'providers/auth_provider.dart';
@@ -33,6 +37,18 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => BroadcastProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddressProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ResidentProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FamilyProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider()
         ),
       ],
       child: Consumer<AuthProvider>(

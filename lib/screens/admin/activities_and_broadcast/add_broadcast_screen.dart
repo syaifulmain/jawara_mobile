@@ -229,7 +229,7 @@ class _AddBroadcastScreenState extends State<AddBroadcastScreen> {
                     )
                   else
                     CustomButton(
-                      onPressed: _pickDocument,
+                      onPressed: _pickPhoto,
                       isOutlined: true,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
