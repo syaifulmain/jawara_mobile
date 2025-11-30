@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => KegiatanFormProvider()),
         ChangeNotifierProvider(create: (_) => PemasukanFormProvider()),
         ChangeNotifierProvider(create: (_) => PengeluaranFormProvider()),
-        ChangeNotifierProvider(create: (_) => ChannelTransferFormProvider())
+        ChangeNotifierProvider(create: (_) => ChannelTransferFormProvider()),
       ],
       child: MaterialApp.router(
         title: 'Jawara Pintar Mobile',
