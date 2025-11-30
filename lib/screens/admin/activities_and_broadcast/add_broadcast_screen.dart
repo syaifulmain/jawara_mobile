@@ -11,6 +11,7 @@ import '../../../providers/broadcast_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/file_picker_button.dart';
 
 class AddBroadcastScreen extends StatefulWidget {
   const AddBroadcastScreen({Key? key}) : super(key: key);
@@ -33,65 +34,6 @@ class _AddBroadcastScreenState extends State<AddBroadcastScreen> {
     _titleController.dispose();
     _messageController.dispose();
     super.dispose();
-  }
-
-  Future<void> _pickPhoto() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        setState(() {
-          _photoFile = File(result.files.single.path!);
-          _photoFileName = result.files.single.name;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal memilih foto: $e')));
-      }
-    }
-  }
-
-  Future<void> _pickDocument() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        setState(() {
-          _documentFile = File(result.files.single.path!);
-          _documentFileName = result.files.single.name;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal memilih dokumen: $e')));
-      }
-    }
-  }
-
-  void _removePhoto() {
-    setState(() {
-      _photoFile = null;
-      _photoFileName = null;
-    });
-  }
-
-  void _removeDocument() {
-    setState(() {
-      _documentFile = null;
-      _documentFileName = null;
-    });
   }
 
   Future<void> _submitForm() async {
@@ -201,101 +143,64 @@ class _AddBroadcastScreenState extends State<AddBroadcastScreen> {
                     ),
                   ),
                   const SizedBox(height: Rem.rem0_5),
-                  if (_photoFile != null)
-                    Container(
-                      padding: const EdgeInsets.all(Rem.rem0_75),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.image, color: Colors.blue),
-                          const SizedBox(width: Rem.rem0_5),
-                          Expanded(
-                            child: Text(
-                              _photoFileName ?? 'Foto',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, size: Rem.rem1_25),
-                            onPressed: _removePhoto,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    CustomButton(
-                      onPressed: _pickPhoto,
-                      isOutlined: true,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add_photo_alternate),
-                          const SizedBox(width: 8),
-                          const Text('Tambahkan Foto'),
-                        ],
-                      ),
-                    ),
+                  FilePickerButton(
+                    file: _photoFile,
+                    fileName: _photoFileName,
+                    fileType: FileType.image,
+                    onFilePicked: (file, fileName) {
+                      setState(() {
+                        _photoFile = file;
+                        _photoFileName = fileName;
+                      });
+                    },
+                    onFileRemoved: () {
+                      setState(() {
+                        _photoFile = null;
+                        _photoFileName = null;
+                      });
+                    },
+                    icon: Icons.add_photo_alternate,
+                    iconColor: Colors.blue,
+                    buttonText: 'Tambahkan Foto',
+                  ),
                   const SizedBox(height: Rem.rem0_75),
-                  if (_documentFile != null)
-                    Container(
-                      padding: const EdgeInsets.all(Rem.rem0_75),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.description, color: Colors.orange),
-                          const SizedBox(width: Rem.rem0_5),
-                          Expanded(
-                            child: Text(
-                              _documentFileName ?? 'Dokumen',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, size: Rem.rem1_25),
-                            onPressed: _removeDocument,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    CustomButton(
-                      onPressed: _pickDocument,
-                      isOutlined: true,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.attach_file),
-                          const SizedBox(width: 8),
-                          const Text('Tambahkan Dokumen'),
-                        ],
-                      ),
-                    ),
+                  FilePickerButton(
+                    file: _documentFile,
+                    fileName: _documentFileName,
+                    fileType: FileType.custom,
+                    allowedExtensions: ['pdf', 'doc', 'docx'],
+                    onFilePicked: (file, fileName) {
+                      setState(() {
+                        _documentFile = file;
+                        _documentFileName = fileName;
+                      });
+                    },
+                    onFileRemoved: () {
+                      setState(() {
+                        _documentFile = null;
+                        _documentFileName = null;
+                      });
+                    },
+                    icon: Icons.attach_file,
+                    iconColor: Colors.orange,
+                    buttonText: 'Tambahkan Dokumen',
+                  ),
                   const SizedBox(height: Rem.rem1_5),
                   CustomButton(
                     onPressed: provider.isLoading ? null : _submitForm,
                     child: provider.isLoading
                         ? const SizedBox(
-                            height: Rem.rem1_25,
-                            width: Rem.rem1_25,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                      height: Rem.rem1_25,
+                      width: Rem.rem1_25,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                         : Text(
-                            'Kirim Broadcast',
-                            style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                          ),
+                      'Kirim Broadcast',
+                      style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                    ),
                   ),
                 ],
               ),
