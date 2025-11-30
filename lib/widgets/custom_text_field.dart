@@ -9,6 +9,12 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final TextEditingController? controller;
+
+  // Tambahan
+  final int? minLines;
+  final int? maxLines;
+  final bool expands;
 
   const CustomTextField({
     super.key,
@@ -17,6 +23,10 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.keyboardType,
     this.obscureText = false,
+    this.controller,
+    this.minLines,
+    this.maxLines,
+    this.expands = false,
   });
 
   @override
@@ -29,17 +39,20 @@ class CustomTextField extends StatelessWidget {
             labelText!,
             style: GoogleFonts.figtree(
               fontSize: Rem.rem1,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
           ),
           const SizedBox(height: Rem.rem0_5),
         ],
-
         TextField(
+          controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           style: GoogleFonts.poppins(),
+          minLines: obscureText ? 1 : minLines,
+          maxLines: obscureText ? 1 : maxLines,
+          expands: expands,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: GoogleFonts.poppins(color: Colors.grey),
@@ -53,9 +66,9 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Rem.rem0_5),
-              borderSide: BorderSide(color: AppColors.primaryColor),
+              borderSide: const BorderSide(color: AppColors.primaryColor),
             ),
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: Rem.rem0_75,
               vertical: Rem.rem0_25,
             ),
@@ -66,3 +79,4 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+

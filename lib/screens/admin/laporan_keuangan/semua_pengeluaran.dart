@@ -13,7 +13,7 @@ class SemuaPengeluaran extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
-      title: title,
+      // title: title,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,

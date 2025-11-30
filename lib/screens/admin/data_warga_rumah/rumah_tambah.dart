@@ -3,66 +3,19 @@ import 'package:jawara_mobile/constants/colors.dart';
 import 'package:jawara_mobile/constants/rem.dart';
 import 'package:jawara_mobile/widgets/white_card_page.dart';
 
-class TambahPengeluaranScreen extends StatelessWidget {
-  final String title = 'Buat Pengeluaran Baru';
-  final DateTime selectedDate = DateTime.now();
+class TambahRumahScreen extends StatelessWidget {
+  final String title = "Tambah Data Rumah";
 
-  TambahPengeluaranScreen({super.key});
+  TambahRumahScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return WhiteCardPage(
       title: title,
       children: [
+        // Nomor Rumah
         Text(
-          'Nama Pengeluaran',
-          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: Rem.rem1),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan nama pengeluaran',
-          ),
-        ),
-        SizedBox(height: Rem.rem2),
-        Text(
-          'Tanggal Pengeluaran',
-          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: Rem.rem1),
-        OutlinedButton(
-          onPressed: () {
-            showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2015, 8),
-              lastDate: DateTime(2101),
-            );
-          },
-          child: Row(
-            children: [
-              Icon(Icons.calendar_today),
-              SizedBox(width: Rem.rem1),
-              Text(selectedDate.toLocal().toString().split(' ')[0]),
-            ],
-          ),
-        ),
-        SizedBox(height: Rem.rem2),
-        Text(
-          'Kategori Pengeluaran',
-          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: Rem.rem1),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan kategori pengeluaran',
-          ),
-        ),
-        SizedBox(height: Rem.rem2),
-        Text(
-          'Nominal Pengeluaran',
+          'Nomor Rumah',
           style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: Rem.rem1),
@@ -70,32 +23,99 @@ class TambahPengeluaranScreen extends StatelessWidget {
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: 'Masukkan nominal pengeluaran',
+            hintText: "Masukkan nomor rumah",
           ),
         ),
         SizedBox(height: Rem.rem2),
+
+        // Alamat
         Text(
-          'Bukti Pengeluaran',
+          'Alamat Rumah',
+          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: Rem.rem1),
+        TextField(
+          maxLines: 2,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            hintText: "Masukkan alamat rumah",
+          ),
+        ),
+        SizedBox(height: Rem.rem2),
+
+        // RT / RW
+        Text(
+          "RT / RW",
+          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: Rem.rem1),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  hintText: "RT",
+                ),
+              ),
+            ),
+            SizedBox(width: Rem.rem1),
+            Expanded(
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  hintText: "RW",
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: Rem.rem2),
+
+        // Status Rumah
+        Text(
+          "Status Rumah",
           style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: Rem.rem1),
         Container(
-          width: double.infinity,
-          height: 150,
+          padding: EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade400),
           ),
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.all(Rem.rem1),
-              child: Text('Klik untuk mengunggah bukti pengeluaran'),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              hint: Text("Pilih status rumah"),
+              items: const [
+                DropdownMenuItem(value: "Milik", child: Text("Milik")),
+                DropdownMenuItem(value: "Kontrak", child: Text("Kontrak")),
+              ],
+              onChanged: (value) {},
             ),
           ),
         ),
+        SizedBox(height: Rem.rem2),
+
+        // Jumlah Penghuni
+        Text(
+          'Jumlah Penghuni',
+          style: TextStyle(fontSize: Rem.rem1, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: Rem.rem1),
+        TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            hintText: 'Masukkan jumlah penghuni',
+          ),
+        ),
         SizedBox(height: Rem.rem3),
+
+        // Tombol Submit dan Reset
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ElevatedButton(
               onPressed: () {},
@@ -110,7 +130,7 @@ class TambahPengeluaranScreen extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Submit',
+                "Submit",
                 style: TextStyle(fontSize: Rem.rem1, color: Colors.white),
               ),
             ),
@@ -118,7 +138,6 @@ class TambahPengeluaranScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                // backgroundColor: Colors.,
                 padding: EdgeInsets.symmetric(
                   horizontal: Rem.rem2,
                   vertical: Rem.rem1,
@@ -127,10 +146,13 @@ class TambahPengeluaranScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Reset', style: TextStyle(fontSize: Rem.rem1)),
+              child: Text(
+                "Reset",
+                style: TextStyle(fontSize: Rem.rem1),
+              ),
             ),
           ],
-        ),
+        )
       ],
     );
   }

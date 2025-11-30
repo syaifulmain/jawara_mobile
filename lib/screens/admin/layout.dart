@@ -6,14 +6,19 @@ import 'package:jawara_mobile/constants/rem.dart';
 
 class AdminLayoutScreen extends StatelessWidget {
   final Widget child;
+  final String title;
 
-  const AdminLayoutScreen({super.key, required this.child});
+  const AdminLayoutScreen({super.key, required this.child, this.title = 'Jawara Mobile'});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildSidebar(context),
-      appBar: AppBar(backgroundColor: AppColors.backgroundColor, elevation: 0),
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: AppColors.backgroundColor,
+        elevation: 0,
+      ),
       body: child,
     );
   }
@@ -76,37 +81,73 @@ class AdminLayoutScreen extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    _buildSubMenu(context, location, Icons.terminal, 'Dashboard', [
-                      {'title': 'Keuangan', 'route': '/admin'},
-                      {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
-                      {'title': 'Kependudukan', 'route': '/dashboard/kependudukan'},
-                    ]),
+                    _buildSubMenu(
+                      context,
+                      location,
+                      Icons.terminal,
+                      'Dashboard',
+                      [
+                        {'title': 'Keuangan', 'route': '/dashboard/keuangan'},
+                        {'title': 'Kegiatan', 'route': '/dashboard/kegiatan'},
+                        {
+                          'title': 'Kependudukan',
+                          'route': '/dashboard/kependudukan',
+                        },
+                      ],
+                    ),
                     _buildSubMenu(
                       context,
                       location,
                       Icons.people_alt_outlined,
                       'Data Warga & Rumah',
                       [
-                        {'title': 'Warga - Daftar', 'route': '/placeholder'},
-                        {'title': 'Warga - Tambah', 'route': '/placeholder'},
-                        {'title': 'Keluarga', 'route': '/placeholder'},
-                        {'title': 'Rumah - Daftar', 'route': '/placeholder'},
-                        {'title': 'Rumah - Tambah', 'route': '/placeholder'},
+                        {'title': 'Warga - Daftar', 'route': '/warga/daftar'},
+                        {'title': 'Warga - Tambah', 'route': '/warga/tambah'},
+                        {'title': 'Keluarga', 'route': '/keluarga'},
+                        {'title': 'Rumah - Daftar', 'route': '/rumah/daftar'},
+                        {'title': 'Rumah - Tambah', 'route': '/rumah/tambah'},
                       ],
                     ),
-                    _buildSubMenu(context, location, Icons.receipt_outlined, 'Pemasukan', [
-                      {'title': 'Daftar', 'route': '/placeholder'},
-                      {'title': 'Tambah', 'route': '/placeholder'},
-                    ]),
-                    _buildSubMenu(context, location, Icons.note_add_outlined, 'Pengeluaran', [
-                      {'title': 'Daftar', 'route': '/pengeluaran/daftar'},
-                      {'title': 'Tambah', 'route': '/pengeluaran/tambah'},
-                    ]),
-                    _buildSubMenu(context, location, Icons.receipt_long, 'Laporan Keuangan', [
-                      {'title': 'Semua Pemasukan', 'route': '/laporan_keuangan/semua_pemasukan'},
-                      {'title': 'Semua Pengeluaran', 'route': '/laporan_keuangan/semua_pengeluaran'},
-                      {'title': 'Cetak Laporan', 'route': '/laporan_keuangan/cetak_laporan'},
-                    ]),
+                    _buildSubMenu(
+                      context,
+                      location,
+                      Icons.receipt_outlined,
+                      'Pemasukan',
+                      [
+                        {'title': 'Daftar', 'route': '/pemasukan/daftar'},
+                        {'title': 'Tambah', 'route': '/pemasukan/tambah'},
+                      ],
+                    ),
+                    _buildSubMenu(
+                      context,
+                      location,
+                      Icons.note_add_outlined,
+                      'Pengeluaran',
+                      [
+                        {'title': 'Daftar', 'route': '/pengeluaran/daftar'},
+                        {'title': 'Tambah', 'route': '/pengeluaran/tambah'},
+                      ],
+                    ),
+                    _buildSubMenu(
+                      context,
+                      location,
+                      Icons.receipt_long,
+                      'Laporan Keuangan',
+                      [
+                        {
+                          'title': 'Semua Pemasukan',
+                          'route': '/laporan_keuangan/semua_pemasukan',
+                        },
+                        {
+                          'title': 'Semua Pengeluaran',
+                          'route': '/laporan_keuangan/semua_pengeluaran',
+                        },
+                        {
+                          'title': 'Cetak Laporan',
+                          'route': '/laporan_keuangan/cetak_laporan',
+                        },
+                      ],
+                    ),
                     _buildSubMenu(
                       context,
                       location,
@@ -115,16 +156,19 @@ class AdminLayoutScreen extends StatelessWidget {
                       [
                         {
                           'title': 'Kegiatan - Daftar',
-                          'route': '/kegiatan/daftar'
+                          'route': '/kegiatan/daftar',
                         },
-                        {'title': 'Kegiatan - Tambah', 'route': '/kegiatan/tambah'},
+                        {
+                          'title': 'Kegiatan - Tambah',
+                          'route': '/kegiatan/tambah',
+                        },
                         {
                           'title': 'Broadcast - Daftar',
-                          'route': '/broadcast/daftar'
+                          'route': '/broadcast/daftar',
                         },
                         {
                           'title': 'Broadcast - Tambah',
-                          'route': '/broadcast/tambah'
+                          'route': '/broadcast/tambah',
                         },
                       ],
                     ),
@@ -245,10 +289,17 @@ class AdminLayoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSubMenu(BuildContext context, String location, IconData icon,
-      String parent, List<Map<String, String>> items) {
+  Widget _buildSubMenu(
+    BuildContext context,
+    String location,
+    IconData icon,
+    String parent,
+    List<Map<String, String>> items,
+  ) {
     // A sub-menu is expanded if one of its children is the current active route.
-    final bool hasSelectedChild = items.any((item) => item['route'] == location);
+    final bool hasSelectedChild = items.any(
+      (item) => item['route'] == location,
+    );
 
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -286,7 +337,7 @@ class AdminLayoutScreen extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                context.go(route);      // Navigate to the new page
+                context.go(route); // Navigate to the new page
               },
               dense: true,
               visualDensity: VisualDensity.compact,
