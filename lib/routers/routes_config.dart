@@ -10,6 +10,7 @@ import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/family/famil
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/house/add_house_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/add_resident_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/resident_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_menu_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
@@ -242,7 +243,7 @@ class RoutesConfig {
       builder: (context, state) {
         final userId = state.pathParameters['id']!;
         return UserDetailScreen(id: userId);
-      }
+      },
     ),
 
     // TRANSFER CHANNEL ROUTES
@@ -251,6 +252,13 @@ class RoutesConfig {
       name: 'transfer_channel_menu',
       label: 'Saluran Transfer',
       builder: (context, state) => const TransferChannelMenuScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/transfer-channels-list',
+      name: 'transfer_channels_list',
+      label: 'Daftar Saluran Transfer',
+      builder: (context, state) => const TransferChannelListScreen(),
     ),
   ];
 }

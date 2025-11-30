@@ -6,6 +6,7 @@ import 'package:jawara_mobile_v2/providers/address_provider.dart';
 import 'package:jawara_mobile_v2/providers/broadcast_provider.dart';
 import 'package:jawara_mobile_v2/providers/family_provider.dart';
 import 'package:jawara_mobile_v2/providers/resident_provider.dart';
+import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
 import 'package:jawara_mobile_v2/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'constants/rem_constant.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider()
+        ),
+        ChangeNotifierProvider(
+            create: (_) => TransferChannelProvider()
         ),
       ],
       child: Consumer<AuthProvider>(

@@ -1,39 +1,14 @@
-// language: dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../constants/api_constant.dart';
-import '../models/user_model.dart';
+import '../models/transfer_channel/transfer_channel_list_model.dart';
 import 'api_exception.dart';
 
-class AuthService {
-  Future<Map<String, dynamic>> login(String email, String password) async {
-    try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.login),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-
-      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
-      print(body);
-      if (response.statusCode == 200) {
-        return body['data'];
-      } else {
-        final msg = body != null && body['message'] != null
-            ? body['message'].toString()
-            : 'Login failed with status ${response.statusCode}';
-        throw ApiException(msg, response.statusCode);
-      }
-    } catch (e) {
-      if (e is ApiException) rethrow;
-      throw ApiException('Network error: $e');
-    }
-  }
-
-  Future<UserModel> getUserProfile(String token) async {
+class TransferChannelService {
+  Future<List<TransferChannelListModel>> getTransferChannels(String token) async {
     try {
       final response = await http.get(
-        Uri.parse(ApiConstants.profile),
+        Uri.parse(ApiConstants.transferChannels),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -43,12 +18,12 @@ class AuthService {
       final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
 
       if (response.statusCode == 200) {
-        final data = body['data'];
-        return UserModel.fromJson(data['user']);
+        final List<dynamic> data = body['data'];
+        return data.map((json) => TransferChannelListModel.fromJson(json)).toList();
       } else {
         final msg = body != null && body['message'] != null
             ? body['message'].toString()
-            : 'Failed to get profile (${response.statusCode})';
+            : 'Failed to get transfer channels (${response.statusCode})';
         throw ApiException(msg, response.statusCode);
       }
     } catch (e) {
@@ -57,17 +32,30 @@ class AuthService {
     }
   }
 
-  Future<void> logout(String token) async {
+  Future<List<TransferChannelListModel>> searchTransferChannels(String token, String query) async {
     try {
-      await http.post(
-        Uri.parse(ApiConstants.logout),
+      final response = await http.get(
+        Uri.parse('${ApiConstants.transferChannels}?search=$query'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
-    } catch (_) {
-      // ignore logout errors
+
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = body['data'];
+        return data.map((json) => TransferChannelListModel.fromJson(json)).toList();
+      } else {
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to search transfer channels (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
     }
   }
 }
