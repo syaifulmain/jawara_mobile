@@ -90,27 +90,72 @@ class _KegiatanDetailScreenState extends State<KegiatanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondaryColor,
-      body: Padding(
-        padding: const EdgeInsets.all(Rem.rem1_5),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Card(
-              color: Colors.white,
+      appBar: AppBar(
+        title: const Text('Detail Kegiatan'),
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      backgroundColor: AppColors.backgroundColor,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(Rem.rem1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card utama detail kegiatan
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Rem.rem0_75),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(Rem.rem1),
+                padding: const EdgeInsets.all(Rem.rem1_5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Detail Kegiatan',
-                      style: GoogleFonts.figtree(
-                        fontSize: Rem.rem1_5,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryColor,
-                      ),
+                    // Header
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(Rem.rem0_5),
+                          decoration: const BoxDecoration(
+                            color: AppColors.primaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.event,
+                            color: Colors.white,
+                            size: Rem.rem1_25,
+                          ),
+                        ),
+                        const SizedBox(width: Rem.rem1),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Detail Kegiatan',
+                                style: GoogleFonts.figtree(
+                                  fontSize: Rem.rem0_875,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              Text(
+                                widget.dataKegiatan.nama_kegiatan,
+                                style: GoogleFonts.figtree(
+                                  fontSize: Rem.rem1_25,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: Rem.rem1_25),
+                    
+                    const SizedBox(height: Rem.rem1_5),
+                    const Divider(),
+                    const SizedBox(height: Rem.rem1),
                     CustomTextField(
                       controller: _namaKegiatanController,
                       labelText: "Nama Kegiatan",
@@ -217,24 +262,11 @@ class _KegiatanDetailScreenState extends State<KegiatanDetailScreen> {
                         style: GoogleFonts.poppins(fontSize: Rem.rem1),
                       ),
                     ),
-
-                    const SizedBox(height: Rem.rem1),
-
-                    CustomButton(
-                      backgroundColor: Colors.grey,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Kembali',
-                        style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                      ),
-                    ),
                   ],
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

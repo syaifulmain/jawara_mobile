@@ -123,10 +123,14 @@ class DataCard extends StatelessWidget {
                 ),
                 Builder(
                   builder: (context) {
-                    return IconButton(
-                      icon: const Icon(Icons.remove_red_eye_outlined),
-                      onPressed: () =>
+                    return GestureDetector(
+                      onTap: () =>
                           context.pushNamed('kegiatan-detail', extra: data),
+                      child: const Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: AppColors.primaryColor,
+                        size: 20,
+                      ),
                     );
                   },
                 ),
