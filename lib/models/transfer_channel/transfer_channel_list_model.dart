@@ -1,7 +1,9 @@
+import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_type.dart';
+
 class TransferChannelListModel {
   final int id;
   final String name;
-  final String type;
+  final TransferChannelType type;
   final String ownerName;
 
   TransferChannelListModel({
@@ -17,7 +19,7 @@ class TransferChannelListModel {
           ? json['id']
           : int.tryParse(json['id'].toString()) ?? 0,
       name: json['name'] ?? '',
-      type: json['type'] ?? '',
+      type: TransferChannelType.fromString(json['type'] ?? ''),
       ownerName: json['owner_name'] ?? '',
     );
   }
@@ -26,7 +28,7 @@ class TransferChannelListModel {
     return {
       'id': id,
       'name': name,
-      'type': type,
+      'type': type.toStringValue(),
       'owner_name': ownerName,
     };
   }
