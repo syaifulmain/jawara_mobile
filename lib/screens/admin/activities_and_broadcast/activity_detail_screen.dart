@@ -161,13 +161,22 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
     if (success) {
       if (mounted) {
+        // Refresh data dari server untuk memastikan sinkronisasi
+        await activityProvider.fetchActivities(authProvider.token!);
+        
+        // Update selectedActivity juga jika sesuai
+        if (activityProvider.selectedActivity?.id == widget.activityId) {
+          await activityProvider.fetchActivityById(authProvider.token!, widget.activityId);
+          _activity = activityProvider.selectedActivity;
+        }
+        
         setState(() {
           _isEditMode = false;
         });
+        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Kegiatan berhasil diperbarui')),
         );
-        _loadActivity();
       }
     } else {
       if (mounted) {
