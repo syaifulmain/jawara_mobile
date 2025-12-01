@@ -1,5 +1,6 @@
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_list_model.dart';
+import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_request_model.dart';
 import '../constants/api_constant.dart';
 import 'base_api_service.dart';
 
@@ -39,7 +40,7 @@ class TransferChannelService extends BaseApiService {
     return TransferChannelDetailModel.fromJson(body!['data']);
   }
 
-  Future<void> create(String token, TransferChannelDetailModel req) async {
+  Future<void> create(String token, TransferChannelRequestModel req) async {
     await request(
       url: ApiConstants.transferChannels,
       method: 'POST',

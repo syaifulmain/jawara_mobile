@@ -35,14 +35,12 @@ class _TransferChannelDetailScreenState
 
   // Controllers
   final _nameController = TextEditingController();
-  // final _typeController = TextEditingController();
   final _ownerNameController = TextEditingController();
   final _accountNumberController = TextEditingController();
   final _notesController = TextEditingController();
 
   // Selections
   TransferChannelType? _selectedType;
-
   bool _isEditMode = false;
   TransferChannelDetailModel? _transferChannel;
 

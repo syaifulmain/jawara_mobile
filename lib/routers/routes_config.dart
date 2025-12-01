@@ -10,6 +10,7 @@ import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/family/famil
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/house/add_house_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/add_resident_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/resident_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_creation_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
@@ -270,6 +271,13 @@ class RoutesConfig {
         final residentId = state.pathParameters['id']!;
         return TransferChannelDetailScreen(id: residentId);
       },
+    ),
+
+    AppRouteItem(
+      path: '/add-transfer-channel',
+      name: 'add_transfer_channel',
+      label: 'Tambah Saluran Transfer',
+      builder: (context, state) => const TransferChannelCreationScreen(),
     ),
   ];
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
+import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_request_model.dart';
 import '../models/transfer_channel/transfer_channel_list_model.dart';
 import '../services/transfer_channel_service.dart';
 import '../services/api_exception.dart';
@@ -89,9 +90,9 @@ class TransferChannelProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> createResident(
+  Future<bool> createTransferChannel(
     String token,
-    TransferChannelDetailModel request,
+    TransferChannelRequestModel request,
   ) async {
     _isLoading = true;
     _errorMessage = null;
