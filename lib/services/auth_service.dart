@@ -15,6 +15,7 @@ class AuthService {
       );
 
       final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+      print(body);
 
       if (response.statusCode == 200) {
         return body['data'];
