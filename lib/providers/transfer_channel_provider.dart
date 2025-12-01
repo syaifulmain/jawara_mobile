@@ -75,7 +75,7 @@ class TransferChannelProvider with ChangeNotifier {
 
     try {
       _selectedTransferChannel = await _transferChannelService
-          .getTransferChannelDetail(token, id);
+          .getDetail(token, id);
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -98,7 +98,7 @@ class TransferChannelProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      await _transferChannelService.createTransferChannel(token, request);
+      await _transferChannelService.create(token, request);
       _isLoading = false;
       notifyListeners();
       return true;
@@ -124,7 +124,7 @@ class TransferChannelProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      await _transferChannelService.updateTransferChannel(token, id, request);
+      await _transferChannelService.update(token, id, request);
       _isLoading = false;
       notifyListeners();
       return true;
