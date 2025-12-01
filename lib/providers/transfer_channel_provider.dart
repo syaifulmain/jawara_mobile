@@ -132,7 +132,7 @@ class TransferChannelProvider with ChangeNotifier {
       if (e is ApiException) {
         _errorMessage = e.message;
       } else {
-        _errorMessage = 'Gagal memperbarui penduduk';
+        _errorMessage = 'Gagal memperbarui saluran transfer';
       }
       _isLoading = false;
       notifyListeners();
