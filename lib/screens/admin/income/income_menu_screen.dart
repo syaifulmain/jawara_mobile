@@ -12,10 +12,17 @@ class IncomeMenuScreen extends StatelessWidget {
       menuItems: [
         SubMenuItem(
           icon: Icons.category,
-          title: 'Kategori Iuran',
-          subtitle: 'Kelola kategori iuran',
+          title: 'Jenis Iuran',
+          subtitle: 'Daftar Jenis iuran',
           color: Colors.blue,
-          onTap: () => context.pushNamed('income_categories'),
+          onTap: () => context.pushNamed('income_categories_list'),
+        ),
+        SubMenuItem(
+          icon: Icons.add_circle,
+          title: 'Tambah Jenis Iuran',
+          subtitle: 'Tambah jenis iuran baru',
+          color: Colors.green,
+          onTap: () => context.pushNamed('add_income_category'),
         ),
         SubMenuItem(
           icon: Icons.payment,
