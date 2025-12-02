@@ -10,6 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check API_BASE_URL variable
+        run: |
+          if [ -z "${{ vars.API_BASE_URL }}" ]; then
+            echo "❌ GitHub Variable API_BASE_URL TIDAK ADA"
+            exit 1
+          else
+            echo "✅ API_BASE_URL ditemukan: ${{ vars.API_BASE_URL }}"
+          fi
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
