@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/pengeluaran/pengeluaran_list_model.dart';
 import '../models/pengeluaran/pengeluaran_request_model.dart';
+import '../models/pengeluaran/pengeluaran_detail_model.dart';
 import '../services/pengeluaran_service.dart';
 import '../services/api_exception.dart';
 
@@ -108,6 +109,35 @@ class PengeluaranProvider with ChangeNotifier {
     }
   }
 
+  // property untuk detail
+  PengeluaranDetailModel? _selectedPengeluaran;
+  PengeluaranDetailModel? get selectedPengeluaran => _selectedPengeluaran;
+
+  // fetch detail
+  Future<void> fetchPengeluaranDetail(String token, String id) async {
+    _isLoading = true;
+    _errorMessage = null;
+    _selectedPengeluaran = null;
+    notifyListeners();
+
+    try {
+      _selectedPengeluaran = await _pengeluaranService.getPengeluaranDetail(
+        token,
+        id,
+      );
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil detail pengeluaran';
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   /// UTILS
   void clearSearch() {
     _searchQuery = '';
@@ -117,5 +147,50 @@ class PengeluaranProvider with ChangeNotifier {
   void clearError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  /// ------------------ TAMBAHAN UNTUK FILTER ------------------
+
+  /// Clear filter / reset pengeluaran
+  void clearFilter() {
+    _pengeluaran = [];
+    _searchQuery = '';
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  /// Fetch pengeluaran by category and/or date
+  Future<void> fetchPengeluaranByCategoryOrDate(
+    String token, {
+    String? category,
+    DateTime? date,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final String? formattedDate = date != null
+          ? date.toIso8601String().split('T').first
+          : null;
+
+      _pengeluaran = await _pengeluaranService.getPengeluaranList(
+        token,
+        kategori: category,
+        startDate: formattedDate,
+        endDate: formattedDate,
+      );
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal memfilter data pengeluaran';
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

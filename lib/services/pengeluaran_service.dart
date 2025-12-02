@@ -113,4 +113,12 @@ class PengeluaranService {
       throw ApiException("Network error: $e");
     }
   }
+
+  /// GET detail pengeluaran berdasarkan ID (untuk provider)
+  Future<PengeluaranDetailModel> getPengeluaranDetail(
+    String token,
+    String id,
+  ) async {
+    return getPengeluaranById(token, id);
+  }
 }
