@@ -1,14 +1,14 @@
-name: Build Flutter App
+name: Build Flutter Android
 
 on:
   push:
     branches: [ "main-v2" ]
-
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,10 +22,29 @@ jobs:
           flutter-version: '3.x'
           channel: 'stable'
 
+      - name: Disable unused Flutter platforms
+        run: |
+          flutter config --no-enable-web
+          flutter config --no-enable-linux-desktop
+          flutter config --no-enable-windows-desktop
+          flutter config --no-enable-macos-desktop
+
+      - run: flutter clean
       - run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release --dart-define=API_BASE_URL="${{ secrets.API_BASE_URL }}"
+      - name: Check BASE_URL_API variable
+        run: |
+          if [ -z "${{ vars.API_BASE_URL }}" ]; then
+            echo "❌ GitHub Variable BASE_URL_API TIDAK ADA"
+            exit 1
+          else
+            echo "✅ BASE_URL_API ditemukan: ${{ vars.API_BASE_URL }}"
+          fi
+
+      - name: Build Android APK
+        run: |
+          flutter build apk --release \
+            --dart-define=API_BASE_URL=${{ vars.API_BASE_URL }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
