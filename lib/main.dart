@@ -8,6 +8,7 @@ import 'package:jawara_mobile_v2/providers/family_provider.dart';
 import 'package:jawara_mobile_v2/providers/resident_provider.dart';
 import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
 import 'package:jawara_mobile_v2/providers/user_provider.dart';
+import 'package:jawara_mobile_v2/providers/income_provider.dart';
 import 'package:provider/provider.dart';
 import 'constants/rem_constant.dart';
 import 'providers/auth_provider.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => UserProvider()
         ),
+        ChangeNotifierProvider(create: (_) => IncomeProvider()),
         ChangeNotifierProvider(
             create: (_) => TransferChannelProvider()
         ),
@@ -83,7 +85,8 @@ class MyApp extends StatelessWidget {
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.backgroundColor,
                 titleTextStyle: GoogleFonts.poppins(
-                  fontSize: Rem.rem1_5, // Pastikan class 'Rem' Anda sudah diimport
+                  fontSize:
+                      Rem.rem1_5, // Pastikan class 'Rem' Anda sudah diimport
                   fontWeight: FontWeight.w500,
                   color: Colors.black, // Warna teks judul
                 ),
@@ -92,7 +95,7 @@ class MyApp extends StatelessWidget {
                 shape: const Border(
                   bottom: BorderSide(
                     color: Colors.grey, // Warna garis bawah
-                    width: 1.0,         // Ketebalan garis
+                    width: 1.0, // Ketebalan garis
                   ),
                 ),
 

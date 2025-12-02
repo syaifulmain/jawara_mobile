@@ -6,6 +6,9 @@ import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/broadcas
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_broadcast_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/dashboard/population_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/other_income_list_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/add_other_income_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/income_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/family/family_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/house/add_house_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/add_resident_screen.dart';
@@ -140,6 +143,27 @@ class RoutesConfig {
       name: 'income_menu',
       label: 'Pemasukan',
       builder: (context, state) => const IncomeMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/other-income-list',
+      name: 'other_income_list',
+      label: 'Daftar Pemasukan Lain',
+      builder: (context, state) => const OtherIncomeListScreen(),
+    ),
+    AppRouteItem(
+      path: '/add-other-income',
+      name: 'add_other_income',
+      label: 'Tambah Pemasukan Lain',
+      builder: (context, state) => const AddOtherIncomeScreen(),
+    ),
+    AppRouteItem(
+      path: '/income-detail/:id',
+      name: 'income_detail',
+      label: 'Detail Pemasukan',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return IncomeDetailScreen(id: id);
+      },
     ),
 
     // EXPENDITURE ROUTES
