@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_type.dart';
 import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
+import 'package:jawara_mobile_v2/widgets/custom_photo_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../../constants/color_constant.dart';
@@ -284,6 +285,10 @@ class _TransferChannelDetailScreenState
                       return null;
                     },
                   ),
+                  if (true) ...[
+                    const SizedBox(height: Rem.rem1_5),
+                    CustomPhotoViewer(photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Meitei_Houdong_%28Meetei_Houdong%29_-_A_typical_Meitei_domestic_cat_%28Meetei_house_cat%29_01.jpg'),
+                  ],
                   const SizedBox(height: Rem.rem1),
                   CustomTextFormField(
                     controller: _notesController,

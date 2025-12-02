@@ -3,11 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/rem_constant.dart';
 
-class BroadcastPhotoViewer extends StatelessWidget {
+class CustomPhotoViewer extends StatelessWidget {
   final String photoUrl;
   final String? label;
 
-  const BroadcastPhotoViewer({
+  const CustomPhotoViewer({
     Key? key,
     required this.photoUrl,
     this.label = 'Foto',
@@ -36,9 +36,7 @@ class BroadcastPhotoViewer extends StatelessWidget {
             placeholder: (context, url) => Container(
               height: 200,
               color: Colors.grey.shade200,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
             errorWidget: (context, url, error) => Container(
               height: 200,
