@@ -6,6 +6,7 @@ import 'package:jawara_mobile_v2/providers/address_provider.dart';
 import 'package:jawara_mobile_v2/providers/broadcast_provider.dart';
 import 'package:jawara_mobile_v2/providers/family_provider.dart';
 import 'package:jawara_mobile_v2/providers/resident_provider.dart';
+import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
 import 'package:jawara_mobile_v2/providers/user_provider.dart';
 import 'package:jawara_mobile_v2/providers/income_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,14 +31,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
-        ChangeNotifierProvider(create: (_) => ActivityProvider()),
-        ChangeNotifierProvider(create: (_) => BroadcastProvider()),
-        ChangeNotifierProvider(create: (_) => AddressProvider()),
-        ChangeNotifierProvider(create: (_) => ResidentProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider()..initialize(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ActivityProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BroadcastProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddressProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ResidentProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FamilyProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider()
+        ),
         ChangeNotifierProvider(create: (_) => IncomeProvider()),
-        ChangeNotifierProvider(create: (_) => FamilyProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(
+            create: (_) => TransferChannelProvider()
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {

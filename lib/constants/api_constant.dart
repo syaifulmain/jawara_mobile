@@ -24,6 +24,7 @@ class ApiConstants {
   static const String users = '$baseUrl/users';
   static const String incomes = '$baseUrl/incomes';
 
+  static const String transferChannels = '$baseUrl/transfer-channels';
 
 
 
