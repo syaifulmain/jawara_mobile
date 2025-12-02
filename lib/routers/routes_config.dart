@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/activities_and_broadcast_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/activities_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_activity_screen.dart';
@@ -6,6 +6,9 @@ import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/broadcas
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_broadcast_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/dashboard/population_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/income_categories_list_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/income_category_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/add_income_category_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/other_income_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/add_other_income_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_detail_screen.dart';
@@ -145,6 +148,24 @@ class RoutesConfig {
       builder: (context, state) => const IncomeMenuScreen(),
     ),
     AppRouteItem(
+      path: '/income-categories-list',
+      name: 'income_categories_list',
+      label: 'Income Categories',
+      builder: (context, state) => const IncomeCategoriesListScreen(),
+    ),
+    AppRouteItem(
+      path: '/add-income-category',
+      name: 'add_income_category',
+      label: 'Add Category',
+      builder: (context, state) => const AddIncomeCategoryScreen(),
+    ),
+    AppRouteItem(
+      path: '/income-category/:id',
+      name: 'income_category_detail',
+      label: 'Category Detail',
+      builder: (context, state) {
+        final categoryId = state.pathParameters['id']!;
+        return IncomeCategoryDetailScreen(categoryId: categoryId);
       path: '/other-income-list',
       name: 'other_income_list',
       label: 'Daftar Pemasukan Lain',

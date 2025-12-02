@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../../../enums/activity_category.dart';
+import '../../../enums/income_type.dart';
 import '../../../providers/auth_provider.dart';
-import '../../../providers/activity_provider.dart';
-import '../../../models/activity_model.dart';
+import '../../../providers/income_categories_provider.dart';
+import '../../../models/income/income_categories_model.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_chip.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_select_calender.dart';
 import '../../../widgets/custom_text_form_field.dart';
 
-class ActivitiesListScreen extends StatefulWidget {
-  const ActivitiesListScreen({Key? key}) : super(key: key);
+class IncomeCategoriesListScreen extends StatefulWidget {
+  const IncomeCategoriesListScreen({Key? key}) : super(key: key);
 
   @override
-  State<ActivitiesListScreen> createState() => _ActivitiesListScreenState();
+  State<IncomeCategoriesListScreen> createState() => _IncomeCategoriesListScreenState();
 }
 
-class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
-  ActivityCategory? _selectedCategory;
+class _IncomeCategoriesListScreenState extends State<IncomeCategoriesListScreen> {
+  IncomeType? _selectedType;
   DateTime? _selectedDate;
   final TextEditingController _searchController = TextEditingController();
 
@@ -28,46 +28,46 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadActivities();
+      _loadCategories();
     });
   }
 
-  void _loadActivities() {
+  void _loadCategories() {
     final authProvider = context.read<AuthProvider>();
-    final activityProvider = context.read<ActivityProvider>();
+    final incomeProvider = context.read<IncomeCategoriesProvider>();
 
     if (authProvider.token != null) {
-      activityProvider.fetchActivities(authProvider.token!);
+      incomeProvider.fetchCategories(authProvider.token!);
     }
   }
 
   void _applyFilters() {
     final authProvider = context.read<AuthProvider>();
-    final activityProvider = context.read<ActivityProvider>();
+    final incomeProvider = context.read<IncomeCategoriesProvider>();
 
     if (authProvider.token != null) {
-      if (_selectedCategory == null && _selectedDate == null) {
-        activityProvider.clearFilter();
-        activityProvider.fetchActivities(authProvider.token!);
+      if (_selectedType == null && _selectedDate == null) {
+        incomeProvider.clearFilter();
+        incomeProvider.fetchCategories(authProvider.token!);
       } else {
-        activityProvider.fetchActivitiesByCategoryOrDate(
+        incomeProvider.fetchCategoriesByTypeOrDate(
           authProvider.token!,
-          category: _selectedCategory,
+          type: _selectedType,
           date: _selectedDate,
         );
       }
     }
   }
 
-  void _searchActivities(String query) {
+  void _searchCategories(String query) {
     final authProvider = context.read<AuthProvider>();
-    final activityProvider = context.read<ActivityProvider>();
+    final incomeProvider = context.read<IncomeCategoriesProvider>();
 
     if (authProvider.token != null) {
       if (query.isEmpty) {
         _applyFilters();
       } else {
-        activityProvider.searchActivities(authProvider.token!, query);
+        incomeProvider.searchCategories(authProvider.token!, query);
       }
     }
   }
@@ -80,11 +80,11 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => _FilterBottomSheet(
-        selectedCategory: _selectedCategory,
+        selectedType: _selectedType,
         selectedDate: _selectedDate,
-        onApply: (category, date) {
+        onApply: (type, date) {
           setState(() {
-            _selectedCategory = category;
+            _selectedType = type;
             _selectedDate = date;
           });
           _applyFilters();
@@ -95,10 +95,10 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasActiveFilter = _selectedCategory != null || _selectedDate != null;
+    final hasActiveFilter = _selectedType != null || _selectedDate != null;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Kegiatan')),
+      appBar: AppBar(title: const Text('Income Categories')),
       body: Column(
         children: [
           Padding(
@@ -107,18 +107,18 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
               children: [
                 CustomTextFormField(
                   controller: _searchController,
-                  hintText: 'Cari kegiatan...',
+                  hintText: 'Search categories...',
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear),
                           onPressed: () {
                             _searchController.clear();
-                            _searchActivities('');
+                            _searchCategories('');
                           },
                         )
                       : null,
                   prefixIcon: const Icon(Icons.search),
-                  onChanged: _searchActivities,
+                  onChanged: _searchCategories,
                 ),
                 const SizedBox(height: 12),
                 CustomButton(
@@ -129,7 +129,7 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                       const Icon(Icons.filter_list),
                       const SizedBox(width: 8),
                       Text(
-                        hasActiveFilter ? 'Filter Aktif' : 'Filter Kegiatan',
+                        hasActiveFilter ? 'Active Filter' : 'Filter Categories',
                       ),
                     ],
                   ),
@@ -138,43 +138,43 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
             ),
           ),
           Expanded(
-            child: Consumer<ActivityProvider>(
-              builder: (context, activityProvider, child) {
-                if (activityProvider.isLoading) {
+            child: Consumer<IncomeCategoriesProvider>(
+              builder: (context, incomeProvider, child) {
+                if (incomeProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (activityProvider.errorMessage != null) {
+                if (incomeProvider.errorMessage != null) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Error: ${activityProvider.errorMessage}',
+                          'Error: ${incomeProvider.errorMessage}',
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: _loadActivities,
-                          child: const Text('Coba Lagi'),
+                          onPressed: _loadCategories,
+                          child: const Text('Try Again'),
                         ),
                       ],
                     ),
                   );
                 }
 
-                if (activityProvider.activities.isEmpty) {
-                  return const Center(child: Text('Belum ada kegiatan'));
+                if (incomeProvider.categories.isEmpty) {
+                  return const Center(child: Text('No categories available'));
                 }
 
                 return RefreshIndicator(
-                  onRefresh: () async => _loadActivities(),
+                  onRefresh: () async => _loadCategories(),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16.0),
-                    itemCount: activityProvider.activities.length,
+                    itemCount: incomeProvider.categories.length,
                     itemBuilder: (context, index) {
-                      final activity = activityProvider.activities[index];
-                      return _ActivityCard(activity: activity);
+                      final category = incomeProvider.categories[index];
+                      return _CategoryCard(category: category);
                     },
                   ),
                 );
@@ -194,12 +194,12 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
 }
 
 class _FilterBottomSheet extends StatefulWidget {
-  final ActivityCategory? selectedCategory;
+  final IncomeType? selectedType;
   final DateTime? selectedDate;
-  final Function(ActivityCategory?, DateTime?) onApply;
+  final Function(IncomeType?, DateTime?) onApply;
 
   const _FilterBottomSheet({
-    required this.selectedCategory,
+    required this.selectedType,
     required this.selectedDate,
     required this.onApply,
   });
@@ -209,51 +209,29 @@ class _FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<_FilterBottomSheet> {
-  ActivityCategory? _tempCategory;
+  IncomeType? _tempType;
   DateTime? _tempDate;
 
   @override
   void initState() {
     super.initState();
-    _tempCategory = widget.selectedCategory;
+    _tempType = widget.selectedType;
     _tempDate = widget.selectedDate;
   }
 
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _tempDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _tempDate = picked;
-      });
-    }
-  }
-
   void _reset() {
-    // setState(() {
-    //   _tempCategory = null;
-    //   _tempDate = null;
-    // });
-
-    // Reset form dan data
+    // Reset form and data
     widget.onApply(null, null);
     Navigator.pop(context);
   }
 
   void _apply() {
-    widget.onApply(_tempCategory, _tempDate);
+    widget.onApply(_tempType, _tempDate);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd MMMM yyyy');
-
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -292,28 +270,28 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               children: [
                 const SizedBox(height: 12),
                 CustomSelectCalendar(
-                  labelText: 'Tanggal Pelaksanaan',
-                  hintText: 'Pilih Tanggal',
+                  labelText: 'Created Date',
+                  hintText: 'Select Date',
                   initialDate: _tempDate,
-                  onDateSelected: (DateTime p1) {
+                  onDateSelected: (DateTime date) {
                     setState(() {
-                      _tempDate = null;
+                      _tempDate = date;
                     });
                   },
                 ),
                 const SizedBox(height: 12),
-                CustomDropdown<ActivityCategory>(
-                  labelText: 'Kategori',
-                  hintText: 'Pilih kategori',
-                  items: ActivityCategory.values.map((category) {
+                CustomDropdown<IncomeType>(
+                  labelText: 'Type',
+                  hintText: 'Select type',
+                  items: IncomeType.values.map((type) {
                     return DropdownMenuEntry(
-                      value: category,
-                      label: category.label,
+                      value: type,
+                      label: type.label,
                     );
                   }).toList(),
                   onSelected: (value) {
                     setState(() {
-                      _tempCategory = value;
+                      _tempType = value;
                     });
                   },
                 ),
@@ -334,14 +312,14 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   child: CustomButton(
                     onPressed: _reset,
                     child: const Text('Reset'),
-                    isOutlined: true, // <-- PENTING: Untuk gaya Outline
+                    isOutlined: true,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: CustomButton(
                     onPressed: _apply,
-                    child: const Text('Terapkan'),
+                    child: const Text('Apply'),
                   ),
                 ),
               ],
@@ -352,12 +330,11 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
     );
   }
 }
-// ... (Kode sebelumnya)
 
-class _ActivityCard extends StatelessWidget {
-  final Activity activity;
+class _CategoryCard extends StatelessWidget {
+  final IncomeCategories category;
 
-  const _ActivityCard({required this.activity});
+  const _CategoryCard({required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -368,10 +345,10 @@ class _ActivityCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          if (activity.id != null) {
+          if (category.id != null) {
             context.pushNamed(
-              'activity_detail',
-              pathParameters: {'id': activity.id.toString()},
+              'income_category_detail',
+              pathParameters: {'id': category.id.toString()},
             );
           }
         },
@@ -385,14 +362,14 @@ class _ActivityCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      activity.name,
+                      category.name,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   CustomChip(
-                    label: activity.category.label,
+                    label: category.type.label,
                   )
                 ],
               ),
@@ -400,21 +377,24 @@ class _ActivityCard extends StatelessWidget {
               Row(
                 children: [
                   const Icon(
-                    Icons.calendar_today,
+                    Icons.monetization_on,
                     size: 16,
-                    color: Colors.grey,
+                    color: Colors.green,
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    dateFormat.format(activity.date),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    category.nominal,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(width: 16),
-                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                  const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
-                      activity.location,
+                      dateFormat.format(category.createdAt),
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -428,26 +408,23 @@ class _ActivityCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
-                      'PJ: ${activity.personInCharge}',
+                      'Created by: ${category.createdByDisplayName}',
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
-              // --- Bagian yang terputus diselesaikan di sini ---
-              if (activity
-                  .description
-                  .isNotEmpty) // Tambahkan deskripsi singkat
+              if (category.description.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    activity.description,
-                    maxLines: 2, // Batasi deskripsi hanya 2 baris
+                    category.description,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[700],
+                    ),
                   ),
                 ),
               const SizedBox(height: 12),
@@ -455,14 +432,14 @@ class _ActivityCard extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    if (activity.id != null) {
+                    if (category.id != null) {
                       context.pushNamed(
-                        'activity_detail',
-                        pathParameters: {'id': activity.id.toString()},
+                        'income_category_detail',
+                        pathParameters: {'id': category.id.toString()},
                       );
                     }
                   },
-                  child: const Text('Lihat Detail'),
+                  child: const Text('View Detail'),
                 ),
               ),
             ],
