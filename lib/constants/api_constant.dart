@@ -24,7 +24,7 @@ class ApiConstants {
 
   static const String transferChannels = '$baseUrl/transfer-channels';
 
-
+  static const String pengeluaran = '$baseUrl/pengeluaran';
 
   // Helper untuk single todo
   // static String todoById(int id) => '$baseUrl/todos/$id';
