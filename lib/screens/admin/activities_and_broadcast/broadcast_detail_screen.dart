@@ -12,6 +12,9 @@ import '../../../providers/broadcast_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/broadcast_photo_viewer.dart';
+import '../../../widgets/document_viewer.dart';
+
 
 class BroadcastDetailScreen extends StatefulWidget {
   final String broadcastId;
@@ -176,19 +179,6 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
     }
   }
 
-  Future<void> _openDocument(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak dapat membuka dokumen')),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMMM yyyy, HH:mm');
@@ -272,71 +262,11 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
                   ),
                   if (_broadcast!.photo != null) ...[
                     const SizedBox(height: Rem.rem1_5),
-                    Text(
-                      "Foto",
-                      style: GoogleFonts.poppins(
-                        fontSize: Rem.rem1,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: Rem.rem0_5),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      child: CachedNetworkImage(
-                        imageUrl: _broadcast!.photoUrl!,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          height: 200,
-                          color: Colors.grey.shade200,
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          height: 200,
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.error),
-                        ),
-                      ),
-                    ),
+                    BroadcastPhotoViewer(photoUrl: _broadcast!.photoUrl!),
                   ],
                   if (_broadcast!.document != null) ...[
                     const SizedBox(height: Rem.rem1_5),
-                    Text(
-                      "Dokumen",
-                      style: GoogleFonts.poppins(
-                        fontSize: Rem.rem1,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: Rem.rem0_5),
-                    InkWell(
-                      onTap: () => _openDocument(_broadcast!.documentUrl!),
-                      child: Container(
-                        padding: const EdgeInsets.all(Rem.rem1),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(Rem.rem0_5),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.description, color: Colors.orange),
-                            const SizedBox(width: Rem.rem0_75),
-                            Expanded(
-                              child: Text(
-                                'Lihat Dokumen',
-                                style: GoogleFonts.poppins(),
-                              ),
-                            ),
-                            const Icon(Icons.open_in_new, size: Rem.rem1_25),
-                          ],
-                        ),
-                      ),
-                    ),
+                    DocumentViewer(documentUrl: _broadcast!.documentUrl!),
                   ],
                   if (_isEditMode) ...[
                     const SizedBox(height: Rem.rem1_5),

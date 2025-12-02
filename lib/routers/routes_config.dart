@@ -35,6 +35,8 @@ import '../screens/admin/residents_and_houses/resident/residents_list_screen.dar
 import '../screens/admin/residents_and_houses/residents_and_houses_menu_screen.dart';
 import '../screens/admin/transfer_channel/transfer_channel_menu_screen.dart';
 import '../screens/admin/user_management/users_list_screen.dart';
+import '../screens/warga/activities/activities_menu_screen.dart';
+import '../screens/warga/broadcast/broadcast_menu_screen.dart';
 import 'app_route_item.dart';
 import '../screens/home_screen.dart';
 
@@ -325,6 +327,22 @@ class RoutesConfig {
       name: 'add_transfer_channel',
       label: 'Tambah Saluran Transfer',
       builder: (context, state) => const TransferChannelCreationScreen(),
+    ),
+
+    // ROLE USER
+    // RESIDENT ACTIVITIES MENU
+    AppRouteItem(
+      path: '/resident-activities-menu',
+      name: 'resident_activities_menu',
+      label: 'Kegiatan Warga',
+      builder: (context, state) => const ResidentActivitiesMenuScreen(),
+    ),
+    // RESIDENT BROADCAST MENU
+    AppRouteItem(
+      path: '/resident-broadcast-menu',
+      name: 'resident_broadcast_menu',
+      label: 'Broadcast Warga',
+      builder: (context, state) => const ResidentBroadcastMenuScreen(),
     ),
   ];
 }
