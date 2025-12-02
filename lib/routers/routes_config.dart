@@ -1,4 +1,3 @@
-
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/activities_and_broadcast_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/activities_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_activity_screen.dart';
@@ -166,6 +165,9 @@ class RoutesConfig {
       builder: (context, state) {
         final categoryId = state.pathParameters['id']!;
         return IncomeCategoryDetailScreen(categoryId: categoryId);
+      },
+    ),
+    AppRouteItem(
       path: '/other-income-list',
       name: 'other_income_list',
       label: 'Daftar Pemasukan Lain',
