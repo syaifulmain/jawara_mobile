@@ -165,16 +165,19 @@ class RoutesConfig {
     AppRouteItem(
       path: '/income-category/:id',
       name: 'income_category_detail',
-      label: 'Detail Kategori Iuran',
+      label: 'Category Detail',
       builder: (context, state) {
         final categoryId = state.pathParameters['id']!;
         return IncomeCategoryDetailScreen(categoryId: categoryId);
+      },
+    ),
+      AppRouteItem(
       path: '/other-income-list',
       name: 'other_income_list',
       label: 'Daftar Pemasukan Lain',
       builder: (context, state) => const OtherIncomeListScreen(),
-    ),
-    AppRouteItem(
+    ), 
+     AppRouteItem(
       path: '/add-other-income',
       name: 'add_other_income',
       label: 'Tambah Pemasukan Lain',
