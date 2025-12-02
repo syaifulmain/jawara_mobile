@@ -9,10 +9,16 @@ import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_categories_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_category_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/add_income_category_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/other_income_list_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/add_other_income_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/income_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/family/family_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/house/add_house_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/add_resident_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/residents_and_houses/resident/resident_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_creation_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_menu_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
@@ -160,6 +166,24 @@ class RoutesConfig {
       builder: (context, state) {
         final categoryId = state.pathParameters['id']!;
         return IncomeCategoryDetailScreen(categoryId: categoryId);
+      path: '/other-income-list',
+      name: 'other_income_list',
+      label: 'Daftar Pemasukan Lain',
+      builder: (context, state) => const OtherIncomeListScreen(),
+    ),
+    AppRouteItem(
+      path: '/add-other-income',
+      name: 'add_other_income',
+      label: 'Tambah Pemasukan Lain',
+      builder: (context, state) => const AddOtherIncomeScreen(),
+    ),
+    AppRouteItem(
+      path: '/income-detail/:id',
+      name: 'income_detail',
+      label: 'Detail Pemasukan',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return IncomeDetailScreen(id: id);
       },
     ),
 
@@ -266,7 +290,7 @@ class RoutesConfig {
       builder: (context, state) {
         final userId = state.pathParameters['id']!;
         return UserDetailScreen(id: userId);
-      }
+      },
     ),
 
     // TRANSFER CHANNEL ROUTES
@@ -275,6 +299,30 @@ class RoutesConfig {
       name: 'transfer_channel_menu',
       label: 'Saluran Transfer',
       builder: (context, state) => const TransferChannelMenuScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/transfer-channels-list',
+      name: 'transfer_channels_list',
+      label: 'Daftar Saluran Transfer',
+      builder: (context, state) => const TransferChannelListScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/transfer-channels/:id',
+      name: 'transfer_channel_detail',
+      label: 'Detail Saluran Transfer',
+      builder: (context, state) {
+        final residentId = state.pathParameters['id']!;
+        return TransferChannelDetailScreen(id: residentId);
+      },
+    ),
+
+    AppRouteItem(
+      path: '/add-transfer-channel',
+      name: 'add_transfer_channel',
+      label: 'Tambah Saluran Transfer',
+      builder: (context, state) => const TransferChannelCreationScreen(),
     ),
   ];
 }
