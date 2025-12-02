@@ -1,8 +1,6 @@
 name: Build Flutter Android
 
 on:
-  push:
-    branches: [ "main-v2" ]
   workflow_dispatch:
 
 jobs:
@@ -31,15 +29,6 @@ jobs:
 
       - run: flutter clean
       - run: flutter pub get
-
-      - name: Check BASE_URL_API variable
-        run: |
-          if [ -z "${{ vars.API_BASE_URL }}" ]; then
-            echo "❌ GitHub Variable BASE_URL_API TIDAK ADA"
-            exit 1
-          else
-            echo "✅ BASE_URL_API ditemukan: ${{ vars.API_BASE_URL }}"
-          fi
 
       - name: Build Android APK
         run: |
