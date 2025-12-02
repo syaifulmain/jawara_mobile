@@ -306,7 +306,7 @@ class HomeScreen extends StatelessWidget {
                       title: 'Kegiatan',
                       subtitle: 'Lihat kegiatan yang diikuti',
                       color: Colors.red,
-                      onTap: () => context.pushNamed('resident_activities'),
+                      onTap: () => context.pushNamed('resident_activities_menu'),
                     ),
                     const SizedBox(height: 12),
 
@@ -316,7 +316,7 @@ class HomeScreen extends StatelessWidget {
                       title: 'Broadcast',
                       subtitle: 'Lihat broadcast terbaru',
                       color: Colors.orange,
-                      onTap: () => context.pushNamed('resident_broadcasts'),
+                      onTap: () => context.pushNamed('resident_broadcast_menu'),
                     ),
                     const SizedBox(height: 12),
 

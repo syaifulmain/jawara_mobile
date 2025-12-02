@@ -33,29 +33,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider()..initialize(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ActivityProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => BroadcastProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => AddressProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ResidentProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => FamilyProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => UserProvider()
-        ),
-        ChangeNotifierProvider(
-          create: (_) => IncomeCategoriesProvider()
+        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
+        ChangeNotifierProvider(create: (_) => ActivityProvider()),
+        ChangeNotifierProvider(create: (_) => BroadcastProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_) => ResidentProvider()),
+        ChangeNotifierProvider(create: (_) => FamilyProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => IncomeCategoriesProvider()),
         ChangeNotifierProvider(create: (_) => IncomeProvider()),
         ChangeNotifierProvider(
             create: (_) => TransferChannelProvider()

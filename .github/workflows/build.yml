@@ -1,0 +1,41 @@
+name: Build Flutter Android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Disable unused Flutter platforms
+        run: |
+          flutter config --no-enable-web
+          flutter config --no-enable-linux-desktop
+          flutter config --no-enable-windows-desktop
+          flutter config --no-enable-macos-desktop
+
+      - run: flutter clean
+      - run: flutter pub get
+
+      - name: Build Android APK
+        run: |
+          flutter build apk --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
