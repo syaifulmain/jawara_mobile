@@ -126,6 +126,21 @@ class ResidentProvider with ChangeNotifier {
     }
   }
 
+  // Fetch resident by user ID (for getting family_id of logged-in user)
+  Future<ResidentDetailModel?> fetchResidentByUserId(String token, String userId) async {
+    try {
+      return await _residentService.getResidentByUserId(token, userId);
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil data penduduk dari user ID';
+      }
+      notifyListeners();
+      return null;
+    }
+  }
+
   void clearSelectedResident() {
     _selectedResident = null;
     notifyListeners();

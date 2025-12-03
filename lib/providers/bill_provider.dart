@@ -8,6 +8,7 @@ class BillProvider with ChangeNotifier {
   final BillService _billService = BillService();
 
   List<BillModel> _bills = [];
+  List<BillModel> _allBills = []; // Cache untuk client-side pagination
   BillModel? _selectedBill;
   bool _isLoading = false;
   bool _isLoadingMore = false;
@@ -18,6 +19,7 @@ class BillProvider with ChangeNotifier {
   int _lastPage = 1;
   bool _hasMore = true;
   final int _perPage = 15;
+  bool _useClientPagination = false;
 
   List<BillModel> get bills => _bills;
   BillModel? get selectedBill => _selectedBill;
@@ -28,17 +30,36 @@ class BillProvider with ChangeNotifier {
   int get currentPage => _currentPage;
 
   // Fetch all bills (reset pagination)
-  Future<void> fetchBills(String token) async {
+  Future<void> fetchBills(String token, {int? familyId}) async {
     _setLoading(true);
     _clearError();
     _currentPage = 1;
 
     try {
-      final result = await _billService.getBills(token, page: 1, perPage: _perPage);
-      _bills = result['bills'] as List<BillModel>;
-      _currentPage = result['current_page'] as int;
-      _lastPage = result['last_page'] as int;
-      _hasMore = result['has_more'] as bool;
+      final result = await _billService.getBills(
+        token, 
+        page: 1, 
+        perPage: _perPage,
+        familyId: familyId,
+      );
+      final allBills = result['bills'] as List<BillModel>;
+      _useClientPagination = result['use_client_pagination'] as bool? ?? false;
+      
+      if (_useClientPagination) {
+        // Client-side pagination: cache all data, show first page
+        _allBills = allBills;
+        _bills = _allBills.take(_perPage).toList();
+        _currentPage = 1;
+        _lastPage = (_allBills.length / _perPage).ceil();
+        _hasMore = _allBills.length > _perPage;
+      } else {
+        // Server-side pagination
+        _bills = allBills;
+        _currentPage = result['current_page'] as int;
+        _lastPage = result['last_page'] as int;
+        _hasMore = result['has_more'] as bool;
+      }
+      
       notifyListeners();
     } on ApiException catch (e) {
       _setError(e.message);
@@ -50,21 +71,41 @@ class BillProvider with ChangeNotifier {
   }
 
   // Load more bills (infinite scroll)
-  Future<void> loadMoreBills(String token) async {
+  Future<void> loadMoreBills(String token, {int? familyId}) async {
     if (_isLoadingMore || !_hasMore || _isLoading) return;
 
     _isLoadingMore = true;
     notifyListeners();
 
     try {
-      final nextPage = _currentPage + 1;
-      final result = await _billService.getBills(token, page: nextPage, perPage: _perPage);
-      
-      final newBills = result['bills'] as List<BillModel>;
-      _bills.addAll(newBills);
-      _currentPage = result['current_page'] as int;
-      _lastPage = result['last_page'] as int;
-      _hasMore = result['has_more'] as bool;
+      if (_useClientPagination) {
+        // Client-side pagination: slice cached data
+        await Future.delayed(const Duration(milliseconds: 300)); // Simulate loading
+        
+        final nextPage = _currentPage + 1;
+        final startIndex = _currentPage * _perPage;
+        final endIndex = startIndex + _perPage;
+        
+        final newBills = _allBills.skip(startIndex).take(_perPage).toList();
+        _bills.addAll(newBills);
+        _currentPage = nextPage;
+        _hasMore = endIndex < _allBills.length;
+      } else {
+        // Server-side pagination: fetch from API
+        final nextPage = _currentPage + 1;
+        final result = await _billService.getBills(
+          token, 
+          page: nextPage, 
+          perPage: _perPage,
+          familyId: familyId,
+        );
+        
+        final newBills = result['bills'] as List<BillModel>;
+        _bills.addAll(newBills);
+        _currentPage = result['current_page'] as int;
+        _lastPage = result['last_page'] as int;
+        _hasMore = result['has_more'] as bool;
+      }
       
       notifyListeners();
     } on ApiException catch (e) {
@@ -267,6 +308,57 @@ class BillProvider with ChangeNotifier {
     }
   }
 
+  // Upload payment proof (for users/warga)
+  Future<bool> uploadPaymentProof(
+    String token,
+    String billId,
+    String imagePath,
+  ) async {
+    _setLoading(true);
+    _clearError();
+
+    try {
+      final success = await _billService.uploadPaymentProof(
+        token,
+        billId,
+        imagePath,
+      );
+
+      if (success) {
+        // Update local data
+        final index = _bills.indexWhere((bill) => bill.id.toString() == billId);
+        if (index != -1) {
+          _bills[index] = _bills[index].copyWith(
+            status: BillStatus.pending,
+            paidAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        }
+
+        // Update selected bill if it matches
+        if (_selectedBill?.id.toString() == billId) {
+          _selectedBill = _selectedBill!.copyWith(
+            status: BillStatus.pending,
+            paidAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        }
+
+        notifyListeners();
+      }
+
+      return success;
+    } on ApiException catch (e) {
+      _setError(e.message);
+      return false;
+    } catch (e) {
+      _setError('An unexpected error occurred: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   // Reject payment
   Future<bool> rejectPayment(
     String token,
@@ -372,6 +464,19 @@ class BillProvider with ChangeNotifier {
   // Clear selected bill
   void clearSelectedBill() {
     _selectedBill = null;
+    notifyListeners();
+  }
+
+  // Clear all bills cache (for switching users)
+  void clearBillsCache() {
+    _bills = [];
+    _allBills = [];
+    _selectedBill = null;
+    _currentPage = 1;
+    _lastPage = 1;
+    _hasMore = true;
+    _useClientPagination = false;
+    _clearError();
     notifyListeners();
   }
 
