@@ -27,6 +27,7 @@ import '../screens/admin/dashboard/dashboard_menu_screen.dart';
 import '../screens/admin/dashboard/finance_screen.dart';
 import '../screens/admin/expenditure/expenditure_menu_screen.dart';
 import '../screens/admin/expenditure/expenditure_list_screen.dart';
+import '../screens/admin/expenditure/expenditure_detail_screen.dart';
 import '../screens/admin/family_mutation/family_mutation_menu_screen.dart';
 import '../screens/admin/financial_reports/financial_reports_menu_screen.dart';
 import '../screens/admin/residents_and_houses/family/families_list_screen.dart';
@@ -205,6 +206,16 @@ class RoutesConfig {
       name: 'expenditures_list',
       label: 'Daftar Pengeluaran',
       builder: (context, state) => const ExpenditureListScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/expenditure_detail/:id',
+      name: 'expenditure_detail',
+      label: 'Detail Pengeluaran',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return ExpenditureDetailScreen(id: id);
+      },
     ),
 
     // FINANCIAL REPORTS ROUTES
