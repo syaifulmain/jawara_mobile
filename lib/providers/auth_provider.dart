@@ -83,7 +83,6 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final response = await _apiService.login(email, password);
-      print(response);
       _token = response['token'];
       _currentUser = UserModel.fromJson(response['user']);
 

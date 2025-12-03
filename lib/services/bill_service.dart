@@ -21,9 +21,6 @@ class BillService {
         },
       );
 
-      print('Bills API Response: ${response.statusCode}');
-      print('Bills API Body: ${response.body}');
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         
@@ -62,7 +59,6 @@ class BillService {
         );
       }
     } catch (e) {
-      print('Error in getBills: $e');
       throw ApiException('Failed to get bills: $e');
     }
   }
@@ -77,9 +73,6 @@ class BillService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Get Bill By ID Response: ${response.statusCode}');
-      print('Get Bill By ID Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
@@ -100,7 +93,6 @@ class BillService {
         );
       }
     } catch (e) {
-      print('Error in getBillById: $e');
       throw ApiException('Failed to get bill: $e');
     }
   }
@@ -115,9 +107,6 @@ class BillService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Search Bills Response: ${response.statusCode}');
-      print('Search Bills Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
@@ -141,7 +130,6 @@ class BillService {
         );
       }
     } catch (e) {
-      print('Error in searchBills: $e');
       throw ApiException('Failed to search bills: $e');
     }
   }
@@ -156,9 +144,6 @@ class BillService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Filter Bills Response: ${response.statusCode}');
-      print('Filter Bills Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
@@ -182,7 +167,6 @@ class BillService {
         );
       }
     } catch (e) {
-      print('Error in getBillsByStatus: $e');
       throw ApiException('Failed to get bills by status: $e');
     }
   }
@@ -270,8 +254,6 @@ class BillService {
     String? notes,
   }) async {
     try {
-      // This method is deprecated, use markAsPaid or verifyPayment instead
-      print('Warning: updateBillStatus is deprecated. Use markAsPaid or verifyPayment instead.');
       
       final response = await http.put(
         Uri.parse('${ApiConstants.bills}/$billId/status'),
@@ -310,9 +292,6 @@ class BillService {
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       };
 
-      print('Mark As Paid URL: $url');
-      print('Mark As Paid Body: ${jsonEncode(body)}');
-
       final response = await http.patch(
         Uri.parse(url),
         headers: {
@@ -321,9 +300,6 @@ class BillService {
         },
         body: jsonEncode(body),
       );
-
-      print('Mark As Paid Response Status: ${response.statusCode}');
-      print('Mark As Paid Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -340,7 +316,6 @@ class BillService {
         }
       }
     } catch (e) {
-      print('Mark As Paid Error: $e');
       if (e is ApiException) {
         rethrow;
       }
@@ -352,9 +327,6 @@ class BillService {
   Future<bool> markAsOverdue(String token) async {
     try {
       final url = '${ApiConstants.bills}/mark-overdue';
-
-      print('Mark As Overdue URL: $url');
-
       final response = await http.post(
         Uri.parse(url),
         headers: {
@@ -362,9 +334,6 @@ class BillService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Mark As Overdue Response Status: ${response.statusCode}');
-      print('Mark As Overdue Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -381,7 +350,6 @@ class BillService {
         }
       }
     } catch (e) {
-      print('Mark As Overdue Error: $e');
       if (e is ApiException) {
         rethrow;
       }
@@ -394,8 +362,6 @@ class BillService {
     try {
       final url = '${ApiConstants.bills}/$billId/approve-payment';
 
-      print('Approve Payment URL: $url');
-
       final response = await http.patch(
         Uri.parse(url),
         headers: {
@@ -403,9 +369,6 @@ class BillService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Approve Payment Response Status: ${response.statusCode}');
-      print('Approve Payment Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -422,7 +385,6 @@ class BillService {
         }
       }
     } catch (e) {
-      print('Approve Payment Error: $e');
       if (e is ApiException) {
         rethrow;
       }
@@ -442,9 +404,6 @@ class BillService {
         'rejection_reason': rejectionReason,
       };
 
-      print('Reject Payment URL: $url');
-      print('Reject Payment Body: ${jsonEncode(body)}');
-
       final response = await http.patch(
         Uri.parse(url),
         headers: {
@@ -453,9 +412,6 @@ class BillService {
         },
         body: jsonEncode(body),
       );
-
-      print('Reject Payment Response Status: ${response.statusCode}');
-      print('Reject Payment Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -472,7 +428,6 @@ class BillService {
         }
       }
     } catch (e) {
-      print('Reject Payment Error: $e');
       if (e is ApiException) {
         rethrow;
       }
