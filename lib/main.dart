@@ -56,7 +56,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => IncomeCategoriesProvider()
-        ChangeNotifierProvider(create: (_) => IncomeProvider()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => IncomeProvider()
+        ),
         ChangeNotifierProvider(
             create: (_) => TransferChannelProvider()
         ),

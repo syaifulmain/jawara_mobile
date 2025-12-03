@@ -8,6 +8,7 @@ class BillProvider with ChangeNotifier {
   final BillService _billService = BillService();
 
   List<BillModel> _bills = [];
+  List<BillModel> _allBills = []; // Cache untuk client-side pagination
   BillModel? _selectedBill;
   bool _isLoading = false;
   bool _isLoadingMore = false;
@@ -18,6 +19,7 @@ class BillProvider with ChangeNotifier {
   int _lastPage = 1;
   bool _hasMore = true;
   final int _perPage = 15;
+  bool _useClientPagination = false;
 
   List<BillModel> get bills => _bills;
   BillModel? get selectedBill => _selectedBill;
@@ -35,10 +37,24 @@ class BillProvider with ChangeNotifier {
 
     try {
       final result = await _billService.getBills(token, page: 1, perPage: _perPage);
-      _bills = result['bills'] as List<BillModel>;
-      _currentPage = result['current_page'] as int;
-      _lastPage = result['last_page'] as int;
-      _hasMore = result['has_more'] as bool;
+      final allBills = result['bills'] as List<BillModel>;
+      _useClientPagination = result['use_client_pagination'] as bool? ?? false;
+      
+      if (_useClientPagination) {
+        // Client-side pagination: cache all data, show first page
+        _allBills = allBills;
+        _bills = _allBills.take(_perPage).toList();
+        _currentPage = 1;
+        _lastPage = (_allBills.length / _perPage).ceil();
+        _hasMore = _allBills.length > _perPage;
+      } else {
+        // Server-side pagination
+        _bills = allBills;
+        _currentPage = result['current_page'] as int;
+        _lastPage = result['last_page'] as int;
+        _hasMore = result['has_more'] as bool;
+      }
+      
       notifyListeners();
     } on ApiException catch (e) {
       _setError(e.message);
@@ -57,14 +73,29 @@ class BillProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final nextPage = _currentPage + 1;
-      final result = await _billService.getBills(token, page: nextPage, perPage: _perPage);
-      
-      final newBills = result['bills'] as List<BillModel>;
-      _bills.addAll(newBills);
-      _currentPage = result['current_page'] as int;
-      _lastPage = result['last_page'] as int;
-      _hasMore = result['has_more'] as bool;
+      if (_useClientPagination) {
+        // Client-side pagination: slice cached data
+        await Future.delayed(const Duration(milliseconds: 300)); // Simulate loading
+        
+        final nextPage = _currentPage + 1;
+        final startIndex = _currentPage * _perPage;
+        final endIndex = startIndex + _perPage;
+        
+        final newBills = _allBills.skip(startIndex).take(_perPage).toList();
+        _bills.addAll(newBills);
+        _currentPage = nextPage;
+        _hasMore = endIndex < _allBills.length;
+      } else {
+        // Server-side pagination: fetch from API
+        final nextPage = _currentPage + 1;
+        final result = await _billService.getBills(token, page: nextPage, perPage: _perPage);
+        
+        final newBills = result['bills'] as List<BillModel>;
+        _bills.addAll(newBills);
+        _currentPage = result['current_page'] as int;
+        _lastPage = result['last_page'] as int;
+        _hasMore = result['has_more'] as bool;
+      }
       
       notifyListeners();
     } on ApiException catch (e) {

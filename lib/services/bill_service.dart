@@ -40,13 +40,20 @@ class BillService {
             .map((json) => BillModel.fromJson(json as Map<String, dynamic>))
             .toList();
         
+        // Check if backend supports server-side pagination
+        final hasServerPagination = data.containsKey('current_page') && 
+                                     data.containsKey('last_page');
+        
         // Return data with pagination info
         return {
           'bills': bills,
           'current_page': data['current_page'] ?? page,
           'last_page': data['last_page'] ?? 1,
           'total': data['total'] ?? bills.length,
-          'has_more': (data['current_page'] ?? page) < (data['last_page'] ?? 1),
+          'has_more': hasServerPagination 
+              ? (data['current_page'] ?? page) < (data['last_page'] ?? 1)
+              : false,
+          'use_client_pagination': !hasServerPagination,
         };
       } else {
         final errorData = jsonDecode(response.body);
