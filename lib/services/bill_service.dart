@@ -11,10 +11,21 @@ class BillService {
     String token, {
     int page = 1,
     int perPage = 15,
+    int? familyId,
   }) async {
     try {
+      // Build query parameters
+      final queryParams = <String>[];
+      queryParams.add('page=$page');
+      queryParams.add('per_page=$perPage');
+      if (familyId != null) {
+        queryParams.add('family_id=$familyId');
+      }
+      
+      final url = '${ApiConstants.bills}?${queryParams.join('&')}';
+      
       final response = await http.get(
-        Uri.parse('${ApiConstants.bills}?page=$page&per_page=$perPage'),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -432,6 +443,49 @@ class BillService {
         rethrow;
       }
       throw ApiException('Failed to reject payment: $e');
+    }
+  }
+
+  // Upload payment proof (for users/warga)
+  Future<bool> uploadPaymentProof(
+    String token,
+    String billId,
+    String imagePath,
+  ) async {
+    try {
+      final url = '${ApiConstants.bills}/$billId/upload-payment';
+
+      var request = http.MultipartRequest('PATCH', Uri.parse(url));
+      request.headers['Authorization'] = 'Bearer $token';
+      
+      // Add image file
+      request.files.add(
+        await http.MultipartFile.fromPath('payment_proof', imagePath),
+      );
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        try {
+          final errorData = jsonDecode(response.body);
+          throw ApiException(
+            errorData['message'] ?? 'Failed to upload payment proof',
+          );
+        } catch (e) {
+          throw ApiException(
+            'Server error (${response.statusCode}): Failed to upload payment proof',
+          );
+        }
+      }
+    } catch (e) {
+      if (e is ApiException) {
+        rethrow;
+      }
+      throw ApiException('Failed to upload payment proof: $e');
     }
   }
 

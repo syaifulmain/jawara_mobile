@@ -30,13 +30,18 @@ class BillProvider with ChangeNotifier {
   int get currentPage => _currentPage;
 
   // Fetch all bills (reset pagination)
-  Future<void> fetchBills(String token) async {
+  Future<void> fetchBills(String token, {int? familyId}) async {
     _setLoading(true);
     _clearError();
     _currentPage = 1;
 
     try {
-      final result = await _billService.getBills(token, page: 1, perPage: _perPage);
+      final result = await _billService.getBills(
+        token, 
+        page: 1, 
+        perPage: _perPage,
+        familyId: familyId,
+      );
       final allBills = result['bills'] as List<BillModel>;
       _useClientPagination = result['use_client_pagination'] as bool? ?? false;
       
@@ -66,7 +71,7 @@ class BillProvider with ChangeNotifier {
   }
 
   // Load more bills (infinite scroll)
-  Future<void> loadMoreBills(String token) async {
+  Future<void> loadMoreBills(String token, {int? familyId}) async {
     if (_isLoadingMore || !_hasMore || _isLoading) return;
 
     _isLoadingMore = true;
@@ -88,7 +93,12 @@ class BillProvider with ChangeNotifier {
       } else {
         // Server-side pagination: fetch from API
         final nextPage = _currentPage + 1;
-        final result = await _billService.getBills(token, page: nextPage, perPage: _perPage);
+        final result = await _billService.getBills(
+          token, 
+          page: nextPage, 
+          perPage: _perPage,
+          familyId: familyId,
+        );
         
         final newBills = result['bills'] as List<BillModel>;
         _bills.addAll(newBills);
@@ -298,6 +308,57 @@ class BillProvider with ChangeNotifier {
     }
   }
 
+  // Upload payment proof (for users/warga)
+  Future<bool> uploadPaymentProof(
+    String token,
+    String billId,
+    String imagePath,
+  ) async {
+    _setLoading(true);
+    _clearError();
+
+    try {
+      final success = await _billService.uploadPaymentProof(
+        token,
+        billId,
+        imagePath,
+      );
+
+      if (success) {
+        // Update local data
+        final index = _bills.indexWhere((bill) => bill.id.toString() == billId);
+        if (index != -1) {
+          _bills[index] = _bills[index].copyWith(
+            status: BillStatus.pending,
+            paidAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        }
+
+        // Update selected bill if it matches
+        if (_selectedBill?.id.toString() == billId) {
+          _selectedBill = _selectedBill!.copyWith(
+            status: BillStatus.pending,
+            paidAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        }
+
+        notifyListeners();
+      }
+
+      return success;
+    } on ApiException catch (e) {
+      _setError(e.message);
+      return false;
+    } catch (e) {
+      _setError('An unexpected error occurred: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   // Reject payment
   Future<bool> rejectPayment(
     String token,
@@ -403,6 +464,19 @@ class BillProvider with ChangeNotifier {
   // Clear selected bill
   void clearSelectedBill() {
     _selectedBill = null;
+    notifyListeners();
+  }
+
+  // Clear all bills cache (for switching users)
+  void clearBillsCache() {
+    _bills = [];
+    _allBills = [];
+    _selectedBill = null;
+    _currentPage = 1;
+    _lastPage = 1;
+    _hasMore = true;
+    _useClientPagination = false;
+    _clearError();
     notifyListeners();
   }
 
