@@ -32,6 +32,7 @@ class PengeluaranService {
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
@@ -63,6 +64,7 @@ class PengeluaranService {
         Uri.parse("${ApiConstants.pengeluaran}/$id"),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
@@ -93,6 +95,7 @@ class PengeluaranService {
         Uri.parse(ApiConstants.pengeluaran),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(request.toJson()),
