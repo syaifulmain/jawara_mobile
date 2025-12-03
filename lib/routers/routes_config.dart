@@ -28,6 +28,7 @@ import '../screens/admin/dashboard/finance_screen.dart';
 import '../screens/admin/expenditure/expenditure_menu_screen.dart';
 import '../screens/admin/expenditure/expenditure_list_screen.dart';
 import '../screens/admin/expenditure/expenditure_detail_screen.dart';
+import '../screens/admin/expenditure/add_expenditure_screen.dart';
 import '../screens/admin/family_mutation/family_mutation_menu_screen.dart';
 import '../screens/admin/financial_reports/financial_reports_menu_screen.dart';
 import '../screens/admin/residents_and_houses/family/families_list_screen.dart';
@@ -200,14 +201,12 @@ class RoutesConfig {
       label: 'Pengeluaran',
       builder: (context, state) => const ExpenditureMenuScreen(),
     ),
-
     AppRouteItem(
       path: '/expenditures_list',
       name: 'expenditures_list',
       label: 'Daftar Pengeluaran',
       builder: (context, state) => const ExpenditureListScreen(),
     ),
-
     AppRouteItem(
       path: '/expenditure_detail/:id',
       name: 'expenditure_detail',
@@ -217,7 +216,12 @@ class RoutesConfig {
         return ExpenditureDetailScreen(id: id);
       },
     ),
-
+    AppRouteItem(
+      path: '/add_expenditure',
+      name: 'add_expenditure',
+      label: 'Tambah Pengeluaran',
+      builder: (context, state) => const AddExpenditureScreen(),
+    ),
     // FINANCIAL REPORTS ROUTES
     AppRouteItem(
       path: '/financial_reports_menu',
@@ -225,7 +229,6 @@ class RoutesConfig {
       label: 'Laporan Keuangan',
       builder: (context, state) => const FinancialReportsMenuScreen(),
     ),
-
     // ACTIVITIES AND BROADCAST ROUTES
     AppRouteItem(
       path: '/activities-and-broadcast-menu',

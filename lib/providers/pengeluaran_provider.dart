@@ -19,6 +19,12 @@ class PengeluaranProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String get searchQuery => _searchQuery;
 
+  // SET LOADING
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   /// FETCH LIST PENGELUARAN
   Future<void> fetchPengeluaran(
     String token, {
@@ -27,9 +33,8 @@ class PengeluaranProvider with ChangeNotifier {
     String? startDate,
     String? endDate,
   }) async {
-    _isLoading = true;
+    setLoading(true);
     _errorMessage = null;
-    notifyListeners();
 
     try {
       _pengeluaran = await _pengeluaranService.getPengeluaranList(
@@ -40,44 +45,33 @@ class PengeluaranProvider with ChangeNotifier {
         endDate: endDate,
       );
 
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
     } catch (e) {
-      if (e is ApiException) {
-        _errorMessage = e.message;
-      } else {
-        _errorMessage = 'Gagal mengambil data pengeluaran';
-      }
+      _errorMessage = e is ApiException
+          ? e.message
+          : 'Gagal mengambil data pengeluaran';
 
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
     }
   }
 
   /// SEARCH PENGELUARAN
   Future<void> searchPengeluaran(String token, String query) async {
-    _isLoading = true;
+    setLoading(true);
     _errorMessage = null;
     _searchQuery = query;
-    notifyListeners();
 
     try {
       _pengeluaran = await _pengeluaranService.getPengeluaranList(
         token,
         search: query,
       );
-
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
     } catch (e) {
-      if (e is ApiException) {
-        _errorMessage = e.message;
-      } else {
-        _errorMessage = 'Gagal mencari data pengeluaran';
-      }
-
-      _isLoading = false;
-      notifyListeners();
+      _errorMessage = e is ApiException
+          ? e.message
+          : 'Gagal mencari data pengeluaran';
+      setLoading(false);
     }
   }
 
@@ -86,55 +80,43 @@ class PengeluaranProvider with ChangeNotifier {
     String token,
     PengeluaranRequestModel request,
   ) async {
-    _isLoading = true;
+    setLoading(true);
     _errorMessage = null;
-    notifyListeners();
 
     try {
       await _pengeluaranService.createPengeluaran(token, request);
-
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
       return true;
     } catch (e) {
-      if (e is ApiException) {
-        _errorMessage = e.message;
-      } else {
-        _errorMessage = 'Gagal menambahkan pengeluaran';
-      }
+      _errorMessage = e is ApiException
+          ? e.message
+          : 'Gagal menambahkan pengeluaran';
 
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
       return false;
     }
   }
 
-  // property untuk detail
+  // Detail
   PengeluaranDetailModel? _selectedPengeluaran;
   PengeluaranDetailModel? get selectedPengeluaran => _selectedPengeluaran;
 
-  // fetch detail
   Future<void> fetchPengeluaranDetail(String token, String id) async {
-    _isLoading = true;
+    setLoading(true);
     _errorMessage = null;
     _selectedPengeluaran = null;
-    notifyListeners();
 
     try {
       _selectedPengeluaran = await _pengeluaranService.getPengeluaranDetail(
         token,
         id,
       );
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
     } catch (e) {
-      if (e is ApiException) {
-        _errorMessage = e.message;
-      } else {
-        _errorMessage = 'Gagal mengambil detail pengeluaran';
-      }
-      _isLoading = false;
-      notifyListeners();
+      _errorMessage = e is ApiException
+          ? e.message
+          : 'Gagal mengambil detail pengeluaran';
+      setLoading(false);
     }
   }
 
@@ -149,9 +131,7 @@ class PengeluaranProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// ------------------ TAMBAHAN UNTUK FILTER ------------------
-
-  /// Clear filter / reset pengeluaran
+  /// FILTER
   void clearFilter() {
     _pengeluaran = [];
     _searchQuery = '';
@@ -159,15 +139,13 @@ class PengeluaranProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetch pengeluaran by category and/or date
   Future<void> fetchPengeluaranByCategoryOrDate(
     String token, {
     String? category,
     DateTime? date,
   }) async {
-    _isLoading = true;
+    setLoading(true);
     _errorMessage = null;
-    notifyListeners();
 
     try {
       final String? formattedDate = date != null
@@ -181,16 +159,12 @@ class PengeluaranProvider with ChangeNotifier {
         endDate: formattedDate,
       );
 
-      _isLoading = false;
-      notifyListeners();
+      setLoading(false);
     } catch (e) {
-      if (e is ApiException) {
-        _errorMessage = e.message;
-      } else {
-        _errorMessage = 'Gagal memfilter data pengeluaran';
-      }
-      _isLoading = false;
-      notifyListeners();
+      _errorMessage = e is ApiException
+          ? e.message
+          : 'Gagal memfilter data pengeluaran';
+      setLoading(false);
     }
   }
 }
