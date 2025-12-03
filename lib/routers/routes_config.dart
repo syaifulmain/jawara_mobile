@@ -23,6 +23,8 @@ import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel
 import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/income/my_bill_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/income/my_bills_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
 import '../screens/admin/activities_and_broadcast/broadcast_detail_screen.dart';
 import '../screens/admin/dashboard/activities_screen.dart';
@@ -202,13 +204,13 @@ class RoutesConfig {
     AppRouteItem(
       path: '/bills-list',
       name: 'bills_list',
-      label: 'Daftar Tagihan',
+      label: 'Daftar Tagihan Warga',
       builder: (context, state) => const BillsListScreen(),
     ),
     AppRouteItem(
       path: '/bill-detail/:id',
       name: 'bill_detail',
-      label: 'Detail Tagihan',
+      label: 'Detail Tagihan Warga',
       builder: (context, state) {
         final billId = state.pathParameters['id']!;
         return BillDetailScreen(billId: billId);
@@ -367,6 +369,23 @@ class RoutesConfig {
       name: 'resident_broadcast_menu',
       label: 'Broadcast Warga',
       builder: (context, state) => const ResidentBroadcastMenuScreen(),
+    ),
+    
+    // USER BILL MENU
+    AppRouteItem(
+      path: '/my-bills-list',
+      name: 'my_bills_list',
+      label: 'Daftar Tagihan ',
+      builder: (context, state) => const MyBillsScreen(),
+    ),
+    AppRouteItem(
+      path: '/my-bill-detail/:id',
+      name: 'my_bill_detail',
+      label: 'Detail Tagihan',
+      builder: (context, state) {
+        final billId = state.pathParameters['id']!;
+        return MyBillDetailScreen(billId: billId);
+      },
     ),
   ];
 }

@@ -285,7 +285,7 @@ class HomeScreen extends StatelessWidget {
                       title: 'Tagihan',
                       subtitle: 'Lihat dan bayar tagihan Anda',
                       color: Colors.green,
-                      onTap: () => context.pushNamed('bills'),
+                      onTap: () => context.pushNamed('my_bills_list'),
                     ),
                     const SizedBox(height: 12),
 
