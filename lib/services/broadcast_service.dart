@@ -135,7 +135,6 @@ class BroadcastService {
       }
     } catch (e) {
       if (e is ApiException) rethrow;
-      print(broadcast.toJson());
       throw ApiException('Network error: $e');
     }
   }
