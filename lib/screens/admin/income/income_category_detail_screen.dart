@@ -54,7 +54,7 @@ class _IncomeCategoryDetailScreenState extends State<IncomeCategoryDetailScreen>
 
       if (_category != null) {
         _nameController.text = _category!.name;
-        _nominalController.text = _category!.nominal;
+        _nominalController.text = _category!.nominal.toString();
         _descriptionController.text = _category!.description;
         _selectedType = _category!.type;
       }
@@ -75,7 +75,7 @@ class _IncomeCategoryDetailScreenState extends State<IncomeCategoryDetailScreen>
       if (_category != null) {
         setState(() {
           _nameController.text = _category!.name;
-          _nominalController.text = _category!.nominal;
+          _nominalController.text = _category!.nominal.toString();
           _descriptionController.text = _category!.description;
           _selectedType = _category!.type;
         });
@@ -116,7 +116,7 @@ class _IncomeCategoryDetailScreenState extends State<IncomeCategoryDetailScreen>
       id: _category!.id,
       name: _nameController.text,
       type: _selectedType!,
-      nominal: _nominalController.text,
+      nominal: double.tryParse(_nominalController.text) ?? 0.0,
       description: _descriptionController.text,
       createdBy: _category!.createdBy,
       createdAt: _category!.createdAt,
@@ -233,7 +233,7 @@ class _IncomeCategoryDetailScreenState extends State<IncomeCategoryDetailScreen>
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: Text(
-          _isEditMode ? 'Edit Category' : 'Category Detail',
+          _isEditMode ? 'Edit Jenis Iuran' : 'Detail Jenis Iuran',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,

@@ -22,13 +22,15 @@ class CustomChip extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Rem.rem0_5),
-        side: BorderSide.none,
+        side: BorderSide(
+          color: textColor ?? Colors.transparent,
+        ),
       ),
       label: Text(
         label,
         style: GoogleFonts.poppins(fontSize: Rem.rem0_75, color: textColor),
       ),
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: backgroundColor ?? AppColors.primaryColor,
       padding: const EdgeInsets.symmetric(horizontal: Rem.rem0_5),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
