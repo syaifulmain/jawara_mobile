@@ -578,10 +578,10 @@ class _MyBillDetailScreenState extends State<MyBillDetailScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: channel.name));
+                  Clipboard.setData(ClipboardData(text: channel.accountNumber));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Nomor rekening ${channel.name} disalin'),
+                      content: Text('Nomor rekening ${channel.accountNumber} disalin'),
                       backgroundColor: Colors.green,
                       duration: const Duration(seconds: 2),
                     ),
