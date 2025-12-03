@@ -8,6 +8,7 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/income_categories_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_dropdown.dart';
+import '../../../widgets/info_banner.dart';
 
 class BillIncomeScreen extends StatefulWidget {
   const BillIncomeScreen({Key? key}) : super(key: key);
@@ -410,44 +411,8 @@ class _BillIncomeScreenState extends State<BillIncomeScreen> {
                     const SizedBox(height: Rem.rem1_5),
                     
                     // Info section
-                    Container(
-                      padding: const EdgeInsets.all(Rem.rem1),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        border: Border.all(color: Colors.blue.shade200),
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.info,
-                                color: Colors.blue.shade600,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Informasi:',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue.shade600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Tagihan akan dikirim ke semua keluarga yang terdaftar aktif di sistem. Pastikan kategori iuran dan tanggal jatuh tempo sudah benar sebelum mengirim tagihan.',
-                            style: GoogleFonts.poppins(
-                              color: Colors.blue.shade800,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
+                    const InfoBanner(
+                      message: 'Tagihan akan dikirim ke semua keluarga yang terdaftar aktif di sistem. Pastikan kategori iuran dan tanggal jatuh tempo sudah benar sebelum mengirim tagihan.',
                     ),
                   ],
                 ),

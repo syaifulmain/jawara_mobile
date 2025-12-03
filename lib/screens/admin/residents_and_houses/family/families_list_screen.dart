@@ -5,6 +5,7 @@ import '../../../../providers/auth_provider.dart';
 import '../../../../providers/family_provider.dart';
 import '../../../../models/family/family_list_model.dart';
 import '../../../../widgets/custom_text_form_field.dart';
+import '../../../../widgets/info_banner.dart';
 
 class FamiliesListScreen extends StatefulWidget {
   const FamiliesListScreen({Key? key}) : super(key: key);
@@ -52,6 +53,9 @@ class _FamiliesListScreenState extends State<FamiliesListScreen> {
       appBar: AppBar(title: const Text('Daftar Keluarga')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar keluarga yang terdaftar di sistem. Gunakan pencarian untuk menemukan keluarga tertentu. Klik item untuk melihat detail keluarga.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(

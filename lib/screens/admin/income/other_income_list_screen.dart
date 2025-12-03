@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 import '../../../providers/income_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../models/income/income_list_model.dart';
@@ -52,6 +53,9 @@ class _OtherIncomeListScreenState extends State<OtherIncomeListScreen> {
       appBar: AppBar(title: const Text('Daftar Pemasukan Lain')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar pemasukan selain iuran warga. Klik item untuk melihat detail atau mengedit. Gunakan pencarian untuk menemukan pemasukan tertentu.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(

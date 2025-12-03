@@ -9,6 +9,7 @@ import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_chip.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class BillsListScreen extends StatefulWidget {
   const BillsListScreen({Key? key}) : super(key: key);
@@ -118,41 +119,8 @@ class _BillsListScreenState extends State<BillsListScreen> {
       body: Column(
         children: [
           // Info Header
-          Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              border: Border.all(color: Colors.blue.shade200),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.info, color: Colors.blue.shade600, size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Informasi:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue.shade600,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Daftar semua tagihan yang telah dibuat. Data dimuat 15 per halaman - scroll ke bawah untuk memuat lebih banyak. Klik pada tagihan untuk melihat detail dan melakukan verifikasi pembayaran.',
-                  style: TextStyle(
-                    color: Colors.blue.shade800,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
+          const InfoBanner(
+            message: 'Daftar semua tagihan yang telah dibuat. Data dimuat 15 per halaman - scroll ke bawah untuk memuat lebih banyak. Klik pada tagihan untuk melihat detail dan melakukan verifikasi pembayaran.',
           ),
           
           // Search and Filter

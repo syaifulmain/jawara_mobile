@@ -5,6 +5,7 @@ import '../../../../providers/auth_provider.dart';
 import '../../../../providers/resident_provider.dart';
 import '../../../../models/resident/resident_list_model.dart';
 import '../../../../widgets/custom_text_form_field.dart';
+import '../../../../widgets/info_banner.dart';
 
 class ResidentsListScreen extends StatefulWidget {
   const ResidentsListScreen({Key? key}) : super(key: key);
@@ -52,6 +53,9 @@ class _ResidentsListScreenState extends State<ResidentsListScreen> {
       appBar: AppBar(title: const Text('Daftar Penduduk')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar penduduk yang terdaftar. Gunakan pencarian untuk menemukan penduduk tertentu. Klik item untuk melihat detail atau edit data penduduk.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(

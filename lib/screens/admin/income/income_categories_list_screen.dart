@@ -11,6 +11,7 @@ import '../../../widgets/custom_chip.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_select_calender.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class IncomeCategoriesListScreen extends StatefulWidget {
   const IncomeCategoriesListScreen({Key? key}) : super(key: key);
@@ -101,6 +102,9 @@ class _IncomeCategoriesListScreenState extends State<IncomeCategoriesListScreen>
       appBar: AppBar(title: const Text('Daftar Jenis Iuran')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar kategori iuran yang tersedia. Klik pada item untuk melihat detail atau edit. Gunakan tombol filter untuk menyaring berdasarkan tipe atau tanggal.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

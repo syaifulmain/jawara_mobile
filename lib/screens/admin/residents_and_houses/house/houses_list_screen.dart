@@ -5,6 +5,7 @@ import '../../../../providers/auth_provider.dart';
 import '../../../../providers/address_provider.dart';
 import '../../../../models/address/address_list_model.dart';
 import '../../../../widgets/custom_text_form_field.dart';
+import '../../../../widgets/info_banner.dart';
 
 class HousesListScreen extends StatefulWidget {
   const HousesListScreen({Key? key}) : super(key: key);
@@ -52,6 +53,9 @@ class _HousesListScreenState extends State<HousesListScreen> {
       appBar: AppBar(title: const Text('Daftar Rumah')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar rumah/alamat yang terdaftar di sistem. Gunakan pencarian untuk menemukan rumah tertentu. Klik item untuk melihat detail.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(
