@@ -489,7 +489,7 @@ class _BillCard extends StatelessWidget {
                   onPressed: () {
                     if (bill.id != null) {
                       context.pushNamed(
-                        'warga_bill_detail',
+                        'my_bill_detail',
                         pathParameters: {'id': bill.id.toString()},
                       );
                     }
