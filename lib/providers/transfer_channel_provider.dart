@@ -107,7 +107,7 @@ class TransferChannelProvider with ChangeNotifier {
       if (e is ApiException) {
         _errorMessage = e.message;
       } else {
-        _errorMessage = 'Gagal menambahkan penduduk';
+        _errorMessage = 'Gagal menambahkan saluran transfer';
       }
       _isLoading = false;
       notifyListeners();

@@ -4,20 +4,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_request_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_type.dart';
 import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
 import 'package:jawara_mobile_v2/widgets/file_picker_button.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../../../../constants/color_constant.dart';
 import '../../../../constants/rem_constant.dart';
-import '../../../../enums/resident_enum.dart';
-import '../../../../models/resident/resident_request_model.dart';
 import '../../../../providers/auth_provider.dart';
-import '../../../../providers/resident_provider.dart';
-import '../../../../providers/family_provider.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_dropdown.dart';
 import '../../../../widgets/custom_text_form_field.dart';
@@ -52,19 +46,7 @@ class _TransferChannelCreationScreenState
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _loadChannels();
-    // });
   }
-
-  // void _loadChannels() {
-  //   final authProvider = context.read<AuthProvider>();
-  //   final familyProvider = context.read<TransferChannelProvider>();
-
-  //   if (authProvider.token != null) {
-  //     familyProvider.fetchTransferChannels(authProvider.token!);
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -107,8 +89,8 @@ class _TransferChannelCreationScreenState
       ownerName: _ownerNameController.text,
       accountNumber: _accountNumberController.text,
       notes: _notesController.text,
-      qrCodeImagePath: _qrFileName,
-      thumbnailImagePath: _thumbnailFileName,
+      qrCodeImage: _qrFile,
+      thumbnailImage: _thumbnailFile,
     );
 
     final success = await provider.createTransferChannel(token, request);
@@ -131,6 +113,7 @@ class _TransferChannelCreationScreenState
             ),
           ),
         );
+        print(provider.errorMessage);
       }
     }
   }
@@ -141,13 +124,13 @@ class _TransferChannelCreationScreenState
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: Text(
-          'Tambah Penduduk',
+          'Tambah Saluran Transfer',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Consumer<ResidentProvider>(
+      body: Consumer<TransferChannelProvider>(
         builder: (context, provider, _) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(Rem.rem1_5),

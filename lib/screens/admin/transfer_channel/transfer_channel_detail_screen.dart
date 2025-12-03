@@ -130,20 +130,6 @@ class _TransferChannelDetailScreenState
       ownerName: _ownerNameController.text,
       accountNumber: _accountNumberController.text,
       notes: _notesController.text,
-      // familyId: _selectedFamilyId!,
-      // fullName: _nameController.text,
-      // nik: _nikController.text,
-      // phoneNumber: _phoneController.text.isNotEmpty ? _phoneController.text : null,
-      // birthPlace: _birthPlaceController.text.isNotEmpty ? _birthPlaceController.text : null,
-      // birthDate: _selectedBirthDate?.toIso8601String().split('T')[0],
-      // gender: _selectedGender?.value ?? (_transferChannel?.gender == 'Laki-laki' ? 'M' : 'F'), // Fallback or correct mapping
-      // religion: _selectedReligion?.label,
-      // bloodType: _selectedBloodType?.label,
-      // familyRole: _selectedFamilyRole?.label ?? 'Famili Lain',
-      // lastEducation: _selectedLastEducation?.label,
-      // occupation: _selectedOccupation?.label,
-      // isAlive: _isAlive,
-      // isActive: _isActive,
     );
 
     final success = await transferChannelProvider.updateTransferChannel(
@@ -237,18 +223,6 @@ class _TransferChannelDetailScreenState
                     },
                   ),
                   const SizedBox(height: Rem.rem1),
-                  // CustomTextFormField(
-                  //   controller: _typeController,
-                  //   labelText: "Tipe Saluran",
-                  //   hintText: "Masukkan tipe saluran.",
-                  //   readOnly: !_isEditMode,
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Tipe harus diisi';
-                  //     }
-                  //     return null;
-                  //   },
-                  // )
                   CustomDropdown<TransferChannelType>(
                     labelText: "Tipe Saluran",
                     hintText: "Masukkan tipe saluran.",
@@ -285,10 +259,21 @@ class _TransferChannelDetailScreenState
                       return null;
                     },
                   ),
-                  if (true) ...[
+                  if (_transferChannel!.qrCodeImagePath != null) ...[
                     const SizedBox(height: Rem.rem1_5),
-                    CustomPhotoViewer(photoUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Meitei_Houdong_%28Meetei_Houdong%29_-_A_typical_Meitei_domestic_cat_%28Meetei_house_cat%29_01.jpg'),
+                    CustomPhotoViewer(
+                      photoUrl: _transferChannel!.qrCodeImagePath!,
+                      label: 'Kode QR',
+                    ),
                   ],
+                  const SizedBox(height: Rem.rem1),
+                  if (_transferChannel!.thumbnailImagePath != null) ...[
+                    CustomPhotoViewer(
+                      photoUrl: _transferChannel!.thumbnailImagePath!,
+                      label: 'Thumbnail',
+                    ),
+                  ],
+
                   const SizedBox(height: Rem.rem1),
                   CustomTextFormField(
                     controller: _notesController,
@@ -317,16 +302,22 @@ class _TransferChannelDetailScreenState
                         const SizedBox(width: 12),
                         Expanded(
                           child: CustomButton(
-                            onPressed: provider.isLoading ? null : _updateTransferChannel,
+                            onPressed: provider.isLoading
+                                ? null
+                                : _updateTransferChannel,
                             child: provider.isLoading
                                 ? const SizedBox(
                                     height: Rem.rem1_25,
                                     width: Rem.rem1_25,
-                                    child: CircularProgressIndicator(color: Colors.white),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
                                   )
                                 : Text(
                                     'Simpan',
-                                    style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                                    style: GoogleFonts.poppins(
+                                      fontSize: Rem.rem1,
+                                    ),
                                   ),
                           ),
                         ),
