@@ -142,6 +142,31 @@ class _ExpenditureDetailScreenState extends State<ExpenditureDetailScreen> {
           _buildInfoRow('Tanggal Terverifikasi', tanggalTransaksi),
           const SizedBox(height: Rem.rem1),
           _buildInfoRow('Verifikator', exp.verifikator),
+          // ------------------ Tampilkan bukti jika ada ------------------
+          if (exp.buktiPengeluaran != null && exp.buktiPengeluaran!.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: Rem.rem1),
+                Text(
+                  'Bukti Pengeluaran',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Rem.rem1,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: Rem.rem0_75),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Rem.rem0_5),
+                  child: Image.network(
+                    exp.buktiPengeluaran!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
