@@ -22,6 +22,8 @@ class ApiConstants {
   static const String categories = '$baseUrl/income-categories';
   static const String incomes = '$baseUrl/incomes';
   static const String transferChannels = '$baseUrl/transfer-channels';
+
+  static const String pengeluaran = '$baseUrl/pengeluaran';
   static const String bills = '$baseUrl/bills';
 
   // Helper untuk single todo

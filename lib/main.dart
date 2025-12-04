@@ -10,6 +10,7 @@ import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
 import 'package:jawara_mobile_v2/providers/user_provider.dart';
 import 'package:jawara_mobile_v2/providers/income_categories_provider.dart';
 import 'package:jawara_mobile_v2/providers/income_provider.dart';
+import 'package:jawara_mobile_v2/providers/pengeluaran_provider.dart';
 import 'package:jawara_mobile_v2/providers/bill_provider.dart';
 import 'package:provider/provider.dart';
 import 'constants/rem_constant.dart';
@@ -33,39 +34,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider()..initialize(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ActivityProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => BroadcastProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => AddressProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ResidentProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => FamilyProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => UserProvider()
-        ),
-        ChangeNotifierProvider(
-          create: (_) => IncomeCategoriesProvider()
-        ),
-        ChangeNotifierProvider(
-          create: (_) => IncomeProvider()
-        ),
-        ChangeNotifierProvider(
-            create: (_) => TransferChannelProvider()
-        ),
-        ChangeNotifierProvider(
-          create: (_) => BillProvider()
-        ),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
+        ChangeNotifierProvider(create: (_) => ActivityProvider()),
+        ChangeNotifierProvider(create: (_) => BroadcastProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_) => ResidentProvider()),
+        ChangeNotifierProvider(create: (_) => FamilyProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => IncomeCategoriesProvider()),
+        ChangeNotifierProvider(create: (_) => IncomeProvider()),
+        ChangeNotifierProvider(create: (_) => TransferChannelProvider()),
+        ChangeNotifierProvider(create: (_) => PengeluaranProvider()),
+        ChangeNotifierProvider(create: (_) => BillProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
