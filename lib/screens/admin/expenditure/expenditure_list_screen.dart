@@ -10,7 +10,6 @@ import '../../../../widgets/custom_chip.dart';
 import '../../../../widgets/custom_dropdown.dart';
 import '../../../../widgets/custom_select_calender.dart';
 import '../../../../widgets/custom_text_form_field.dart';
-import 'package:intl/intl.dart';
 
 class ExpenditureListScreen extends StatefulWidget {
   const ExpenditureListScreen({super.key});
@@ -288,18 +287,15 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                 CustomDropdown<String>(
                   labelText: 'Kategori',
                   hintText: 'Pilih kategori',
-                  items:
-                      [
-                            'Operasional RT/RW',
-                            'Kegiatan Sosial',
-                            'Pemeliharaan Fasilitas',
-                            'Pembangunan',
-                            'Kegiatan Warga',
-                            'Keamanan & Kebersihan',
-                            'Lain-lain',
-                          ] // Contoh kategori
-                          .map((e) => DropdownMenuEntry(value: e, label: e))
-                          .toList(),
+                  items: [
+                    'Operasional RT/RW',
+                    'Kegiatan Sosial',
+                    'Pemeliharaan Fasilitas',
+                    'Pembangunan',
+                    'Kegiatan Warga',
+                    'Keamanan & Kebersihan', 
+                    'Lain-lain',
+                  ].map((e) => DropdownMenuEntry(value: e, label: e)).toList(),
                   onSelected: (value) => setState(() => _tempCategory = value),
                 ),
                 const SizedBox(height: 24),

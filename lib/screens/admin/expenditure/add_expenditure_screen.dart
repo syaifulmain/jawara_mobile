@@ -1,19 +1,19 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
-import '../../../models/pengeluaran/pengeluaran_request_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/pengeluaran_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import '../../../widgets/file_picker_button.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../../../widgets/custom_dropdown.dart';
 import '../../../constants/api_constant.dart';
 
 class AddExpenditureScreen extends StatefulWidget {
@@ -99,25 +99,20 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
       final uri = Uri.parse(ApiConstants.pengeluaran);
 
-      // Multipart request
       var request = http.MultipartRequest('POST', uri);
 
-      request.headers['Accept'] =
-          'application/json'; // ⬅ Fix error <!DOCTYPE html>
+      request.headers['Accept'] = 'application/json';
       request.headers['Authorization'] = 'Bearer $token';
 
-      // Format tanggal harus YYYY-MM-DD (untuk Laravel)
       final tanggalFormatted =
           "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
 
-      // Kirim field biasa
       request.fields['nama_pengeluaran'] = _namaController.text;
       request.fields['tanggal'] = tanggalFormatted;
       request.fields['kategori'] = _selectedKategori!;
       request.fields['nominal'] = _nominalController.text.trim();
       request.fields['verifikator'] = 'Admin';
 
-      // Kirim file bila ada
       if (_buktiFile != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -127,11 +122,9 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
         );
       }
 
-      // Kirim request
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
-      // Cek apakah response bukan HTML
       if (response.body.startsWith('<!DOCTYPE html>')) {
         throw Exception(
           "Server mengembalikan HTML, kemungkinan salah endpoint atau middleware.",
@@ -156,7 +149,6 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
         return;
       }
 
-      // Jika gagal
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -199,84 +191,135 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextFormField(
-                    controller: _namaController,
-                    labelText: "Nama Pengeluaran",
-                    hintText: "Masukkan nama pengeluaran",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nama pengeluaran harus diisi';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: Rem.rem1),
-                  GestureDetector(
-                    onTap: _pickDate,
-                    child: AbsorbPointer(
-                      child: CustomTextFormField(
-                        labelText: "Tanggal Pengeluaran",
-                        hintText: _selectedDate == null
-                            ? 'Pilih tanggal'
-                            : '${_selectedDate!.day.toString().padLeft(2, '0')} '
-                                  '${_monthName(_selectedDate!.month)} '
-                                  '${_selectedDate!.year}',
-                        validator: (_) {
-                          if (_selectedDate == null) {
-                            return 'Tanggal pengeluaran harus dipilih';
-                          }
-                          return null;
-                        },
-                      ),
+                  // Nama Pengeluaran
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: CustomTextFormField(
+                      controller: _namaController,
+                      labelText: "Nama Pengeluaran",
+                      hintText: "Masukkan nama pengeluaran",
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Nama pengeluaran harus diisi';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(height: Rem.rem1),
-                  DropdownButtonFormField<String>(
-                    value: _selectedKategori,
-                    decoration: InputDecoration(
+
+                  // Tanggal Pengeluaran
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Tanggal Pengeluaran",
+                        style: GoogleFonts.poppins(
+                          fontSize: Rem.rem1,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: Rem.rem0_5),
+                      InkWell(
+                        onTap: _pickDate,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Rem.rem1,
+                            vertical: Rem.rem0_875,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(Rem.rem0_5),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _selectedDate == null
+                                    ? 'Pilih tanggal'
+                                    : '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}',
+                                style: GoogleFonts.poppins(
+                                  color: _selectedDate == null
+                                      ? Colors.grey
+                                      : Colors.black,
+                                ),
+                              ),
+                              Icon(
+                                Icons.calendar_today,
+                                size: Rem.rem1_25,
+                                color: Colors.black54,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: Rem.rem1),
+
+                  // Dropdown Kategori Pengeluaran
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: CustomDropdown<String>(
                       labelText: "Kategori Pengeluaran",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Rem.rem0_5),
-                      ),
+                      hintText: "",
+                      // backgroundColor: Colors.grey[300],
+                      items: _kategoriList.map((k) {
+                        return DropdownMenuEntry(value: k, label: k);
+                      }).toList(),
+                      onSelected: (value) {
+                        setState(() {
+                          _selectedKategori = value;
+                        });
+                      },
                     ),
-                    items: _kategoriList
-                        .map((k) => DropdownMenuItem(value: k, child: Text(k)))
-                        .toList(),
-                    onChanged: (value) =>
-                        setState(() => _selectedKategori = value),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Kategori pengeluaran harus dipilih';
-                      }
-                      return null;
-                    },
                   ),
                   const SizedBox(height: Rem.rem1),
-                  CustomTextFormField(
-                    controller: _nominalController,
-                    labelText: "Nominal",
-                    hintText: "Masukkan nominal",
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nominal harus diisi';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Nominal harus berupa angka';
-                      }
-                      return null;
-                    },
+
+                  // Nominal
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: CustomTextFormField(
+                      controller: _nominalController,
+                      labelText: "Nominal",
+                      hintText: "Masukkan nominal",
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Nominal harus diisi';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Nominal harus berupa angka';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   const SizedBox(height: Rem.rem1),
+
                   FilePickerButton(
                     file: _buktiFile,
                     fileName: _buktiFileName,
                     fileType: FileType.custom,
-                    allowedExtensions: [
-                      'jpg',
-                      'jpeg',
-                      'png',
-                    ], // ✅ FIX: PDF DIHAPUS
+                    allowedExtensions: ['jpg', 'jpeg', 'png'],
                     onFilePicked: (file, fileName) {
                       setState(() {
                         _buktiFile = file;
@@ -317,23 +360,5 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
         },
       ),
     );
-  }
-
-  String _monthName(int month) {
-    const names = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
-    ];
-    return names[month - 1];
   }
 }

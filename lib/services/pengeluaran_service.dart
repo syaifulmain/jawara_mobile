@@ -21,10 +21,18 @@ class PengeluaranService {
 
       // Build Query Params
       List<String> params = [];
-      if (search != null) params.add('search=$search');
-      if (kategori != null) params.add('kategori=$kategori');
-      if (startDate != null) params.add('start_date=$startDate');
-      if (endDate != null) params.add('end_date=$endDate');
+      if (search != null) {
+        params.add('search=${Uri.encodeComponent(search)}');
+      }
+      if (kategori != null) {
+        params.add('kategori=${Uri.encodeComponent(kategori)}');
+      }
+      if (startDate != null) {
+        params.add('start_date=${Uri.encodeComponent(startDate)}');
+      }
+      if (endDate != null) {
+        params.add('end_date=${Uri.encodeComponent(endDate)}');
+      }
 
       if (params.isNotEmpty) url += '?${params.join("&")}';
 
