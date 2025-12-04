@@ -10,6 +10,7 @@ import '../../../../widgets/custom_chip.dart';
 import '../../../../widgets/custom_dropdown.dart';
 import '../../../../widgets/custom_select_calender.dart';
 import '../../../../widgets/custom_text_form_field.dart';
+import 'package:intl/intl.dart';
 
 class ExpenditureListScreen extends StatefulWidget {
   const ExpenditureListScreen({super.key});
@@ -345,6 +346,7 @@ class _ExpenditureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd MMM yyyy');
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -385,7 +387,10 @@ class _ExpenditureCard extends StatelessWidget {
                   const SizedBox(width: 16),
                   const Icon(Icons.attach_money, size: 16, color: Colors.grey),
                   const SizedBox(width: 4),
-                  Text("Rp ${pengeluaran.nominal}"),
+                  // Gunakan NumberFormat
+                  Text(
+                    "Rp ${NumberFormat('#,###', 'id_ID').format(pengeluaran.nominal)}",
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
