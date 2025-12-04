@@ -8,6 +8,9 @@ import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_categories_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_category_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/add_income_category_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/bill_income_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/bills_list_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/income/bill_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/other_income_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/add_other_income_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_detail_screen.dart';
@@ -20,6 +23,8 @@ import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel
 import 'package:jawara_mobile_v2/screens/admin/transfer_channel/transfer_channel_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/income/my_bill_detail_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/income/my_bills_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
 import '../screens/admin/activities_and_broadcast/broadcast_detail_screen.dart';
 import '../screens/admin/dashboard/activities_screen.dart';
@@ -154,13 +159,13 @@ class RoutesConfig {
     AppRouteItem(
       path: '/income-categories-list',
       name: 'income_categories_list',
-      label: 'Income Categories',
+      label: 'Daftar Kategori Iuran',
       builder: (context, state) => const IncomeCategoriesListScreen(),
     ),
     AppRouteItem(
       path: '/add-income-category',
       name: 'add_income_category',
-      label: 'Add Category',
+      label: 'Tambah Kategori Iuran',
       builder: (context, state) => const AddIncomeCategoryScreen(),
     ),
     AppRouteItem(
@@ -177,8 +182,8 @@ class RoutesConfig {
       name: 'other_income_list',
       label: 'Daftar Pemasukan Lain',
       builder: (context, state) => const OtherIncomeListScreen(),
-    ),
-    AppRouteItem(
+    ), 
+     AppRouteItem(
       path: '/add-other-income',
       name: 'add_other_income',
       label: 'Tambah Pemasukan Lain',
@@ -191,6 +196,27 @@ class RoutesConfig {
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return IncomeDetailScreen(id: id);
+      },
+    ),
+    AppRouteItem(
+      path: '/bill-income',
+      name: 'bill_income',
+      label: 'Tagih Iuran',
+      builder: (context, state) => const BillIncomeScreen(),
+    ),
+    AppRouteItem(
+      path: '/bills-list',
+      name: 'bills_list',
+      label: 'Daftar Tagihan Warga',
+      builder: (context, state) => const BillsListScreen(),
+    ),
+    AppRouteItem(
+      path: '/bill-detail/:id',
+      name: 'bill_detail',
+      label: 'Detail Tagihan Warga',
+      builder: (context, state) {
+        final billId = state.pathParameters['id']!;
+        return BillDetailScreen(billId: billId);
       },
     ),
 
@@ -365,6 +391,23 @@ class RoutesConfig {
       name: 'resident_broadcast_menu',
       label: 'Broadcast Warga',
       builder: (context, state) => const ResidentBroadcastMenuScreen(),
+    ),
+    
+    // USER BILL MENU
+    AppRouteItem(
+      path: '/my-bills-list',
+      name: 'my_bills_list',
+      label: 'Daftar Tagihan ',
+      builder: (context, state) => const MyBillsScreen(),
+    ),
+    AppRouteItem(
+      path: '/my-bill-detail/:id',
+      name: 'my_bill_detail',
+      label: 'Detail Tagihan',
+      builder: (context, state) {
+        final billId = state.pathParameters['id']!;
+        return MyBillDetailScreen(billId: billId);
+      },
     ),
   ];
 }

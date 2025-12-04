@@ -52,7 +52,7 @@ class _AddIncomeCategoryScreenState extends State<AddIncomeCategoryScreen> {
     final category = IncomeCategories(
       name: _nameController.text,
       type: _selectedType!,
-      nominal: _nominalController.text,
+      nominal: double.tryParse(_nominalController.text) ?? 0.0,
       description: _descriptionController.text,
       createdBy: userId,
       createdByName: authProvider.currentUser?.name,
@@ -97,7 +97,7 @@ class _AddIncomeCategoryScreenState extends State<AddIncomeCategoryScreen> {
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: Text(
-          'Add Category',
+          'Tambah Jenis Iuran',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,

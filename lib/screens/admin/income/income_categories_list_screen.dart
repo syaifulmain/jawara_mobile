@@ -11,6 +11,7 @@ import '../../../widgets/custom_chip.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_select_calender.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class IncomeCategoriesListScreen extends StatefulWidget {
   const IncomeCategoriesListScreen({Key? key}) : super(key: key);
@@ -98,16 +99,19 @@ class _IncomeCategoriesListScreenState extends State<IncomeCategoriesListScreen>
     final hasActiveFilter = _selectedType != null || _selectedDate != null;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Income Categories')),
+      appBar: AppBar(title: const Text('Daftar Jenis Iuran')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar kategori iuran yang tersedia. Klik pada item untuk melihat detail atau edit. Gunakan tombol filter untuk menyaring berdasarkan tipe atau tanggal.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 CustomTextFormField(
                   controller: _searchController,
-                  hintText: 'Search categories...',
+                  hintText: 'Cari berdasarkan jenis iuran...',
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear),
@@ -129,7 +133,7 @@ class _IncomeCategoriesListScreenState extends State<IncomeCategoriesListScreen>
                       const Icon(Icons.filter_list),
                       const SizedBox(width: 8),
                       Text(
-                        hasActiveFilter ? 'Active Filter' : 'Filter Categories',
+                        hasActiveFilter ? 'Filter Aktif' : 'Filter Jenis Iuran',
                       ),
                     ],
                   ),
@@ -383,7 +387,7 @@ class _CategoryCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    category.nominal,
+                    category.formattedNominal,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -439,7 +443,7 @@ class _CategoryCard extends StatelessWidget {
                       );
                     }
                   },
-                  child: const Text('View Detail'),
+                  child: const Text('Lihat Detail'),
                 ),
               ),
             ],

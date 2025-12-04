@@ -3,7 +3,7 @@ class IncomeCategories {
   final int? id;
   final String name;
   final IncomeType type;
-  final String nominal;
+  final double nominal;
   final String description;
   final int createdBy; // Foreign key to user table
   final String? createdByName; // User's name for display
@@ -42,7 +42,9 @@ class IncomeCategories {
       id: json['id'] as int?,
       name: json['name'] as String,
       type: IncomeType.fromString(json['type'] as String),
-      nominal: json['nominal'] as String,
+      nominal: json['nominal'] != null 
+          ? double.parse(json['nominal'].toString()) 
+          : 0.0,
       description: json['description'] as String,
       createdBy: createdByUserId,
       createdByName: createdByUserName,
@@ -68,7 +70,7 @@ class IncomeCategories {
     int? id,
     String? name,
     IncomeType? type,
-    String? nominal,
+    double? nominal,
     String? description,
     int? createdBy,
     String? createdByName,
@@ -91,6 +93,11 @@ class IncomeCategories {
   /// Helper method to get display name for created by field
   String get createdByDisplayName {
     return createdByName ?? 'User ID: $createdBy';
+  }
+
+  /// Helper method to get formatted nominal
+  String get formattedNominal {
+    return 'Rp ${nominal.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 }
 

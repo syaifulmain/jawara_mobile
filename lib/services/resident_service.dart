@@ -34,7 +34,10 @@ class ResidentService {
     }
   }
 
-  Future<List<ResidentListModel>> searchResidents(String token, String query) async {
+  Future<List<ResidentListModel>> searchResidents(
+    String token,
+    String query,
+  ) async {
     try {
       final response = await http.get(
         Uri.parse('${ApiConstants.residents}?search=$query'),
@@ -88,7 +91,10 @@ class ResidentService {
     }
   }
 
-  Future<void> createResident(String token, ResidentRequestModel request) async {
+  Future<void> createResident(
+    String token,
+    ResidentRequestModel request,
+  ) async {
     try {
       final response = await http.post(
         Uri.parse(ApiConstants.residents),
@@ -113,7 +119,11 @@ class ResidentService {
     }
   }
 
-  Future<void> updateResident(String token, String id, ResidentRequestModel request) async {
+  Future<void> updateResident(
+    String token,
+    String id,
+    ResidentRequestModel request,
+  ) async {
     try {
       final response = await http.put(
         Uri.parse('${ApiConstants.residents}/$id'),
@@ -130,6 +140,52 @@ class ResidentService {
         final msg = body != null && body['message'] != null
             ? body['message'].toString()
             : 'Failed to update resident (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
+    }
+  }
+
+  // Get resident by user ID (to get family_id for logged-in user)
+  Future<ResidentDetailModel?> getResidentByUserId(
+    String token,
+    String userId,
+  ) async {
+    try {
+      // Fallback: Get all residents and filter by user_id on client side
+      // since backend might not have /residents/user/{userId} endpoint
+
+      final response = await http.get(
+        Uri.parse(ApiConstants.residents),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = body['data'];
+
+        // Find resident with matching user_id
+        final residentJson = data.firstWhere((r) {
+          final residentUserId = r['user_id']?.toString();
+          return residentUserId == userId;
+        }, orElse: () => null);
+
+        if (residentJson != null) {
+          return ResidentDetailModel.fromJson(residentJson);
+        }
+
+        // User has no resident record
+        return null;
+      } else {
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to get resident by user ID (${response.statusCode})';
         throw ApiException(msg, response.statusCode);
       }
     } catch (e) {

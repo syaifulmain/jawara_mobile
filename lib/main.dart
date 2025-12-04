@@ -11,6 +11,7 @@ import 'package:jawara_mobile_v2/providers/user_provider.dart';
 import 'package:jawara_mobile_v2/providers/income_categories_provider.dart';
 import 'package:jawara_mobile_v2/providers/income_provider.dart';
 import 'package:jawara_mobile_v2/providers/pengeluaran_provider.dart';
+import 'package:jawara_mobile_v2/providers/bill_provider.dart';
 import 'package:provider/provider.dart';
 import 'constants/rem_constant.dart';
 import 'providers/auth_provider.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => IncomeProvider()),
         ChangeNotifierProvider(create: (_) => TransferChannelProvider()),
         ChangeNotifierProvider(create: (_) => PengeluaranProvider()),
+        ChangeNotifierProvider(create: (_) => BillProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
