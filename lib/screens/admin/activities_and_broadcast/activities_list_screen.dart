@@ -11,6 +11,7 @@ import '../../../widgets/custom_chip.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_select_calender.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class ActivitiesListScreen extends StatefulWidget {
   const ActivitiesListScreen({Key? key}) : super(key: key);
@@ -101,6 +102,9 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
       appBar: AppBar(title: const Text('Daftar Kegiatan')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar kegiatan yang telah terjadwal. Gunakan filter untuk menyaring berdasarkan kategori atau tanggal. Klik item untuk melihat detail kegiatan.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

@@ -5,6 +5,7 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/user_provider.dart';
 import '../../../models/user/user_list_model.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class UsersListScreen extends StatefulWidget {
   const UsersListScreen({Key? key}) : super(key: key);
@@ -52,6 +53,9 @@ class _UserListScreenState extends State<UsersListScreen> {
       appBar: AppBar(title: const Text('Daftar Pengguna')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar pengguna/admin yang memiliki akses ke sistem. Gunakan pencarian untuk menemukan pengguna. Klik item untuk melihat detail atau edit akses.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(

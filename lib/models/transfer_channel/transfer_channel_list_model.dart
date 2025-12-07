@@ -5,12 +5,14 @@ class TransferChannelListModel {
   final String name;
   final TransferChannelType type;
   final String ownerName;
+  final String accountNumber;
 
   TransferChannelListModel({
     required this.id,
     required this.name,
     required this.type,
     required this.ownerName,
+    required this.accountNumber,
   });
 
   factory TransferChannelListModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class TransferChannelListModel {
       name: json['name'] ?? '',
       type: TransferChannelType.fromString(json['type'] ?? ''),
       ownerName: json['owner_name'] ?? '',
+      accountNumber: json['account_number'] ?? '',
     );
   }
 
@@ -30,6 +33,7 @@ class TransferChannelListModel {
       'name': name,
       'type': type.toStringValue(),
       'owner_name': ownerName,
+      'account_number': accountNumber,
     };
   }
 }

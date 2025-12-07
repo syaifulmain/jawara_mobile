@@ -7,6 +7,7 @@ import '../../../providers/broadcast_provider.dart';
 import '../../../models/broadcast_model.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/info_banner.dart';
 
 class BroadcastsListScreen extends StatefulWidget {
   const BroadcastsListScreen({Key? key}) : super(key: key);
@@ -54,6 +55,9 @@ class _BroadcastsListScreenState extends State<BroadcastsListScreen> {
       appBar: AppBar(title: const Text('Daftar Broadcast')),
       body: Column(
         children: [
+          const InfoBanner(
+            message: 'Daftar pesan broadcast yang telah dikirim. Gunakan pencarian untuk menemukan broadcast tertentu. Klik item untuk melihat detail.',
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(
