@@ -15,7 +15,7 @@ class UserFamilyMenuScreen extends StatelessWidget {
           title: 'Profil Keluarga',
           subtitle: 'Lihat data keluarga Anda',
           color: Colors.red,
-          onTap: () => context.pushNamed(''),
+          onTap: () => context.pushNamed('family_profile'),
         ),
         SubMenuItem(
           icon: Icons.list_sharp,

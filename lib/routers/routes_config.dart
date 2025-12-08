@@ -26,6 +26,7 @@ import 'package:jawara_mobile_v2/screens/admin/user_management/user_management_m
 import 'package:jawara_mobile_v2/screens/warga/income/my_bill_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/warga/income/my_bills_screen.dart';
 import 'package:jawara_mobile_v2/screens/warga/family/user_family_menu_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/family/user_family_profile_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
 import '../screens/admin/activities_and_broadcast/broadcast_detail_screen.dart';
 import '../screens/admin/dashboard/activities_screen.dart';
@@ -412,9 +413,15 @@ class RoutesConfig {
     ),
     AppRouteItem(
       path: '/user-family-menu',
-      name: 'family_data', // ini harus sama dengan nama di onTap HomeScreen
+      name: 'family_data', 
       label: 'Data Keluarga',
       builder: (context, state) => const UserFamilyMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/user-family-profile',
+      name: 'family_profile',
+      label: 'Profil Keluarga',
+      builder: (context, state) => const UserFamilyProfileScreen(),
     ),
   ];
 }
