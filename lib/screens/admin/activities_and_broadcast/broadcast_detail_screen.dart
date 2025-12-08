@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jawara_mobile_v2/widgets/file_picker_button.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,14 +13,14 @@ import '../../../providers/broadcast_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
-import '../../../widgets/broadcast_photo_viewer.dart';
+import '../../../widgets/custom_photo_viewer.dart';
 import '../../../widgets/document_viewer.dart';
-
 
 class BroadcastDetailScreen extends StatefulWidget {
   final String broadcastId;
 
-  const BroadcastDetailScreen({Key? key, required this.broadcastId}) : super(key: key);
+  const BroadcastDetailScreen({Key? key, required this.broadcastId})
+    : super(key: key);
 
   @override
   State<BroadcastDetailScreen> createState() => _BroadcastDetailScreenState();
@@ -49,7 +50,7 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
     final broadcastProvider = context.read<BroadcastProvider>();
 
     _broadcast = broadcastProvider.broadcasts.firstWhere(
-          (b) => b.id.toString() == widget.broadcastId,
+      (b) => b.id.toString() == widget.broadcastId,
     );
 
     if (_broadcast != null) {
@@ -85,13 +86,16 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
     );
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final broadcastProvider = Provider.of<BroadcastProvider>(context, listen: false);
+    final broadcastProvider = Provider.of<BroadcastProvider>(
+      context,
+      listen: false,
+    );
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda belum login')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
       return;
     }
 
@@ -147,17 +151,23 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
     if (confirmed != true) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final broadcastProvider = Provider.of<BroadcastProvider>(context, listen: false);
+    final broadcastProvider = Provider.of<BroadcastProvider>(
+      context,
+      listen: false,
+    );
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda belum login')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
       return;
     }
 
-    final success = await broadcastProvider.deleteBroadcast(token, widget.broadcastId);
+    final success = await broadcastProvider.deleteBroadcast(
+      token,
+      widget.broadcastId,
+    );
 
     if (success) {
       if (mounted) {
@@ -262,7 +272,7 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
                   ),
                   if (_broadcast!.photo != null) ...[
                     const SizedBox(height: Rem.rem1_5),
-                    BroadcastPhotoViewer(photoUrl: _broadcast!.photoUrl!),
+                    CustomPhotoViewer(photoUrl: _broadcast!.photoUrl!),
                   ],
                   if (_broadcast!.document != null) ...[
                     const SizedBox(height: Rem.rem1_5),
@@ -282,20 +292,24 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: CustomButton(
-                            onPressed: provider.isLoading ? null : _updateBroadcast,
+                            onPressed: provider.isLoading
+                                ? null
+                                : _updateBroadcast,
                             child: provider.isLoading
                                 ? const SizedBox(
-                              height: Rem.rem1_25,
-                              width: Rem.rem1_25,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
+                                    height: Rem.rem1_25,
+                                    width: Rem.rem1_25,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
                                 : Text(
-                              'Simpan',
-                              style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                            ),
+                                    'Simpan',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: Rem.rem1,
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

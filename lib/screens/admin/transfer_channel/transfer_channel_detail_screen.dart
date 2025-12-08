@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_type.dart';
 import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
+import 'package:jawara_mobile_v2/widgets/custom_photo_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../../constants/color_constant.dart';
@@ -21,14 +22,12 @@ import '../../../../widgets/custom_text_form_field.dart';
 class TransferChannelDetailScreen extends StatefulWidget {
   final String id;
 
-  const TransferChannelDetailScreen({Key? key, required this.id})
-    : super(key: key);
+  const TransferChannelDetailScreen({super.key, required this.id});
 
   @override
   State<TransferChannelDetailScreen> createState() =>
       _TransferChannelDetailScreenState();
 }
-
 class _TransferChannelDetailScreenState
     extends State<TransferChannelDetailScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -42,7 +41,8 @@ class _TransferChannelDetailScreenState
   // Selections
   TransferChannelType? _selectedType;
   bool _isEditMode = false;
-  TransferChannelDetailModel? _transferChannel;
+  
+  // TransferChannelDetailModel? _transferChannel;
 
   @override
   void initState() {
@@ -61,44 +61,35 @@ class _TransferChannelDetailScreenState
         authProvider.token!,
         widget.id,
       );
-      _transferChannel = transferChannelProvider.selectedTransferChannel;
+      
+      // Ambil langsung dari provider
+      final transferChannel = transferChannelProvider.selectedTransferChannel;
 
-      if (_transferChannel != null && mounted) {
-        _initializeFields();
+      if (transferChannel != null && mounted) {
+        _initializeFields(transferChannel);
       }
     }
   }
 
-  void _initializeFields() {
-    if (_transferChannel == null) return;
-
+  // Terima parameter
+  void _initializeFields(TransferChannelDetailModel transferChannel) {
     setState(() {
-      _nameController.text = _transferChannel!.name;
-      // _typeController.text = _transferChannel!.type.toStringValue();
-
-      _selectedType = _transferChannel!.type;
-
-      _ownerNameController.text = _transferChannel!.ownerName;
-      _accountNumberController.text = _transferChannel!.accountNumber;
-      _notesController.text = _transferChannel!.notes;
+      _nameController.text = transferChannel.name;
+      _selectedType = transferChannel.type;
+      _ownerNameController.text = transferChannel.ownerName;
+      _accountNumberController.text = transferChannel.accountNumber;
+      _notesController.text = transferChannel.notes;
     });
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    // _typeController.dispose();
-    _ownerNameController.dispose();
-    _accountNumberController.dispose();
-    _notesController.dispose();
-    super.dispose();
-  }
-
   void _toggleEditMode() {
+    final transferChannelProvider = context.read<TransferChannelProvider>();
+    final transferChannel = transferChannelProvider.selectedTransferChannel;
+    
     setState(() {
       _isEditMode = !_isEditMode;
-      if (!_isEditMode) {
-        _initializeFields(); // Reset to original data
+      if (!_isEditMode && transferChannel != null) {
+        _initializeFields(transferChannel); // Reset to original data
       }
     });
   }
@@ -113,36 +104,31 @@ class _TransferChannelDetailScreenState
       context,
       listen: false,
     );
+    
+    // ✅ Ambil dari provider
+    final transferChannel = transferChannelProvider.selectedTransferChannel;
+    if (transferChannel == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data tidak ditemukan')),
+      );
+      return;
+    }
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Anda belum login')),
+      );
       return;
     }
 
     final request = TransferChannelDetailModel(
-      id: _transferChannel!.id,
+      id: transferChannel.id,
       name: _nameController.text,
-      type: _selectedType ?? _transferChannel!.type,
+      type: _selectedType ?? transferChannel.type,
       ownerName: _ownerNameController.text,
       accountNumber: _accountNumberController.text,
       notes: _notesController.text,
-      // familyId: _selectedFamilyId!,
-      // fullName: _nameController.text,
-      // nik: _nikController.text,
-      // phoneNumber: _phoneController.text.isNotEmpty ? _phoneController.text : null,
-      // birthPlace: _birthPlaceController.text.isNotEmpty ? _birthPlaceController.text : null,
-      // birthDate: _selectedBirthDate?.toIso8601String().split('T')[0],
-      // gender: _selectedGender?.value ?? (_transferChannel?.gender == 'Laki-laki' ? 'M' : 'F'), // Fallback or correct mapping
-      // religion: _selectedReligion?.label,
-      // bloodType: _selectedBloodType?.label,
-      // familyRole: _selectedFamilyRole?.label ?? 'Famili Lain',
-      // lastEducation: _selectedLastEducation?.label,
-      // occupation: _selectedOccupation?.label,
-      // isAlive: _isAlive,
-      // isActive: _isActive,
     );
 
     final success = await transferChannelProvider.updateTransferChannel(
@@ -196,11 +182,14 @@ class _TransferChannelDetailScreenState
       ),
       body: Consumer<TransferChannelProvider>(
         builder: (context, provider, _) {
-          if (provider.isLoading && !_isEditMode) {
+          // ✅ Ambil dari provider di sini
+          final transferChannel = provider.selectedTransferChannel;
+          
+          if (provider.isLoading && transferChannel == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.errorMessage != null && _transferChannel == null) {
+          if (provider.errorMessage != null && transferChannel == null) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -213,6 +202,13 @@ class _TransferChannelDetailScreenState
                   ),
                 ],
               ),
+            );
+          }
+
+          // Guard clause
+          if (transferChannel == null) {
+            return const Center(
+              child: Text('Data tidak ditemukan'),
             );
           }
 
@@ -236,18 +232,6 @@ class _TransferChannelDetailScreenState
                     },
                   ),
                   const SizedBox(height: Rem.rem1),
-                  // CustomTextFormField(
-                  //   controller: _typeController,
-                  //   labelText: "Tipe Saluran",
-                  //   hintText: "Masukkan tipe saluran.",
-                  //   readOnly: !_isEditMode,
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Tipe harus diisi';
-                  //     }
-                  //     return null;
-                  //   },
-                  // )
                   CustomDropdown<TransferChannelType>(
                     labelText: "Tipe Saluran",
                     hintText: "Masukkan tipe saluran.",
@@ -284,6 +268,19 @@ class _TransferChannelDetailScreenState
                       return null;
                     },
                   ),
+                  // ✅ Sekarang aman menggunakan transferChannel
+                  if (transferChannel.qrCodeImagePath != null) ...[
+                    const SizedBox(height: Rem.rem1_5),
+                    CustomPhotoViewer(
+                      photoUrl: transferChannel.qrCodeImagePath!,
+                    ),
+                  ],
+                  const SizedBox(height: Rem.rem1_5),
+                  if (transferChannel.thumbnailImagePath != null) ...[
+                    CustomPhotoViewer(
+                      photoUrl: transferChannel.thumbnailImagePath!,
+                    ),
+                  ],
                   const SizedBox(height: Rem.rem1),
                   CustomTextFormField(
                     controller: _notesController,
@@ -297,7 +294,6 @@ class _TransferChannelDetailScreenState
                       return null;
                     },
                   ),
-                  const SizedBox(width: 12),
                   if (_isEditMode) ...[
                     const SizedBox(height: Rem.rem2),
                     Row(
@@ -312,16 +308,22 @@ class _TransferChannelDetailScreenState
                         const SizedBox(width: 12),
                         Expanded(
                           child: CustomButton(
-                            onPressed: provider.isLoading ? null : _updateTransferChannel,
+                            onPressed: provider.isLoading
+                                ? null
+                                : _updateTransferChannel,
                             child: provider.isLoading
                                 ? const SizedBox(
                                     height: Rem.rem1_25,
                                     width: Rem.rem1_25,
-                                    child: CircularProgressIndicator(color: Colors.white),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
                                   )
                                 : Text(
                                     'Simpan',
-                                    style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                                    style: GoogleFonts.poppins(
+                                      fontSize: Rem.rem1,
+                                    ),
                                   ),
                           ),
                         ),
@@ -351,33 +353,4 @@ class _TransferChannelDetailScreenState
       ),
     );
   }
-
-  // Widget _buildSwitchTile({
-  //   required String title,
-  //   required bool value,
-  //   required ValueChanged<bool>? onChanged,
-  // }) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: Rem.rem1),
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: _isEditMode ? Colors.white : Colors.grey.shade100,
-  //         border: Border.all(color: Colors.grey.shade300),
-  //         borderRadius: BorderRadius.circular(Rem.rem0_5),
-  //       ),
-  //       child: SwitchListTile(
-  //         title: Text(
-  //           title,
-  //           style: GoogleFonts.poppins(
-  //             fontSize: Rem.rem1,
-  //             color: Colors.black87,
-  //           ),
-  //         ),
-  //         value: value,
-  //         onChanged: onChanged,
-  //         activeColor: AppColors.primaryColor,
-  //       ),
-  //     ),
-  //   );
-  // }
 }

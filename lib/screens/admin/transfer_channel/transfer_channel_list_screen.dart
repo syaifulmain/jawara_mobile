@@ -144,6 +144,7 @@ class _TransferChannelListItemCard extends StatelessWidget {
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: AppColors.secondaryColor,
       child: InkWell(
         // Added InkWell for tap functionality
         onTap: () {
