@@ -113,7 +113,7 @@ class _TransferChannelCreationScreenState
             ),
           ),
         );
-        print(provider.errorMessage);
+        // print(provider.errorMessage);
       }
     }
   }

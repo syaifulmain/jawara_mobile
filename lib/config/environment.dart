@@ -6,6 +6,6 @@ class Environment {
   // Untuk Physical Device: http://192.168.x.x:8000 (IP komputer Anda)
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://192.168.58.202:8000/api',
+    defaultValue: 'http://192.168.67.223:8000/api',
   );
 }

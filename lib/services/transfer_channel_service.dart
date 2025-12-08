@@ -1,6 +1,7 @@
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_detail_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_list_model.dart';
 import 'package:jawara_mobile_v2/models/transfer_channel/transfer_channel_request_model.dart';
+import 'package:jawara_mobile_v2/services/api_exception.dart';
 import '../constants/api_constant.dart';
 import 'base_api_service.dart';
 
@@ -40,7 +41,13 @@ class TransferChannelService extends BaseApiService {
       token: token,
     );
 
-    return TransferChannelDetailModel.fromJson(body!['data']);
+    // print('Response body: $body'); // Debug
+
+    if (body == null || body['data'] == null) {
+      throw ApiException('Data tidak ditemukan');
+    }
+
+    return TransferChannelDetailModel.fromJson(body['data']);
   }
 
   Future<void> create(String token, TransferChannelRequestModel req) async {

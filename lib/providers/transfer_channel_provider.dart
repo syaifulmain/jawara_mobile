@@ -75,8 +75,10 @@ class TransferChannelProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _selectedTransferChannel = await _transferChannelService
-          .getDetail(token, id);
+      _selectedTransferChannel = await _transferChannelService.getDetail(
+        token,
+        id,
+      );
       _isLoading = false;
       notifyListeners();
     } catch (e) {
