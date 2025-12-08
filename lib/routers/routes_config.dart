@@ -27,6 +27,7 @@ import 'package:jawara_mobile_v2/screens/warga/income/my_bill_detail_screen.dart
 import 'package:jawara_mobile_v2/screens/warga/income/my_bills_screen.dart';
 import 'package:jawara_mobile_v2/screens/warga/family/user_family_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/warga/family/user_family_profile_screen.dart';
+import 'package:jawara_mobile_v2/screens/warga/family/user_family_members_screen.dart';
 import '../screens/admin/activities_and_broadcast/activity_detail_screen.dart';
 import '../screens/admin/activities_and_broadcast/broadcast_detail_screen.dart';
 import '../screens/admin/dashboard/activities_screen.dart';
@@ -413,7 +414,7 @@ class RoutesConfig {
     ),
     AppRouteItem(
       path: '/user-family-menu',
-      name: 'family_data', 
+      name: 'family_data',
       label: 'Data Keluarga',
       builder: (context, state) => const UserFamilyMenuScreen(),
     ),
@@ -422,6 +423,12 @@ class RoutesConfig {
       name: 'family_profile',
       label: 'Profil Keluarga',
       builder: (context, state) => const UserFamilyProfileScreen(),
+    ),
+    AppRouteItem(
+      path: '/user-family-members',
+      name: 'family_members',
+      label: 'Daftar Anggota',
+      builder: (context, state) => const UserFamilyMembersScreen(),
     ),
   ];
 }

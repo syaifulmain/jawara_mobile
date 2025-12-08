@@ -22,7 +22,7 @@ class UserFamilyMenuScreen extends StatelessWidget {
           title: 'Daftar Anggota',
           subtitle: 'Lihat semua anggota keluarga',
           color: Colors.green,
-          onTap: () => context.pushNamed(''),
+          onTap: () => context.pushNamed('family_members'),
         ),
         SubMenuItem(
           icon: Icons.person_add,
