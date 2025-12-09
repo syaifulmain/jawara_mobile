@@ -91,7 +91,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
               const SizedBox(height: Rem.rem0_5),
             ],
             DropdownMenu<T>(
-              controller: _controller, // Use the controller to manage the displayed text.
+              controller:
+                  _controller, // Use the controller to manage the displayed text.
               width: width,
               onSelected: widget.onSelected,
               hintText: widget.hintText,
