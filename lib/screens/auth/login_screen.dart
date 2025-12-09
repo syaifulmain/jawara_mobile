@@ -41,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text,
     );
 
+    print(success);
+
     if (!mounted) return;
 
     if (!success) {

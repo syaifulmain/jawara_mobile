@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/user/update_user_request_model.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/api_exception.dart';
@@ -137,5 +138,30 @@ class AuthProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
     await prefs.remove('user_data');
+  }
+
+  Future<bool> updateUser(String token, String id, UpdateUserRequestModel req) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final updated = await _apiService.updateProfile(token, id, req);
+      // persist or update list if needed
+      _isLoading = false;
+      notifyListeners();
+      _verifyTokenInBackground();
+      return true;
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Update error: $e';
+      }
+      print(e);
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }

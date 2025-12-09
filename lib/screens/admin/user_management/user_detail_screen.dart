@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
+import '../../../models/user/update_user_request_model.dart';
 import '../../../models/user/user_detail_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user_provider.dart';
@@ -49,6 +50,55 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     }
   }
 
+  Future<void> _updateUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final authProvider = context.read<AuthProvider>();
+
+    if (authProvider.token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Token tidak ditemukan. Silakan login ulang.'), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    // Prepare request model. If phone is empty, send null to allow partial update.
+    final phoneValue = _phoneController.text.trim();
+    final passwordValue = _passwordController.text;
+    
+    print('Updating user with phone: $phoneValue, password: ${passwordValue.isNotEmpty ? '***' : '(unchanged)'}');
+
+    final req = UpdateUserRequestModel(
+      email: _emailController.text.trim(),
+      phone: phoneValue.isEmpty ? null : phoneValue,
+      password: passwordValue.isEmpty ? null : passwordValue,
+      passwordConfirmation: passwordValue.isEmpty ? null : passwordValue,
+    );
+
+    final success = await authProvider.updateUser(authProvider.token!, widget.id, req);
+
+    print(success);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profil berhasil diperbarui'), backgroundColor: Colors.green),
+      );
+      // refresh local user data and exit edit mode
+      setState(() {
+        _isEditMode = false;
+      });
+      // reload detail from provider to ensure fresh data
+      _loadDetail();
+    } else {
+      final msg = authProvider.errorMessage ?? 'Gagal memperbarui pengguna';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.red),
+      );
+    }
+  }
+
   void _initializeFields() {
     if (_user == null) return;
     
@@ -68,19 +118,19 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     });
   }
 
-  Future<void> _updateUser() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    // TODO: Implement update logic in Provider and Service
-    // For now, just a mock implementation
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Fitur update pengguna belum diimplementasikan di API')),
-    );
-    
-    setState(() {
-      _isEditMode = false;
-    });
-  }
+  // Future<void> _updateUser() async {
+  //   if (!_formKey.currentState!.validate()) return;
+  //
+  //   // TODO: Implement update logic in Provider and Service
+  //   // For now, just a mock implementation
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(content: Text('Fitur update pengguna belum diimplementasikan di API')),
+  //   );
+  //
+  //   setState(() {
+  //     _isEditMode = false;
+  //   });
+  // }
 
   @override
   void dispose() {
