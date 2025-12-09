@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../../constants/color_constant.dart';
-import '../../../../constants/rem_constant.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../models/family/family_detail_model.dart';
 import '../../../../providers/auth_provider.dart';
 import '../../../../providers/user_family_provider.dart';
+import '../../../../widgets/info_banner.dart';
 
 class UserFamilyMembersScreen extends StatefulWidget {
   const UserFamilyMembersScreen({Key? key}) : super(key: key);
@@ -36,201 +35,140 @@ class _UserFamilyMembersScreenState extends State<UserFamilyMembersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondaryColor,
-      appBar: AppBar(
-        title: Text(
-          'Anggota Keluarga',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Consumer<UserFamilyProvider>(
-        builder: (context, userFamilyProvider, child) {
-          if (userFamilyProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (userFamilyProvider.errorMessage != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Error: ${userFamilyProvider.errorMessage}',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _loadFamilyMembers,
-                    child: const Text('Coba Lagi'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final family = userFamilyProvider.selectedFamily;
-          if (family == null) {
-            return const Center(child: Text('Data keluarga tidak ditemukan'));
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(Rem.rem1_5),
-            child: _buildMembersSection(family),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildMembersSection(FamilyDetailModel family) {
-    final members = family.familyMembers;
-
-    if (members.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(Rem.rem2),
-          child: Text(
-            'Belum ada anggota keluarga',
-            style: GoogleFonts.poppins(color: Colors.grey),
-          ),
-        ),
-      );
-    }
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: members.length,
-      itemBuilder: (context, index) {
-        final member = members[index];
-        return _buildMemberCard(member);
-      },
-    );
-  }
-
-  Widget _buildMemberCard(FamilyMemberModel member) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: Rem.rem1),
-      padding: const EdgeInsets.all(Rem.rem1),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(Rem.rem0_5),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(title: const Text('Anggota Keluarga')),
+      body: Column(
         children: [
-          // Header: Icon, Name, NIK, Role
-          Row(
-            children: [
-              Icon(Icons.person, color: AppColors.primaryColor, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      member.name,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Rem.rem1,
-                      ),
-                    ),
-                    Text(
-                      member.nik,
-                      style: GoogleFonts.poppins(
-                        color: Colors.grey.shade600,
-                        fontSize: Rem.rem0_875,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  member.role,
-                  style: GoogleFonts.poppins(
-                    fontSize: Rem.rem0_75,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
+          const InfoBanner(
+            message:
+                'Daftar anggota keluarga Anda. Klik item untuk melihat detail atau edit data.',
           ),
-          const SizedBox(height: 8),
+          Expanded(
+            child: Consumer<UserFamilyProvider>(
+              builder: (context, userFamilyProvider, child) {
+                if (userFamilyProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          // Gender
-          _buildInfoColumn('Gender', member.gender),
+                if (userFamilyProvider.errorMessage != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Error: ${userFamilyProvider.errorMessage}',
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _loadFamilyMembers,
+                          child: const Text('Coba Lagi'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
 
-          const SizedBox(height: 4),
+                final family = userFamilyProvider.selectedFamily;
+                if (family == null) {
+                  return const Center(
+                    child: Text('Data keluarga tidak ditemukan'),
+                  );
+                }
 
-          // Status di bawah Gender
-          _buildInfoColumn('Status', member.status),
+                if (family.familyMembers.isEmpty) {
+                  return const Center(
+                    child: Text('Belum ada anggota keluarga'),
+                  );
+                }
 
-          const SizedBox(height: 8),
-
-          // Buttons: Detail & Edit (kanan)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // TODO: navigate to detail screen
-                },
-                child: Text(
-                  'Detail',
-                  style: GoogleFonts.poppins(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w600,
+                return RefreshIndicator(
+                  onRefresh: () async => _loadFamilyMembers(),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: family.familyMembers.length,
+                    itemBuilder: (context, index) {
+                      final member = family.familyMembers[index];
+                      return _FamilyMemberCard(member: member);
+                    },
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: () {
-                  // TODO: navigate to edit screen
-                },
-                child: Text(
-                  'Edit',
-                  style: GoogleFonts.poppins(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildInfoColumn(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(color: Colors.grey, fontSize: Rem.rem0_75),
-        ),
-        Text(
-          value,
-          style: GoogleFonts.poppins(
-            fontSize: Rem.rem0_875,
-            color: (label == 'Status' && value == 'Hidup')
-                ? Colors.green
-                : null,
+class _FamilyMemberCard extends StatelessWidget {
+  final FamilyMemberModel member;
+
+  const _FamilyMemberCard({required this.member});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () {
+          // Navigasi ke detail resident berdasarkan NIK
+          context.pushNamed(
+            'resident_detail',
+            pathParameters: {'id': member.id.toString()},
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                member.name,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text('NIK: ${member.nik}'),
+              Text('Peran: ${member.role}'),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: member.status == 'Hidup'
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      member.status,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: member.status == 'Hidup'
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    member.gender,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
