@@ -191,25 +191,18 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildSectionTitle('Informasi Pengeluaran'),
                   // Nama Pengeluaran
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: CustomTextFormField(
-                      controller: _namaController,
-                      labelText: "Nama Pengeluaran",
-                      hintText: "Masukkan nama pengeluaran",
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Nama pengeluaran harus diisi';
-                        }
-                        return null;
-                      },
-                    ),
+                  CustomTextFormField(
+                    controller: _namaController,
+                    labelText: "Nama Pengeluaran",
+                    hintText: "Masukkan nama pengeluaran",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nama pengeluaran harus diisi';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: Rem.rem1),
 
@@ -235,7 +228,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                             vertical: Rem.rem0_875,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Colors.white,
                             border: Border.all(color: Colors.grey.shade300),
                             borderRadius: BorderRadius.circular(Rem.rem0_5),
                           ),
@@ -255,7 +248,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                               Icon(
                                 Icons.calendar_today,
                                 size: Rem.rem1_25,
-                                color: Colors.black54,
+                                color: Colors.black,
                               ),
                             ],
                           ),
@@ -265,56 +258,40 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                   ),
                   const SizedBox(height: Rem.rem1),
 
-                  // Dropdown Kategori Pengeluaran
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: CustomDropdown<String>(
-                      labelText: "Kategori Pengeluaran",
-                      hintText: "",
-                      // backgroundColor: Colors.grey[300],
-                      items: _kategoriList.map((k) {
-                        return DropdownMenuEntry(value: k, label: k);
-                      }).toList(),
-                      onSelected: (value) {
-                        setState(() {
-                          _selectedKategori = value;
-                        });
-                      },
-                    ),
+                  // Dropdown Kategori
+                  CustomDropdown<String>(
+                    labelText: "Kategori Pengeluaran",
+                    hintText: "-- PILIH KATEGORI --",
+                    items: _kategoriList.map((k) {
+                      return DropdownMenuEntry(value: k, label: k);
+                    }).toList(),
+                    onSelected: (value) {
+                      setState(() {
+                        _selectedKategori = value;
+                      });
+                    },
                   ),
                   const SizedBox(height: Rem.rem1),
 
                   // Nominal
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: CustomTextFormField(
-                      controller: _nominalController,
-                      labelText: "Nominal",
-                      hintText: "Masukkan nominal",
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Nominal harus diisi';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Nominal harus berupa angka';
-                        }
-                        return null;
-                      },
-                    ),
+                  CustomTextFormField(
+                    controller: _nominalController,
+                    labelText: "Nominal",
+                    hintText: "Masukkan nominal",
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nominal harus diisi';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Nominal harus berupa angka';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: Rem.rem1),
 
+                  // Bukti File
                   FilePickerButton(
                     file: _buktiFile,
                     fileName: _buktiFileName,
@@ -336,28 +313,48 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                     iconColor: Colors.blue,
                     buttonText: 'Tambahkan Bukti Pengeluaran (Opsional)',
                   ),
-                  const SizedBox(height: Rem.rem1_5),
-                  CustomButton(
-                    onPressed: provider.isLoading ? null : _submitForm,
-                    child: provider.isLoading
-                        ? const SizedBox(
-                            height: Rem.rem1_25,
-                            width: Rem.rem1_25,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
+                  const SizedBox(height: Rem.rem2),
+
+                  // Submit Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      onPressed: provider.isLoading ? null : _submitForm,
+                      child: provider.isLoading
+                          ? const SizedBox(
+                              height: Rem.rem1_25,
+                              width: Rem.rem1_25,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Simpan',
+                              style: GoogleFonts.poppins(fontSize: Rem.rem1),
                             ),
-                          )
-                        : Text(
-                            'Buat Pengeluaran',
-                            style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                          ),
+                    ),
                   ),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(bottom: Rem.rem1),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          fontSize: Rem.rem1_25,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryColor,
+        ),
       ),
     );
   }

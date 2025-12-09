@@ -1,5 +1,4 @@
-
-enum Gender{
+enum Gender {
   lakiLaki('M', 'Laki-laki'),
   perempuan('F', 'Perempuan');
 
@@ -10,21 +9,20 @@ enum Gender{
 
   static Gender fromString(String value) {
     return Gender.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => Gender.lakiLaki,
     );
   }
 }
 
 enum Religion {
-  islam('islam', 'Islam'),
-  kristen('kristen', 'Kristen'),
-  protestan('protestan', 'Protestan'),
-  katolik('katolik', 'Katolik'),
-  hindu('hindu', 'Hindu'),
-  budha('budha', 'Budha'),
-  konghuchu('konghuchu', 'Konghuchu'),
-  lainnya('lainnya', 'Lainnya');
+  islam('Islam', 'Islam'),
+  kristen('Kristen', 'Kristen'),
+  katolik('Katolik', 'Katolik'),
+  hindu('Hindu', 'Hindu'),
+  buddha('Buddha', 'Buddha'),
+  konghucu('Konghuchu', 'Konghuchu'),
+  lainnya('Lainnya', 'Lainnya');
 
   final String value;
   final String label;
@@ -33,7 +31,7 @@ enum Religion {
 
   static Religion fromString(String value) {
     return Religion.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => Religion.lainnya,
     );
   }
@@ -53,7 +51,7 @@ enum BloodType {
 
   static BloodType fromString(String value) {
     return BloodType.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => BloodType.tidakTahu,
     );
   }
@@ -72,7 +70,7 @@ enum FamilyRole {
 
   static FamilyRole fromString(String value) {
     return FamilyRole.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => FamilyRole.lainnya,
     );
   }
@@ -94,7 +92,7 @@ enum LastEducation {
 
   static LastEducation fromString(String value) {
     return LastEducation.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => LastEducation.tidakSekolah,
     );
   }
@@ -115,7 +113,7 @@ enum Occupation {
 
   static Occupation fromString(String value) {
     return Occupation.values.firstWhere(
-          (category) => category.value == value,
+      (category) => category.value == value,
       orElse: () => Occupation.lainnya,
     );
   }

@@ -82,7 +82,10 @@ class ResidentProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> createResident(String token, ResidentRequestModel request) async {
+  Future<bool> createResident(
+    String token,
+    ResidentRequestModel request,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -104,7 +107,11 @@ class ResidentProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateResident(String token, String id, ResidentRequestModel request) async {
+  Future<bool> updateResident(
+    String token,
+    String id,
+    ResidentRequestModel request,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -127,7 +134,10 @@ class ResidentProvider with ChangeNotifier {
   }
 
   // Fetch resident by user ID (for getting family_id of logged-in user)
-  Future<ResidentDetailModel?> fetchResidentByUserId(String token, String userId) async {
+  Future<ResidentDetailModel?> fetchResidentByUserId(
+    String token,
+    String userId,
+  ) async {
     try {
       return await _residentService.getResidentByUserId(token, userId);
     } catch (e) {
