@@ -431,11 +431,11 @@ class RoutesConfig {
       label: 'Daftar Anggota',
       builder: (context, state) => const UserFamilyMembersScreen(),
     ),
-    // AppRouteItem(
-    //   path: '/add-user-family-member',
-    //   name: 'add_user_family_member',
-    //   label: 'Tambah Anggota Keluarga',
-    //   builder: (context, state) => const AddUserFamilyScreen(),
-    // ),
+    AppRouteItem(
+      path: '/add-user-family-member',
+      name: 'add_user_family_member',
+      label: 'Tambah Anggota Keluarga',
+      builder: (context, state) => const AddUserFamilyScreen(),
+    ),
   ];
 }

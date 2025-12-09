@@ -23,13 +23,13 @@ class AddResidentScreen extends StatefulWidget {
 
 class _AddResidentScreenState extends State<AddResidentScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Controllers
   final _nameController = TextEditingController();
   final _nikController = TextEditingController();
   final _phoneController = TextEditingController();
   final _birthPlaceController = TextEditingController();
-  
+
   // Selections
   DateTime? _selectedBirthDate;
   Gender? _selectedGender;
@@ -51,7 +51,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
   void _loadFamilies() {
     final authProvider = context.read<AuthProvider>();
     final familyProvider = context.read<FamilyProvider>();
-    
+
     if (authProvider.token != null) {
       familyProvider.fetchFamilies(authProvider.token!);
     }
@@ -86,9 +86,9 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
     }
 
     if (_selectedFamilyId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Silakan pilih keluarga')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Silakan pilih keluarga')));
       return;
     }
 
@@ -107,13 +107,16 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
     }
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final residentProvider = Provider.of<ResidentProvider>(context, listen: false);
+    final residentProvider = Provider.of<ResidentProvider>(
+      context,
+      listen: false,
+    );
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda belum login')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
       return;
     }
 
@@ -121,8 +124,12 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
       familyId: _selectedFamilyId!,
       fullName: _nameController.text,
       nik: _nikController.text,
-      phoneNumber: _phoneController.text.isNotEmpty ? _phoneController.text : null,
-      birthPlace: _birthPlaceController.text.isNotEmpty ? _birthPlaceController.text : null,
+      phoneNumber: _phoneController.text.isNotEmpty
+          ? _phoneController.text
+          : null,
+      birthPlace: _birthPlaceController.text.isNotEmpty
+          ? _birthPlaceController.text
+          : null,
       birthDate: _selectedBirthDate?.toIso8601String().split('T')[0],
       gender: _selectedGender!.value,
       religion: _selectedReligion?.label,
@@ -130,6 +137,8 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
       familyRole: _selectedFamilyRole!.label,
       lastEducation: _selectedLastEducation?.label,
       occupation: _selectedOccupation?.label,
+      isAlive: true,
+      isActive: true,
     );
 
     final success = await residentProvider.createResident(token, request);
@@ -182,8 +191,16 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                         labelText: "Keluarga",
                         hintText: "-- PILIH KELUARGA --",
                         initialSelection: _selectedFamilyId,
-                        items: familyProvider.families.map((e) => DropdownMenuEntry(value: e.id, label: e.namaKeluarga)).toList(),
-                        onSelected: (value) => setState(() => _selectedFamilyId = value),
+                        items: familyProvider.families
+                            .map(
+                              (e) => DropdownMenuEntry(
+                                value: e.id,
+                                label: e.namaKeluarga,
+                              ),
+                            )
+                            .toList(),
+                        onSelected: (value) =>
+                            setState(() => _selectedFamilyId = value),
                       );
                     },
                   ),
@@ -195,8 +212,10 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     labelText: "Nama Lengkap",
                     hintText: "Masukkan nama lengkap",
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Nama harus diisi';
-                      if (value.length > 150) return 'Nama maksimal 150 karakter';
+                      if (value == null || value.isEmpty)
+                        return 'Nama harus diisi';
+                      if (value.length > 150)
+                        return 'Nama maksimal 150 karakter';
                       return null;
                     },
                   ),
@@ -207,7 +226,8 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     hintText: "Masukkan NIK",
                     keyboardType: TextInputType.number,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'NIK harus diisi';
+                      if (value == null || value.isEmpty)
+                        return 'NIK harus diisi';
                       if (value.length != 16) return 'NIK harus 16 digit';
                       return null;
                     },
@@ -250,7 +270,9 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                               Text(
                                 _selectedBirthDate == null
                                     ? 'Pilih tanggal lahir'
-                                    : DateFormat('dd/MM/yyyy').format(_selectedBirthDate!),
+                                    : DateFormat(
+                                        'dd/MM/yyyy',
+                                      ).format(_selectedBirthDate!),
                                 style: GoogleFonts.poppins(
                                   color: _selectedBirthDate == null
                                       ? Colors.grey
@@ -273,24 +295,33 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     labelText: "Jenis Kelamin",
                     hintText: "-- PILIH GENDER --",
                     initialSelection: _selectedGender,
-                    items: Gender.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedGender = value),
+                    items: Gender.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedGender = value),
                   ),
                   const SizedBox(height: Rem.rem1),
                   CustomDropdown<BloodType>(
                     labelText: "Golongan Darah",
                     hintText: "-- PILIH GOLONGAN DARAH --",
                     initialSelection: _selectedBloodType,
-                    items: BloodType.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedBloodType = value),
+                    items: BloodType.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedBloodType = value),
                   ),
                   const SizedBox(height: Rem.rem1),
                   CustomDropdown<Religion>(
                     labelText: "Agama",
                     hintText: "-- PILIH AGAMA --",
                     initialSelection: _selectedReligion,
-                    items: Religion.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedReligion = value),
+                    items: Religion.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedReligion = value),
                   ),
 
                   const SizedBox(height: Rem.rem2),
@@ -306,16 +337,22 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     labelText: "Pekerjaan",
                     hintText: "-- PILIH PEKERJAAN --",
                     initialSelection: _selectedOccupation,
-                    items: Occupation.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedOccupation = value),
+                    items: Occupation.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedOccupation = value),
                   ),
                   const SizedBox(height: Rem.rem1),
                   CustomDropdown<LastEducation>(
                     labelText: "Pendidikan Terakhir",
                     hintText: "-- PILIH PENDIDIKAN --",
                     initialSelection: _selectedLastEducation,
-                    items: LastEducation.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedLastEducation = value),
+                    items: LastEducation.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedLastEducation = value),
                   ),
 
                   const SizedBox(height: Rem.rem2),
@@ -324,8 +361,11 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     labelText: "Peran dalam Keluarga",
                     hintText: "-- PILIH PERAN --",
                     initialSelection: _selectedFamilyRole,
-                    items: FamilyRole.values.map((e) => DropdownMenuEntry(value: e, label: e.label)).toList(),
-                    onSelected: (value) => setState(() => _selectedFamilyRole = value),
+                    items: FamilyRole.values
+                        .map((e) => DropdownMenuEntry(value: e, label: e.label))
+                        .toList(),
+                    onSelected: (value) =>
+                        setState(() => _selectedFamilyRole = value),
                   ),
 
                   const SizedBox(height: Rem.rem2),
