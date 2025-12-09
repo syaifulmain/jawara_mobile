@@ -22,7 +22,8 @@ class FamilyDetailModel {
       currentAddress: json['current_address'],
       ownershipStatus: json['ownership_status'],
       familyStatus: json['family_status'] ?? 'Tidak Aktif',
-      familyMembers: (json['family_members'] as List<dynamic>?)
+      familyMembers:
+          (json['family_members'] as List<dynamic>?)
               ?.map((e) => FamilyMemberModel.fromJson(e))
               .toList() ??
           [],
@@ -42,6 +43,8 @@ class FamilyDetailModel {
 }
 
 class FamilyMemberModel {
+  final int id;
+  final int? familyId;
   final String name;
   final String nik;
   final String role;
@@ -50,6 +53,8 @@ class FamilyMemberModel {
   final String status;
 
   FamilyMemberModel({
+    required this.id,
+    this.familyId,
     required this.name,
     required this.nik,
     required this.role,
@@ -59,7 +64,21 @@ class FamilyMemberModel {
   });
 
   factory FamilyMemberModel.fromJson(Map<String, dynamic> json) {
+    final parsedId = json['id'] != null
+        ? int.tryParse(json['id'].toString())
+        : null;
+
+    if (parsedId == null) {
+      throw Exception('FamilyMemberModel.id tidak valid: ${json}');
+    }
+
     return FamilyMemberModel(
+      id: parsedId,
+      familyId: json['family_id'] != null
+          ? (json['family_id'] is int
+                ? json['family_id']
+                : int.tryParse(json['family_id'].toString()))
+          : null,
       name: json['name'] ?? '',
       nik: json['nik'] ?? '',
       role: json['role'] ?? '',
@@ -71,6 +90,7 @@ class FamilyMemberModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'nik': nik,
       'role': role,

@@ -25,6 +25,7 @@ class ApiConstants {
 
   static const String pengeluaran = '$baseUrl/pengeluaran';
   static const String bills = '$baseUrl/bills';
+  static const String userFamily = '$baseUrl/user/family';
 
   // Helper untuk single todo
   // static String todoById(int id) => '$baseUrl/todos/$id';

@@ -13,6 +13,7 @@ class ResidentService {
         Uri.parse(ApiConstants.residents),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
@@ -43,6 +44,7 @@ class ResidentService {
         Uri.parse('${ApiConstants.residents}?search=$query'),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
@@ -70,6 +72,7 @@ class ResidentService {
         Uri.parse('${ApiConstants.residents}/$id'),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
@@ -100,6 +103,7 @@ class ResidentService {
         Uri.parse(ApiConstants.residents),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(request.toJson()),
@@ -129,6 +133,7 @@ class ResidentService {
         Uri.parse('${ApiConstants.residents}/$id'),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(request.toJson()),
@@ -161,6 +166,7 @@ class ResidentService {
         Uri.parse(ApiConstants.residents),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );

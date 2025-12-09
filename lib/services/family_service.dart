@@ -33,7 +33,10 @@ class FamilyService {
     }
   }
 
-  Future<List<FamilyListModel>> searchFamilies(String token, String query) async {
+  Future<List<FamilyListModel>> searchFamilies(
+    String token,
+    String query,
+  ) async {
     try {
       final response = await http.get(
         Uri.parse('${ApiConstants.families}?search=$query'),
@@ -79,6 +82,33 @@ class FamilyService {
         final msg = body != null && body['message'] != null
             ? body['message'].toString()
             : 'Failed to get family detail (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
+    }
+  }
+
+  Future<FamilyDetailModel> getMyFamily(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiConstants.baseUrl}/user/family'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
+      if (response.statusCode == 200) {
+        final data = body['data'];
+        return FamilyDetailModel.fromJson(data);
+      } else {
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to get my family (${response.statusCode})';
         throw ApiException(msg, response.statusCode);
       }
     } catch (e) {

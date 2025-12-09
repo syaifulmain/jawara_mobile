@@ -14,14 +14,14 @@ import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_dropdown.dart';
 import '../../../../widgets/custom_text_form_field.dart';
 
-class AddResidentScreen extends StatefulWidget {
-  const AddResidentScreen({Key? key}) : super(key: key);
+class AddUserFamilyScreen extends StatefulWidget {
+  const AddUserFamilyScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddResidentScreen> createState() => _AddResidentScreenState();
+  State<AddUserFamilyScreen> createState() => _AddUserFamilyScreenState();
 }
 
-class _AddResidentScreenState extends State<AddResidentScreen> {
+class _AddUserFamilyScreenState extends State<AddUserFamilyScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers
