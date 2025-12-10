@@ -47,6 +47,7 @@ import '../screens/admin/residents_and_houses/house/houses_list_screen.dart';
 import '../screens/admin/residents_and_houses/resident/residents_list_screen.dart';
 import '../screens/admin/residents_and_houses/residents_and_houses_menu_screen.dart';
 import '../screens/admin/transfer_channel/transfer_channel_menu_screen.dart';
+import '../screens/admin/user_management/add_user_screen.dart';
 import '../screens/admin/user_management/users_list_screen.dart';
 import '../screens/warga/activities/activities_list_this_mount.dart';
 import '../screens/warga/activities/activities_menu_screen.dart';
@@ -357,6 +358,13 @@ class RoutesConfig {
         return UserDetailScreen(id: userId);
       },
     ),
+    AppRouteItem(
+      path: '/add-user',
+      name: 'add_user',
+      label: 'Tambah Pengguna',
+      builder: (context, state) => const AddUserScreen(),
+    ),
+
 
     // TRANSFER CHANNEL ROUTES
     AppRouteItem(

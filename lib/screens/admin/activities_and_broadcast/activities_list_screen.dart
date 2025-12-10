@@ -125,6 +125,7 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                   onChanged: _searchActivities,
                 ),
                 const SizedBox(height: 12),
+                if (false) ...[
                 CustomButton(
                   onPressed: _showFilterBottomSheet,
                   child: Row(
@@ -138,6 +139,7 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                     ],
                   ),
                 ),
+                ]
               ],
             ),
           ),
