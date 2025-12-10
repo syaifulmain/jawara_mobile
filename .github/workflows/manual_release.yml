@@ -1,0 +1,57 @@
+name: Manual Build Release Flutter Android
+
+on:
+  workflow_dispatch:
+
+# PENTING: Izin ini wajib ada agar GitHub Actions boleh upload/mengubah Release
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Disable unused Flutter platforms
+        run: |
+          flutter config --no-enable-web
+          flutter config --no-enable-linux-desktop
+          flutter config --no-enable-windows-desktop
+          flutter config --no-enable-macos-desktop
+
+      - run: flutter clean
+      - run: flutter pub get
+
+      - name: Build Android APK
+        run: |
+          flutter build apk --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+
+      # 1. Rename file default (app-release.apk) menjadi 'jawara-mobile.apk'
+      - name: Rename APK to Jawara Mobile
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/jawara-mobile.apk
+
+      # 2. Upload ke GitHub Release (File lama akan tertimpa otomatis karena namanya sama)
+      - name: Release APK to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: manual-build
+          name: Download Jawara Mobile
+          body: "Ini adalah versi terbaru aplikasi Jawara Mobile."
+          draft: false
+          prerelease: true
+          files: build/app/outputs/flutter-apk/jawara-mobile.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
