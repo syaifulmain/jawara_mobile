@@ -33,8 +33,10 @@ class ApiConstants {
   static const String dashboardKegiatan = '$baseUrl/dashboard/kegiatan';
   static const String dashboardKependudukan = '$baseUrl/dashboard/kependudukan';
   static const String financialReport = '$baseUrl/reports/financial';
+  static const String financialReportDownloadPdf = '$baseUrl/reports/financial/download-pdf';
 
 
-  // Helper untuk single todo
+
+// Helper untuk single todo
   // static String todoById(int id) => '$baseUrl/todos/$id';
 }

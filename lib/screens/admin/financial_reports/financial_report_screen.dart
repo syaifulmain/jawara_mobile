@@ -6,6 +6,7 @@ import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/financial_report_provider.dart';
+import '../../../services/report_service.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_dropdown.dart';
 
@@ -76,9 +77,9 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda belum login')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
       return;
     }
 
@@ -90,9 +91,9 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     );
 
     if (reportProvider.errorMessage != null && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(reportProvider.errorMessage!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(reportProvider.errorMessage!)));
     }
   }
 
@@ -174,12 +175,67 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               },
             ),
             const SizedBox(height: Rem.rem1_5),
-            CustomButton(
-              onPressed: _generateReport,
-              child: Text(
-                'Tampilkan Laporan',
-                style: GoogleFonts.poppins(fontSize: Rem.rem1),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    onPressed: _generateReport,
+                    child: Text(
+                      'Tampilkan Laporan',
+                      style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                    ),
+                  ),
+                ),
+                if (false)...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomButton(
+                      onPressed: () async {
+                        final authProvider = context.read<AuthProvider>();
+                        final token = authProvider.token;
+
+                        if (token == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Anda belum login')),
+                          );
+                          return;
+                        }
+
+                        try {
+                          await ReportService().downloadFinancialReportPdf(
+                            token,
+                            startDate: _startDate, // jika ada filter tanggal
+                            endDate: _endDate,     // jika ada filter tanggal
+                          );
+
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('PDF berhasil diunduh dan dibuka')),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Gagal mengunduh PDF: $e')),
+                            );
+                          }
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.download, size: Rem.rem1_25),
+                          const SizedBox(width: Rem.rem0_5),
+                          Text(
+                            'Download PDF',
+                            style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                          ),
+                        ],
+                      ),
+                    )
+                  ),
+                ],
+              ],
             ),
           ],
         ),
@@ -328,11 +384,11 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   }
 
   Widget _buildSummaryItem(
-      String label,
-      String value,
-      Color color, {
-        bool isBold = false,
-      }) {
+    String label,
+    String value,
+    Color color, {
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Rem.rem0_5),
       child: Row(
