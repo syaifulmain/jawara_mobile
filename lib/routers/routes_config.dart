@@ -39,6 +39,7 @@ import '../screens/admin/expenditure/expenditure_list_screen.dart';
 import '../screens/admin/expenditure/expenditure_detail_screen.dart';
 import '../screens/admin/expenditure/add_expenditure_screen.dart';
 import '../screens/admin/family_mutation/family_mutation_menu_screen.dart';
+import '../screens/admin/financial_reports/financial_report_screen.dart';
 import '../screens/admin/financial_reports/financial_reports_menu_screen.dart';
 import '../screens/admin/residents_and_houses/family/families_list_screen.dart';
 import '../screens/admin/residents_and_houses/house/house_detail_screen.dart';
@@ -75,6 +76,12 @@ class RoutesConfig {
       name: 'dashboard-finance',
       label: 'Keuangan',
       builder: (context, state) => const FinanceScreen(),
+    ),
+    AppRouteItem(
+      path: '/financial-report-screen',
+      name: 'print_financial_report',
+      label: 'Laporan Keuangan',
+      builder: (context, state) => const FinancialReportScreen(),
     ),
     AppRouteItem(
       path: '/dashboard-menu/activities',

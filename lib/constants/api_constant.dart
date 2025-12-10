@@ -32,6 +32,7 @@ class ApiConstants {
   static const String dashboardKeuangan = '$baseUrl/dashboard/keuangan';
   static const String dashboardKegiatan = '$baseUrl/dashboard/kegiatan';
   static const String dashboardKependudukan = '$baseUrl/dashboard/kependudukan';
+  static const String financialReport = '$baseUrl/reports/financial';
 
 
   // Helper untuk single todo
