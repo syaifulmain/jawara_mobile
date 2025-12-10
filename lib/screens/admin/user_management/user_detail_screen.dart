@@ -252,14 +252,19 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           CircleAvatar(
             radius: 50,
             backgroundColor: Colors.blue.shade100,
-            child: Text(
+            backgroundImage: user.photoUrl != null && user.photoUrl!.isNotEmpty
+                ? NetworkImage(user.photoUrl!)
+                : null,
+            child: user.photoUrl == null || user.photoUrl!.isEmpty
+                ? Text(
               user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
               style: GoogleFonts.poppins(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
               ),
-            ),
+            )
+                : null,
           ),
           const SizedBox(height: 16),
           Text(
