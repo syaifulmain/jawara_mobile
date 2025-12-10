@@ -15,14 +15,14 @@ class FinancialReportsMenuScreen extends StatelessWidget {
           title: 'Semua Pemasukan',
           subtitle: 'Lihat laporan pemasukan',
           color: Colors.green,
-          onTap: () => context.pushNamed('all_income_report'),
+          onTap: () => context.pushNamed('other_income_list'),
         ),
         SubMenuItem(
           icon: Icons.trending_down,
           title: 'Semua Pengeluaran',
           subtitle: 'Lihat laporan pengeluaran',
           color: Colors.red,
-          onTap: () => context.pushNamed('all_expenditure_report'),
+          onTap: () => context.pushNamed('expenditures_list'),
         ),
         SubMenuItem(
           icon: Icons.print,

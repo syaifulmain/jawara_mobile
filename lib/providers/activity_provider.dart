@@ -212,6 +212,26 @@ class ActivityProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchActivitiesThisMonth(String token) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _activities = await _activityService.getActivitiesThisMonth(token);
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil aktivitas bulan ini';
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void clearSelectedActivity() {
     _selectedActivity = null;
     notifyListeners();

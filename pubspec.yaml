@@ -20,7 +20,7 @@ dependencies:
   image_picker: ^1.2.1      # Image picker for payment proof
   cached_network_image: ^3.3.1
   url_launcher: ^6.2.5
-
+  fl_chart: ^1.1.1
 
 dev_dependencies:
   flutter_test:

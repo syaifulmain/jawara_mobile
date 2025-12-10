@@ -41,6 +41,7 @@ class SubMenuScreen extends StatelessWidget {
                 subtitle: item.subtitle,
                 color: item.color,
                 onTap: item.onTap,
+                  gap: false
               ),
             );
           }).toList(),

@@ -24,7 +24,6 @@ class DashboardMenuScreen extends StatelessWidget {
               color: Colors.green,
               onTap: () => context.pushNamed('dashboard-finance'),
             ),
-            const SizedBox(height: 12),
             MenuListTile(
               icon: Icons.event_note,
               title: 'Kegiatan',
@@ -32,7 +31,6 @@ class DashboardMenuScreen extends StatelessWidget {
               color: Colors.blue,
               onTap: () => context.pushNamed('dashboard-activities'),
             ),
-            const SizedBox(height: 12),
             MenuListTile(
               icon: Icons.people_outline,
               title: 'Kependudukan',

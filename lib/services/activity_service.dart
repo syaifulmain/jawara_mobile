@@ -230,4 +230,31 @@ class ActivityService {
       throw ApiException('Network error: $e');
     }
   }
+
+  Future<List<Activity>> getActivitiesThisMonth(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConstants.activityThisMonth),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = body['data'];
+        return data.map((json) => Activity.fromJson(json)).toList();
+      } else {
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to get activities this month (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
+    }
+  }
 }

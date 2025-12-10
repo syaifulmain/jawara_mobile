@@ -10,8 +10,10 @@ class ApiConstants {
 
   // activities endpoints
   static const String activities = '$baseUrl/activities';
+  static const String activityThisMonth = '$baseUrl/activities-this-month';
   // broadcast endpoints
   static const String broadcasts = '$baseUrl/broadcasts';
+  static const String broadcastThisWeek = '$baseUrl/broadcast-this-week';
   // static String broadcastsDownloadPhoto(String id) => '$baseUrl/broadcasts/$id/download-photo';
   // static String broadcastsDownloadDocument(String id) => '$baseUrl/broadcasts/$id/download-document';
 
@@ -26,6 +28,11 @@ class ApiConstants {
   static const String pengeluaran = '$baseUrl/pengeluaran';
   static const String bills = '$baseUrl/bills';
   static const String userFamily = '$baseUrl/user/family';
+
+  static const String dashboardKeuangan = '$baseUrl/dashboard/keuangan';
+  static const String dashboardKegiatan = '$baseUrl/dashboard/kegiatan';
+  static const String dashboardKependudukan = '$baseUrl/dashboard/kependudukan';
+
 
   // Helper untuk single todo
   // static String todoById(int id) => '$baseUrl/todos/$id';

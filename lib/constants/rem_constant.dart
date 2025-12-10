@@ -7,6 +7,7 @@ class Rem {
   static const double rem0_75 = base * 0.75; // 12.0
   static const double rem0_875 = base * 0.875; // 14.0
   static const double rem1 = base * 1.0; // 16.0
+  static const double rem1_125 = base * 1.125; // 18.0
   static const double rem1_25 = base * 1.25; // 20.0
   static const double rem1_5 = base * 1.5; // 24.0
   static const double rem1_75 = base * 1.75; // 28.0

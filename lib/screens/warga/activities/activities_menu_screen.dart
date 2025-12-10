@@ -23,7 +23,7 @@ class ResidentActivitiesMenuScreen extends StatelessWidget {
           title: 'Daftar Kegiatan',
           subtitle: 'Lihat semua kegiatan',
           color: Colors.blue,
-          onTap: () => context.pushNamed('resident_activities_list'),
+          onTap: () => context.pushNamed('activities_list'),
         ),
       ],
     );

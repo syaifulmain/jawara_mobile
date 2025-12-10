@@ -135,8 +135,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.teal,
                       onTap: () => context.pushNamed('dashboard_menu'),
                     ),
-                    const SizedBox(height: 12),
-
                     // Data Warga dan Rumah
                     MenuListTile(
                       icon: Icons.home,
@@ -146,7 +144,6 @@ class HomeScreen extends StatelessWidget {
                       onTap: () =>
                           context.pushNamed('residents_and_houses_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Pemasukan
                     MenuListTile(
@@ -156,7 +153,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.green,
                       onTap: () => context.pushNamed('income_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Pengeluaran
                     MenuListTile(
@@ -166,7 +162,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.purple,
                       onTap: () => context.pushNamed('expenditure_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Laporan Keuangan
                     MenuListTile(
@@ -176,7 +171,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.brown,
                       onTap: () => context.pushNamed('financial_reports_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Kegiatan dan broadcast
                     MenuListTile(
@@ -187,7 +181,6 @@ class HomeScreen extends StatelessWidget {
                       onTap: () =>
                           context.pushNamed('activities_and_broadcast_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     if (user.canAccessActivity) ...[
                       // Pesan Warga
@@ -198,8 +191,8 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.indigo,
                         onTap: () => context.pushNamed('citizen_messages_menu'),
                         disabled: true,
+                        hidden: true,
                       ),
-                      const SizedBox(height: 12),
                     ],
 
                     if (user.hasFullAccess) ...[
@@ -211,8 +204,8 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.cyan,
                         onTap: () => context.pushNamed('citizen_receipts_menu'),
                         disabled: true,
+                        hidden: true,
                       ),
-                      const SizedBox(height: 12),
 
                       // Mutasi Keluarga
                       MenuListTile(
@@ -221,8 +214,8 @@ class HomeScreen extends StatelessWidget {
                         subtitle: 'Kelola mutasi keluarga',
                         color: Colors.tealAccent,
                         onTap: () => context.pushNamed('family_mutation_menu'),
+                        hidden: true,
                       ),
-                      const SizedBox(height: 12),
                     ],
 
                     // Log Aktivitas
@@ -233,8 +226,8 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.grey,
                       onTap: () => context.pushNamed('activity_log_menu'),
                       disabled: true,
+                      hidden: true,
                     ),
-                    const SizedBox(height: 12),
 
                     if (user.hasFullAccess) ...[
                       // Managemen Pengguna
@@ -245,7 +238,6 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.orange,
                         onTap: () => context.pushNamed('user_management_menu'),
                       ),
-                      const SizedBox(height: 12),
                     ],
 
                     // Channel Transfer
@@ -265,10 +257,8 @@ class HomeScreen extends StatelessWidget {
                       title: 'Dashboard Warga',
                       subtitle: 'Lihat ringkasan data warga',
                       color: Colors.teal,
-                      onTap: () => context.pushNamed('resident_dashboard'),
+                      onTap: () => context.pushNamed('dashboard_menu'),
                     ),
-                    const SizedBox(height: 12),
-
                     // Keluarga
                     MenuListTile(
                       icon: Icons.family_restroom,
@@ -277,8 +267,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.blue,
                       onTap: () => context.pushNamed('family_data'),
                     ),
-                    const SizedBox(height: 12),
-
                     // Tagihan
                     MenuListTile(
                       icon: Icons.receipt_long,
@@ -287,18 +275,14 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.green,
                       onTap: () => context.pushNamed('my_bills_list'),
                     ),
-                    const SizedBox(height: 12),
-
                     // Laporan Keuangan
                     MenuListTile(
                       icon: Icons.report,
                       title: 'Laporan Keuangan',
                       subtitle: 'Lihat laporan keuangan Anda',
                       color: Colors.brown,
-                      onTap: () =>
-                          context.pushNamed('resident_financial_reports'),
+                      onTap: () => context.pushNamed('financial_reports_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Kegiatan
                     MenuListTile(
@@ -308,8 +292,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.red,
                       onTap: () => context.pushNamed('resident_activities_menu'),
                     ),
-                    const SizedBox(height: 12),
-
                     // Broadcast
                     MenuListTile(
                       icon: Icons.campaign,
@@ -318,7 +300,6 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.orange,
                       onTap: () => context.pushNamed('resident_broadcast_menu'),
                     ),
-                    const SizedBox(height: 12),
 
                     // Informasi Aspirasi warga
                     MenuListTile(
@@ -327,6 +308,7 @@ class HomeScreen extends StatelessWidget {
                       subtitle: 'Kirim dan lihat aspirasi warga',
                       color: Colors.pink,
                       onTap: () => context.pushNamed('citizen_aspirations'),
+                      hidden: true,
                     ),
                   ],
 

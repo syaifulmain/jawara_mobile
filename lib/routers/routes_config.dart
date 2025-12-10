@@ -47,7 +47,9 @@ import '../screens/admin/residents_and_houses/resident/residents_list_screen.dar
 import '../screens/admin/residents_and_houses/residents_and_houses_menu_screen.dart';
 import '../screens/admin/transfer_channel/transfer_channel_menu_screen.dart';
 import '../screens/admin/user_management/users_list_screen.dart';
+import '../screens/warga/activities/activities_list_this_mount.dart';
 import '../screens/warga/activities/activities_menu_screen.dart';
+import '../screens/warga/broadcast/broadcast_list_this_week_screen.dart';
 import '../screens/warga/broadcast/broadcast_menu_screen.dart';
 import 'app_route_item.dart';
 import '../screens/home_screen.dart';
@@ -389,12 +391,24 @@ class RoutesConfig {
       label: 'Kegiatan Warga',
       builder: (context, state) => const ResidentActivitiesMenuScreen(),
     ),
+    AppRouteItem(
+      path: '/resident-activities-this-month',
+      name: 'resident_activities_this_month',
+      label: 'Kegiatan Bulan Ini',
+      builder: (context, state) => const ActivitiesListThisMonth(),
+    ),
     // RESIDENT BROADCAST MENU
     AppRouteItem(
       path: '/resident-broadcast-menu',
       name: 'resident_broadcast_menu',
       label: 'Broadcast Warga',
       builder: (context, state) => const ResidentBroadcastMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/resident-broadcasts-this-week',
+      name: 'resident_broadcasts_this_week',
+      label: 'Broadcast Minggu Ini',
+      builder: (context, state) => const BroadcastListThisWeekScreen(),
     ),
 
     // USER BILL MENU

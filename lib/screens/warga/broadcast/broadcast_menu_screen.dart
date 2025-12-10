@@ -22,7 +22,7 @@ class ResidentBroadcastMenuScreen extends StatelessWidget {
           title: 'Daftar Broadcast',
           subtitle: 'Lihat semua broadcast',
           color: Colors.orange,
-          onTap: () => context.pushNamed('resident_broadcasts_list'),
+          onTap: () => context.pushNamed('broadcasts_list'),
         ),
       ],
     );

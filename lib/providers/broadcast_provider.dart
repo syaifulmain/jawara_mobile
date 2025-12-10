@@ -170,6 +170,26 @@ class BroadcastProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchBroadcastsThisWeek(String token) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _broadcasts = await _broadcastService.getBroadcastsThisWeek(token);
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal mengambil broadcast minggu ini';
+      }
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void clearSelectedBroadcast() {
     _selectedBroadcast = null;
     notifyListeners();

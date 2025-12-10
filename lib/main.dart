@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:jawara_mobile_v2/constants/color_constant.dart';
 import 'package:jawara_mobile_v2/providers/address_provider.dart';
 import 'package:jawara_mobile_v2/providers/broadcast_provider.dart';
+import 'package:jawara_mobile_v2/providers/dashboard_provider.dart';
 import 'package:jawara_mobile_v2/providers/family_provider.dart';
 import 'package:jawara_mobile_v2/providers/resident_provider.dart';
 import 'package:jawara_mobile_v2/providers/transfer_channel_provider.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PengeluaranProvider()),
         ChangeNotifierProvider(create: (_) => BillProvider()),
         ChangeNotifierProvider(create: (_) => UserFamilyProvider()),
+        ChangeNotifierProvider(create: (_) => DashboardProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
