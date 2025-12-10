@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/auth/register_request_model.dart';
 import '../models/user/update_user_request_model.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
@@ -159,6 +160,28 @@ class AuthProvider with ChangeNotifier {
         _errorMessage = 'Update error: $e';
       }
       print(e);
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> register(RegisterRequest request) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final user = await _apiService.register(request);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal melakukan registrasi';
+      }
       _isLoading = false;
       notifyListeners();
       return false;

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../constants/api_constant.dart';
+import '../models/auth/register_request_model.dart';
 import '../models/user/update_user_request_model.dart';
 import '../models/user_model.dart';
 import 'api_exception.dart';
@@ -88,9 +89,6 @@ class AuthService {
         },
         body: jsonEncode(req.toJson()),
       );
-
-      print(req.toJson());
-
       final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
 
       if (response.statusCode == 200) {
@@ -102,6 +100,48 @@ class AuthService {
         final msg = body != null && body['message'] != null
             ? body['message'].toString()
             : 'Failed to update profile (${response.statusCode})';
+        throw ApiException(msg, response.statusCode);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Network error: $e');
+    }
+  }
+
+
+  Future<bool> register(RegisterRequest request) async {
+    try {
+      var multipartRequest = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiConstants.baseUrl}/register'),
+      );
+
+      multipartRequest.headers.addAll({
+        'Accept': 'application/json',
+      });
+
+      multipartRequest.fields.addAll(request.toFields());
+
+      if (request.identityPhoto != null) {
+        multipartRequest.files.add(
+          await http.MultipartFile.fromPath(
+            'identity_photo',
+            request.identityPhoto!.path,
+          ),
+        );
+      }
+
+      final streamedResponse = await multipartRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return true;
+
+      } else {
+        final msg = body != null && body['message'] != null
+            ? body['message'].toString()
+            : 'Failed to register (${response.statusCode})';
         throw ApiException(msg, response.statusCode);
       }
     } catch (e) {
