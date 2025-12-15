@@ -4,6 +4,7 @@ import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_acti
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/broadcasts_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_broadcast_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/dashboard/population_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/family_relocation/family_relocation_detail_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/family_relocation/family_relocation_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/family_relocation/family_relocation_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
@@ -480,6 +481,16 @@ class RoutesConfig {
       name: 'family_relocation_list',
       label: 'Daftar Mutasi Keluarga',
       builder: (context, state) => const FamilyRelocationListScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/family-relocation/:id',
+      name: 'family_relocation_detail',
+      label: 'Detail Mutasi Keluarga',
+      builder: (context, state) {
+        final familyRelocationId = state.pathParameters['id']!;
+        return FamilyRelocationDetailScreen(id: familyRelocationId);
+      },
     ),
   ];
 }
