@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/user/user_list_model.dart';
 import '../models/user/user_detail_model.dart';
+import '../models/auth/register_request_model.dart';
 import '../services/user_service.dart';
 import '../services/api_exception.dart';
 
@@ -94,5 +95,27 @@ class UserProvider with ChangeNotifier {
   void clearError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  Future<bool> register(RegisterRequest request) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _userService.register(request);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal melakukan registrasi';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }
