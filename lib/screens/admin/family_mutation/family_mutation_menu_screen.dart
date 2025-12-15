@@ -15,7 +15,7 @@ class FamilyMutationMenuScreen extends StatelessWidget {
           title: 'Daftar Mutasi',
           subtitle: 'Lihat semua mutasi keluarga',
           color: Colors.purple,
-          onTap: () => context.pushNamed('family_mutations_list'),
+          onTap: () => context.pushNamed('family_relocation_list'),
         ),
         SubMenuItem(
           icon: Icons.add_circle,

@@ -4,6 +4,8 @@ import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_acti
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/broadcasts_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/activities_and_broadcast/add_broadcast_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/dashboard/population_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/family_relocation/family_relocation_list_screen.dart';
+import 'package:jawara_mobile_v2/screens/admin/family_relocation/family_relocation_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_menu_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_categories_list_screen.dart';
 import 'package:jawara_mobile_v2/screens/admin/income/income_category_detail_screen.dart';
@@ -365,7 +367,6 @@ class RoutesConfig {
       builder: (context, state) => const AddUserScreen(),
     ),
 
-
     // TRANSFER CHANNEL ROUTES
     AppRouteItem(
       path: '/transfer-channel-menu',
@@ -465,6 +466,20 @@ class RoutesConfig {
       name: 'add_user_family_member',
       label: 'Tambah Anggota Keluarga',
       builder: (context, state) => const AddUserFamilyScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/family-relocation-menu',
+      name: 'family_relocation_menu',
+      label: 'Mutasi Keluarga',
+      builder: (context, state) => const FamilyRelocationMenuScreen(),
+    ),
+
+    AppRouteItem(
+      path: '/family-relocation-list',
+      name: 'family_relocation_list',
+      label: 'Daftar Mutasi Keluarga',
+      builder: (context, state) => const FamilyRelocationListScreen(),
     ),
   ];
 }

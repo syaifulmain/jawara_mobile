@@ -145,6 +145,15 @@ class HomeScreen extends StatelessWidget {
                           context.pushNamed('residents_and_houses_menu'),
                     ),
 
+                    // Mutasi Keluarga
+                    MenuListTile(
+                      icon: Icons.family_restroom,
+                      title: 'Mutasi Keluarga',
+                      subtitle: 'Kelola data mutasi keluarga',
+                      color: Colors.purple,
+                      onTap: () => context.pushNamed('family_mutation_menu'),
+                    ),
+
                     // Pemasukan
                     MenuListTile(
                       icon: Icons.attach_money,
