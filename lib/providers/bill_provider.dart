@@ -9,10 +9,12 @@ class BillProvider with ChangeNotifier {
 
   List<BillModel> _bills = [];
   List<BillModel> _allBills = []; // Cache untuk client-side pagination
+  List<BillModel> _originalBills = []; // Cache untuk restore search
   BillModel? _selectedBill;
   bool _isLoading = false;
   bool _isLoadingMore = false;
   String? _errorMessage;
+  bool _isSearching = false;
   
   // Pagination state
   int _currentPage = 1;
@@ -49,17 +51,20 @@ class BillProvider with ChangeNotifier {
         // Client-side pagination: cache all data, show first page
         _allBills = allBills;
         _bills = _allBills.take(_perPage).toList();
+        _originalBills = List.from(_bills); // Save for search restore
         _currentPage = 1;
         _lastPage = (_allBills.length / _perPage).ceil();
         _hasMore = _allBills.length > _perPage;
       } else {
         // Server-side pagination
         _bills = allBills;
+        _originalBills = List.from(_bills); // Save for search restore
         _currentPage = result['current_page'] as int;
         _lastPage = result['last_page'] as int;
         _hasMore = result['has_more'] as bool;
       }
       
+      _isSearching = false;
       notifyListeners();
     } on ApiException catch (e) {
       _setError(e.message);
@@ -478,6 +483,33 @@ class BillProvider with ChangeNotifier {
     _useClientPagination = false;
     _clearError();
     notifyListeners();
+  }
+
+  // Update bills with search result (client-side search)
+  void updateBillsWithSearch(List<BillModel> filteredBills) {
+    if (!_isSearching) {
+      // First time searching, save original
+      _originalBills = List.from(_bills);
+      _isSearching = true;
+    }
+    _bills = filteredBills;
+    _hasMore = false; // Disable pagination saat search
+    notifyListeners();
+  }
+
+  // Restore bills from search
+  void restoreBillsFromSearch() {
+    if (_isSearching) {
+      _bills = List.from(_originalBills);
+      _isSearching = false;
+      // Restore pagination state
+      if (_useClientPagination) {
+        _hasMore = _originalBills.length > _perPage;
+      } else {
+        _hasMore = _currentPage < _lastPage;
+      }
+      notifyListeners();
+    }
   }
 
   // Helper methods

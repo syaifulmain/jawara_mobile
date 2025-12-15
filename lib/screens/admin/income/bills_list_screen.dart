@@ -77,16 +77,34 @@ class _BillsListScreenState extends State<BillsListScreen> {
   }
 
   void _searchBills(String query) {
-    final authProvider = context.read<AuthProvider>();
     final billProvider = context.read<BillProvider>();
-
-    if (authProvider.token != null) {
-      if (query.isEmpty) {
-        _applyFilters();
-      } else {
-        billProvider.searchBills(authProvider.token!, query);
-      }
+    
+    if (query.isEmpty) {
+      // Restore original bills
+      billProvider.restoreBillsFromSearch();
+      return;
     }
+
+    // Client-side search
+    final searchSource = billProvider.bills;
+    
+    final searchQuery = query.toLowerCase();
+    final filteredBills = searchSource.where((bill) {
+      final code = bill.code.toLowerCase();
+      final category = bill.categoryDisplayName.toLowerCase();
+      final period = bill.formattedPeriod.toLowerCase();
+      final amount = bill.formattedAmount.toLowerCase();
+      final familyName = bill.familyDisplayName.toLowerCase();
+      
+      return code.contains(searchQuery) || 
+             category.contains(searchQuery) || 
+             period.contains(searchQuery) ||
+             amount.contains(searchQuery) ||
+             familyName.contains(searchQuery);
+    }).toList();
+    
+    // Update bills dengan hasil search
+    billProvider.updateBillsWithSearch(filteredBills);
   }
 
   void _showFilterBottomSheet() {

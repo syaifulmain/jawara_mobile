@@ -103,7 +103,7 @@ class _MyBillsScreenState extends State<MyBillsScreen> {
     if (authProvider.token != null) {
       if (_selectedStatus == null) {
         billProvider.clearFilter();
-        billProvider.fetchBills(authProvider.token!);
+        billProvider.fetchBills(authProvider.token!, familyId: _familyId);
       } else {
         billProvider.fetchBillsByStatus(authProvider.token!, _selectedStatus!);
       }
@@ -111,16 +111,33 @@ class _MyBillsScreenState extends State<MyBillsScreen> {
   }
 
   void _searchBills(String query) {
-    final authProvider = context.read<AuthProvider>();
     final billProvider = context.read<BillProvider>();
-
-    if (authProvider.token != null) {
-      if (query.isEmpty) {
-        _applyFilter();
-      } else {
-        billProvider.searchBills(authProvider.token!, query);
-      }
+    
+    if (query.isEmpty) {
+      // Restore original bills
+      billProvider.restoreBillsFromSearch();
+      return;
     }
+
+    // Client-side search untuk filter by family
+    // Search dari _allBills atau _originalBills untuk hasil lebih lengkap
+    final searchSource = billProvider.bills;
+    
+    final searchQuery = query.toLowerCase();
+    final filteredBills = searchSource.where((bill) {
+      final code = bill.code.toLowerCase();
+      final category = bill.categoryDisplayName.toLowerCase();
+      final period = bill.formattedPeriod.toLowerCase();
+      final amount = bill.formattedAmount.toLowerCase();
+      
+      return code.contains(searchQuery) || 
+             category.contains(searchQuery) || 
+             period.contains(searchQuery) ||
+             amount.contains(searchQuery);
+    }).toList();
+    
+    // Update bills dengan hasil search
+    billProvider.updateBillsWithSearch(filteredBills);
   }
 
   @override
