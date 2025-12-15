@@ -36,6 +36,8 @@ class ApiConstants {
   static const String financialReport = '$baseUrl/reports/financial';
   static const String financialReportDownloadPdf = '$baseUrl/reports/financial/download-pdf';
 
+  static const String familyRelocations = '$baseUrl/family-relocations';
+
 
 
 // Helper untuk single todo
