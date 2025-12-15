@@ -190,17 +190,17 @@ class _AddBroadcastScreenState extends State<AddBroadcastScreen> {
                     onPressed: provider.isLoading ? null : _submitForm,
                     child: provider.isLoading
                         ? const SizedBox(
-                      height: Rem.rem1_25,
-                      width: Rem.rem1_25,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
+                            height: Rem.rem1_25,
+                            width: Rem.rem1_25,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                         : Text(
-                      'Kirim Broadcast',
-                      style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                    ),
+                            'Kirim Broadcast',
+                            style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                          ),
                   ),
                 ],
               ),

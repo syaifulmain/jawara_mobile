@@ -103,7 +103,8 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
       body: Column(
         children: [
           const InfoBanner(
-            message: 'Daftar kegiatan yang telah terjadwal. Gunakan filter untuk menyaring berdasarkan kategori atau tanggal. Klik item untuk melihat detail kegiatan.',
+            message:
+                'Daftar kegiatan yang telah terjadwal. Gunakan filter untuk menyaring berdasarkan kategori atau tanggal. Klik item untuk melihat detail kegiatan.',
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -126,20 +127,20 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                 ),
                 const SizedBox(height: 12),
                 if (false) ...[
-                CustomButton(
-                  onPressed: _showFilterBottomSheet,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.filter_list),
-                      const SizedBox(width: 8),
-                      Text(
-                        hasActiveFilter ? 'Filter Aktif' : 'Filter Kegiatan',
-                      ),
-                    ],
+                  CustomButton(
+                    onPressed: _showFilterBottomSheet,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.filter_list),
+                        const SizedBox(width: 8),
+                        Text(
+                          hasActiveFilter ? 'Filter Aktif' : 'Filter Kegiatan',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ]
+                ],
               ],
             ),
           ),
@@ -397,9 +398,7 @@ class _ActivityCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  CustomChip(
-                    label: activity.category.label,
-                  )
+                  CustomChip(label: activity.category.label),
                 ],
               ),
               const SizedBox(height: 8),
@@ -441,15 +440,60 @@ class _ActivityCard extends StatelessWidget {
                   ),
                 ],
               ),
-              // --- Bagian yang terputus diselesaikan di sini ---
-              if (activity
-                  .description
-                  .isNotEmpty) // Tambahkan deskripsi singkat
+              // Indikator Pengeluaran
+              if (activity.isPengeluaran)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.orange.shade300),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.account_balance_wallet,
+                          size: 16,
+                          color: Colors.orange.shade700,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Termasuk Pengeluaran',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Colors.orange.shade700,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        if (activity.nominal != null) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            '• ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(activity.nominal)}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Colors.orange.shade700,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              // Deskripsi singkat
+              if (activity.description != null &&
+                  activity.description!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    activity.description,
-                    maxLines: 2, // Batasi deskripsi hanya 2 baris
+                    activity.description!,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(
                       context,

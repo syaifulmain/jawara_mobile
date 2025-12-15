@@ -208,11 +208,12 @@ class _ActivityCard extends StatelessWidget {
                   ),
                 ],
               ),
-              if (activity.description.isNotEmpty)
+              if (activity.description != null &&
+                  activity.description!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    activity.description,
+                    activity.description!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(

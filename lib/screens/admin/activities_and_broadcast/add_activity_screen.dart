@@ -1,16 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
 import '../../../enums/activity_category.dart';
-import '../../../models/activity_model.dart';
+import '../../../models/activity/create_activity_request_model.dart';
 import '../../../providers/activity_provider.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/file_picker_button.dart';
 
 class AddActivityScreen extends StatefulWidget {
   const AddActivityScreen({Key? key}) : super(key: key);
@@ -29,12 +32,34 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
+  // Toggle dan fields untuk pengeluaran
+  bool _isPengeluaran = false;
+  final _namaPengeluaranController = TextEditingController();
+  String? _selectedKategoriPengeluaran;
+  final _nominalController = TextEditingController();
+  final _verifikatorController = TextEditingController();
+  File? _buktiFile;
+  String? _buktiFileName;
+
+  final List<String> _kategoriPengeluaranList = [
+    'Operasional RT/RW',
+    'Kegiatan Sosial',
+    'Pemeliharaan Fasilitas',
+    'Pembangunan',
+    'Kegiatan Warga',
+    'Keamanan & Kebersihan',
+    'Lain-lain',
+  ];
+
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
     _personInChargeController.dispose();
+    _namaPengeluaranController.dispose();
+    _nominalController.dispose();
+    _verifikatorController.dispose();
     super.dispose();
   }
 
@@ -70,24 +95,40 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     }
 
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih kategori kegiatan')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Pilih kategori kegiatan')));
       return;
     }
 
     if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih tanggal kegiatan')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Pilih tanggal kegiatan')));
       return;
     }
 
     if (_selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih waktu kegiatan')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Pilih waktu kegiatan')));
       return;
+    }
+
+    // Validasi pengeluaran jika toggle aktif
+    if (_isPengeluaran) {
+      if (_namaPengeluaranController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nama pengeluaran harus diisi')),
+        );
+        return;
+      }
+      if (_nominalController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nominal pengeluaran harus diisi')),
+        );
+        return;
+      }
     }
 
     final activityDateTime = DateTime(
@@ -98,27 +139,42 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       _selectedTime!.minute,
     );
 
-    final activity = Activity(
+    final request = CreateActivityRequest(
       name: _nameController.text,
-      description: _descriptionController.text,
+      description: _descriptionController.text.isNotEmpty
+          ? _descriptionController.text
+          : null,
       category: _selectedCategory!,
       date: activityDateTime,
       location: _locationController.text,
       personInCharge: _personInChargeController.text,
+      isPengeluaran: _isPengeluaran,
+      namaPengeluaran: _isPengeluaran ? _namaPengeluaranController.text : null,
+      kategori: _isPengeluaran ? _selectedKategoriPengeluaran : null,
+      nominal: _isPengeluaran && _nominalController.text.isNotEmpty
+          ? double.tryParse(_nominalController.text)
+          : null,
+      verifikator: _isPengeluaran && _verifikatorController.text.isNotEmpty
+          ? _verifikatorController.text
+          : null,
+      buktiPengeluaran: _isPengeluaran ? _buktiFile : null,
     );
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
+    final activityProvider = Provider.of<ActivityProvider>(
+      context,
+      listen: false,
+    );
 
     final token = authProvider.token;
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda belum login')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda belum login')));
       return;
     }
 
-    final success = await activityProvider.createActivity(token, activity);
+    final success = await activityProvider.createActivity(token, request);
 
     if (success) {
       if (mounted) {
@@ -229,7 +285,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                 borderRadius: BorderRadius.circular(Rem.rem0_5),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     _selectedDate == null
@@ -241,7 +298,10 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                           : Colors.black,
                                     ),
                                   ),
-                                  const Icon(Icons.calendar_today, size: Rem.rem1_25),
+                                  const Icon(
+                                    Icons.calendar_today,
+                                    size: Rem.rem1_25,
+                                  ),
                                 ],
                               ),
                             ),
@@ -274,7 +334,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                 borderRadius: BorderRadius.circular(Rem.rem0_5),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     _selectedTime == null
@@ -286,7 +347,10 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                           : Colors.black,
                                     ),
                                   ),
-                                  const Icon(Icons.access_time, size: Rem.rem1_25),
+                                  const Icon(
+                                    Icons.access_time,
+                                    size: Rem.rem1_25,
+                                  ),
                                 ],
                               ),
                             ),
@@ -305,6 +369,174 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                           return null;
                         },
                       ),
+                      const SizedBox(height: Rem.rem1_5),
+                      // Toggle Pengeluaran
+                      Container(
+                        padding: const EdgeInsets.all(Rem.rem1),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(Rem.rem0_75),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.account_balance_wallet,
+                              color: AppColors.primaryColor,
+                              size: Rem.rem1_5,
+                            ),
+                            const SizedBox(width: Rem.rem0_75),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tambahkan Pengeluaran',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: Rem.rem1,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Aktifkan jika kegiatan ini memiliki biaya',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: Rem.rem0_875,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Switch(
+                              value: _isPengeluaran,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPengeluaran = value;
+                                });
+                              },
+                              activeColor: AppColors.primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Fields Pengeluaran (tampil jika toggle aktif)
+                      if (_isPengeluaran) ...[
+                        const SizedBox(height: Rem.rem1_5),
+                        Container(
+                          padding: const EdgeInsets.all(Rem.rem1_5),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade50,
+                            borderRadius: BorderRadius.circular(Rem.rem0_75),
+                            border: Border.all(color: Colors.orange.shade200),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: Colors.orange.shade700,
+                                    size: Rem.rem1_25,
+                                  ),
+                                  const SizedBox(width: Rem.rem0_5),
+                                  Text(
+                                    'Informasi Pengeluaran',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Rem.rem1_125,
+                                      color: Colors.orange.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: Rem.rem1),
+                              CustomTextFormField(
+                                controller: _namaPengeluaranController,
+                                labelText: "Nama Pengeluaran *",
+                                hintText: "Masukkan nama pengeluaran",
+                                validator: (value) {
+                                  if (_isPengeluaran &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Nama pengeluaran harus diisi';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: Rem.rem1),
+                              CustomDropdown<String>(
+                                labelText: "Kategori Pengeluaran",
+                                hintText: "Pilih kategori",
+                                initialSelection: _selectedKategoriPengeluaran,
+                                items: _kategoriPengeluaranList
+                                    .map(
+                                      (kategori) => DropdownMenuEntry(
+                                        value: kategori,
+                                        label: kategori,
+                                      ),
+                                    )
+                                    .toList(),
+                                onSelected: (value) {
+                                  setState(() {
+                                    _selectedKategoriPengeluaran = value;
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: Rem.rem1),
+                              CustomTextFormField(
+                                controller: _nominalController,
+                                labelText: "Nominal *",
+                                hintText: "Masukkan nominal",
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (_isPengeluaran &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Nominal harus diisi';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: Rem.rem1),
+                              CustomTextFormField(
+                                controller: _verifikatorController,
+                                labelText: "Verifikator",
+                                hintText: "Masukkan nama verifikator",
+                              ),
+                              const SizedBox(height: Rem.rem1),
+                              Text(
+                                "Bukti Pengeluaran",
+                                style: GoogleFonts.poppins(
+                                  fontSize: Rem.rem1,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: Rem.rem0_5),
+                              FilePickerButton(
+                                file: _buktiFile,
+                                fileName: _buktiFileName,
+                                fileType: FileType.image,
+                                allowedExtensions: ['jpg', 'jpeg', 'png'],
+                                onFilePicked: (file, fileName) {
+                                  setState(() {
+                                    _buktiFile = file;
+                                    _buktiFileName = fileName;
+                                  });
+                                },
+                                onFileRemoved: () {
+                                  setState(() {
+                                    _buktiFile = null;
+                                    _buktiFileName = null;
+                                  });
+                                },
+                                icon: Icons.upload_file,
+                                iconColor: Colors.orange,
+                                buttonText: 'Upload Bukti Pengeluaran',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: Rem.rem1),
                       CustomTextFormField(
                         controller: _personInChargeController,
@@ -322,17 +554,17 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         onPressed: provider.isLoading ? null : _submitForm,
                         child: provider.isLoading
                             ? const SizedBox(
-                          height: Rem.rem1_25,
-                          width: Rem.rem1_25,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
+                                height: Rem.rem1_25,
+                                width: Rem.rem1_25,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : Text(
-                          'Simpan Kegiatan',
-                          style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                        ),
+                                'Simpan Kegiatan',
+                                style: GoogleFonts.poppins(fontSize: Rem.rem1),
+                              ),
                       ),
                     ],
                   ),
