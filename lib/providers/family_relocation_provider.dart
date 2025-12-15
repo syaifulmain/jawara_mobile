@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jawara_mobile_v2/models/family_relocation/family_relocation_detail_model.dart';
 import 'package:jawara_mobile_v2/models/family_relocation/family_relocation_list_model.dart';
+import 'package:jawara_mobile_v2/models/family_relocation/family_relocation_request_model.dart';
 import 'package:jawara_mobile_v2/services/api_exception.dart';
 import 'package:jawara_mobile_v2/services/family_relocation_service.dart';
 
@@ -89,6 +90,31 @@ class FamilyRelocationProvider with ChangeNotifier {
       }
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<bool> createFamilyRelocation(
+    String token,
+    FamilyRelocationRequestModel request,
+  ) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _familyRelocationService.create(token, request);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (e is ApiException) {
+        _errorMessage = e.message;
+      } else {
+        _errorMessage = 'Gagal menambahkan mutasi keluarga';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 }

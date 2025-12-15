@@ -22,7 +22,7 @@ class FamilyMutationMenuScreen extends StatelessWidget {
           title: 'Tambah Mutasi',
           subtitle: 'Catat mutasi keluarga baru',
           color: Colors.purple,
-          onTap: () => context.pushNamed('add_family_mutation'),
+          onTap: () => context.pushNamed('add_family_relocation'),
         ),
       ],
     );
