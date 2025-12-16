@@ -168,13 +168,13 @@ class _FamilyRelocationListItemCard extends StatelessWidget {
               relocation.familyName,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 4),
-                Text('Tanggal: ${relocation.relocationDate}'),
-              ],
-            ),
+            // subtitle: Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     const SizedBox(height: 4),
+            //     Text('Tanggal: ${relocation.relocationDate}'),
+            //   ],
+            // ),
           ),
         ),
       ),
