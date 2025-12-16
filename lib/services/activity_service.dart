@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../constants/api_constant.dart';
 import '../enums/activity_category.dart';
 import '../models/activity_model.dart';
+import '../models/activity/create_activity_request_model.dart';
 import 'api_exception.dart';
 
 class ActivityService {
@@ -59,26 +60,69 @@ class ActivityService {
     }
   }
 
-  Future<Activity> createActivity(String token, Activity activity) async {
+  Future<Activity> createActivity(
+    String token,
+    CreateActivityRequest request,
+  ) async {
     try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.activities),
-        headers: {
-          'Content-Type': 'application/json',
+      // Jika ada bukti pengeluaran, gunakan multipart request
+      if (request.isPengeluaran && request.buktiPengeluaran != null) {
+        var multipartRequest = http.MultipartRequest(
+          'POST',
+          Uri.parse(ApiConstants.activities),
+        );
+
+        multipartRequest.headers.addAll({
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(activity.toJson()),
-      );
+        });
 
-      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+        multipartRequest.fields.addAll(request.toFields());
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        return Activity.fromJson(body['data']);
+        multipartRequest.files.add(
+          await http.MultipartFile.fromPath(
+            'bukti_pengeluaran',
+            request.buktiPengeluaran!.path,
+          ),
+        );
+
+        final streamedResponse = await multipartRequest.send();
+        final response = await http.Response.fromStream(streamedResponse);
+        final body = response.body.isNotEmpty
+            ? jsonDecode(response.body)
+            : null;
+
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          return Activity.fromJson(body['data']);
+        } else {
+          final msg = body != null && body['message'] != null
+              ? body['message'].toString()
+              : 'Failed to create activity (${response.statusCode})';
+          throw ApiException(msg, response.statusCode);
+        }
       } else {
-        final msg = body != null && body['message'] != null
-            ? body['message'].toString()
-            : 'Failed to create activity (${response.statusCode})';
-        throw ApiException(msg, response.statusCode);
+        // Jika tidak ada file, gunakan JSON request biasa
+        final response = await http.post(
+          Uri.parse(ApiConstants.activities),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(request.toJson()),
+        );
+
+        final body = response.body.isNotEmpty
+            ? jsonDecode(response.body)
+            : null;
+
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          return Activity.fromJson(body['data']);
+        } else {
+          final msg = body != null && body['message'] != null
+              ? body['message'].toString()
+              : 'Failed to create activity (${response.statusCode})';
+          throw ApiException(msg, response.statusCode);
+        }
       }
     } catch (e) {
       if (e is ApiException) rethrow;
@@ -86,26 +130,72 @@ class ActivityService {
     }
   }
 
-  Future<Activity> updateActivity(String token, String id, Activity activity) async {
+  Future<Activity> updateActivity(
+    String token,
+    String id,
+    CreateActivityRequest request,
+  ) async {
     try {
-      final response = await http.put(
-        Uri.parse('${ApiConstants.activities}/$id'),
-        headers: {
-          'Content-Type': 'application/json',
+      // Jika ada bukti pengeluaran, gunakan multipart request dengan POST dan _method=PUT
+      if (request.isPengeluaran && request.buktiPengeluaran != null) {
+        var multipartRequest = http.MultipartRequest(
+          'POST',
+          Uri.parse('${ApiConstants.activities}/$id'),
+        );
+
+        multipartRequest.headers.addAll({
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(activity.toJson()),
-      );
+        });
 
-      final body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+        var fields = request.toFields();
+        fields['_method'] = 'PUT'; // Laravel method spoofing
+        multipartRequest.fields.addAll(fields);
 
-      if (response.statusCode == 200) {
-        return Activity.fromJson(body['data']);
+        multipartRequest.files.add(
+          await http.MultipartFile.fromPath(
+            'bukti_pengeluaran',
+            request.buktiPengeluaran!.path,
+          ),
+        );
+
+        final streamedResponse = await multipartRequest.send();
+        final response = await http.Response.fromStream(streamedResponse);
+        final body = response.body.isNotEmpty
+            ? jsonDecode(response.body)
+            : null;
+
+        if (response.statusCode == 200) {
+          return Activity.fromJson(body['data']);
+        } else {
+          final msg = body != null && body['message'] != null
+              ? body['message'].toString()
+              : 'Failed to update activity (${response.statusCode})';
+          throw ApiException(msg, response.statusCode);
+        }
       } else {
-        final msg = body != null && body['message'] != null
-            ? body['message'].toString()
-            : 'Failed to update activity (${response.statusCode})';
-        throw ApiException(msg, response.statusCode);
+        // Jika tidak ada file, gunakan JSON request biasa
+        final response = await http.put(
+          Uri.parse('${ApiConstants.activities}/$id'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(request.toJson()),
+        );
+
+        final body = response.body.isNotEmpty
+            ? jsonDecode(response.body)
+            : null;
+
+        if (response.statusCode == 200) {
+          return Activity.fromJson(body['data']);
+        } else {
+          final msg = body != null && body['message'] != null
+              ? body['message'].toString()
+              : 'Failed to update activity (${response.statusCode})';
+          throw ApiException(msg, response.statusCode);
+        }
       }
     } catch (e) {
       if (e is ApiException) rethrow;
@@ -137,7 +227,10 @@ class ActivityService {
     }
   }
 
-  Future<List<Activity>> getActivitiesByCategory(String token, ActivityCategory category) async {
+  Future<List<Activity>> getActivitiesByCategory(
+    String token,
+    ActivityCategory category,
+  ) async {
     try {
       final response = await http.get(
         Uri.parse('${ApiConstants.activities}?category=${category.name}'),
@@ -191,7 +284,11 @@ class ActivityService {
     }
   }
 
-  Future<List<Activity>> getActivitiesByCategoryOrDate(String token, {ActivityCategory? category, DateTime? date}) async {
+  Future<List<Activity>> getActivitiesByCategoryOrDate(
+    String token, {
+    ActivityCategory? category,
+    DateTime? date,
+  }) async {
     try {
       String url = ApiConstants.activities;
       List<String> queryParams = [];

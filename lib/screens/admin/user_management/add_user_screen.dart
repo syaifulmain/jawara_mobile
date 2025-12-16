@@ -10,6 +10,7 @@ import '../../../models/auth/register_request_model.dart';
 import '../../../models/address/address_list_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/address_provider.dart';
+import '../../../providers/user_provider.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import '../../../widgets/custom_dropdown.dart';
@@ -75,16 +76,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
     }
 
     if (_selectedGender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih jenis kelamin')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Pilih jenis kelamin')));
       return;
     }
 
     if (_selectedStatus == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih status')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Pilih status')));
       return;
     }
 
@@ -97,13 +98,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
       phoneNumber: _phoneController.text,
       gender: _selectedGender!,
       addressId: _selectedAddress?.id,
-      address: _addressController.text.isNotEmpty ? _addressController.text : null,
+      address: _addressController.text.isNotEmpty
+          ? _addressController.text
+          : null,
       status: _selectedStatus!,
       identityPhoto: _identityPhoto,
     );
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final success = await authProvider.register(request);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final success = await userProvider.register(request);
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,7 +120,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            authProvider.errorMessage ?? 'Gagal menambahkan pengguna',
+            userProvider.errorMessage ?? 'Gagal menambahkan pengguna',
           ),
           backgroundColor: Colors.red,
         ),
@@ -137,8 +140,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Consumer<AuthProvider>(
-        builder: (context, authProvider, _) {
+      body: Consumer<UserProvider>(
+        builder: (context, userProvider, _) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(Rem.rem1_5),
             child: Form(
@@ -172,7 +175,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         obscureText: _obscurePassword,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                           ),
                           onPressed: () {
                             setState(() {
@@ -205,7 +210,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           onPressed: () {
                             setState(() {
                               _obscurePasswordConfirmation =
-                              !_obscurePasswordConfirmation;
+                                  !_obscurePasswordConfirmation;
                             });
                           },
                         ),
@@ -377,20 +382,22 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       Expanded(
                         flex: 2,
                         child: CustomButton(
-                          onPressed: authProvider.isLoading ? null : _addUser,
-                          child: authProvider.isLoading
+                          onPressed: userProvider.isLoading ? null : _addUser,
+                          child: userProvider.isLoading
                               ? const SizedBox(
-                            height: Rem.rem1_25,
-                            width: Rem.rem1_25,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                                  height: Rem.rem1_25,
+                                  width: Rem.rem1_25,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
                               : Text(
-                            'Simpan Pengguna',
-                            style: GoogleFonts.poppins(fontSize: Rem.rem1),
-                          ),
+                                  'Simpan Pengguna',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: Rem.rem1,
+                                  ),
+                                ),
                         ),
                       ),
                     ],

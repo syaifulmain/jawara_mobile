@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../enums/activity_category.dart';
 import '../models/activity_model.dart';
+import '../models/activity/create_activity_request_model.dart';
 import '../services/activity_service.dart';
 import '../services/api_exception.dart';
 
@@ -11,7 +12,6 @@ class ActivityProvider with ChangeNotifier {
   String? _errorMessage;
   ActivityCategory? _selectedCategory;
   String _searchQuery = '';
-
 
   final ActivityService _activityService = ActivityService();
 
@@ -71,13 +71,16 @@ class ActivityProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> createActivity(String token, Activity activity) async {
+  Future<bool> createActivity(
+    String token,
+    CreateActivityRequest request,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final newActivity = await _activityService.createActivity(token, activity);
+      final newActivity = await _activityService.createActivity(token, request);
       _activities.insert(0, newActivity);
       _isLoading = false;
       notifyListeners();
@@ -94,18 +97,26 @@ class ActivityProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateActivity(String token, String id, Activity activity) async {
+  Future<bool> updateActivity(
+    String token,
+    String id,
+    CreateActivityRequest request,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final updatedActivity = await _activityService.updateActivity(token, id, activity);
-      final index = _activities.indexWhere((a) => a.id == id);
+      final updatedActivity = await _activityService.updateActivity(
+        token,
+        id,
+        request,
+      );
+      final index = _activities.indexWhere((a) => a.id.toString() == id);
       if (index != -1) {
         _activities[index] = updatedActivity;
       }
-      if (_selectedActivity?.id == id) {
+      if (_selectedActivity?.id.toString() == id) {
         _selectedActivity = updatedActivity;
       }
       _isLoading = false;
@@ -149,14 +160,20 @@ class ActivityProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchActivitiesByCategory(String token, ActivityCategory category) async {
+  Future<void> fetchActivitiesByCategory(
+    String token,
+    ActivityCategory category,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     _selectedCategory = category;
     notifyListeners();
 
     try {
-      _activities = await _activityService.getActivitiesByCategory(token, category);
+      _activities = await _activityService.getActivitiesByCategory(
+        token,
+        category,
+      );
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -191,21 +208,30 @@ class ActivityProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchActivitiesByCategoryOrDate(String token, {ActivityCategory? category, DateTime? date}) async {
+  Future<void> fetchActivitiesByCategoryOrDate(
+    String token, {
+    ActivityCategory? category,
+    DateTime? date,
+  }) async {
     _isLoading = true;
     _errorMessage = null;
     _selectedCategory = category;
     notifyListeners();
 
     try {
-      _activities = await _activityService.getActivitiesByCategoryOrDate(token, category: category, date: date);
+      _activities = await _activityService.getActivitiesByCategoryOrDate(
+        token,
+        category: category,
+        date: date,
+      );
       _isLoading = false;
       notifyListeners();
     } catch (e) {
       if (e is ApiException) {
         _errorMessage = e.message;
       } else {
-        _errorMessage = 'Gagal mengambil aktivitas berdasarkan kategori atau tanggal';
+        _errorMessage =
+            'Gagal mengambil aktivitas berdasarkan kategori atau tanggal';
       }
       _isLoading = false;
       notifyListeners();

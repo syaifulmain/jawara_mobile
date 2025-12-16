@@ -1,4 +1,5 @@
 class FamilyDetailModel {
+  final int? id;
   final String familyName;
   final String? familyHead;
   final String? currentAddress;
@@ -7,6 +8,7 @@ class FamilyDetailModel {
   final List<FamilyMemberModel> familyMembers;
 
   FamilyDetailModel({
+    this.id,
     required this.familyName,
     this.familyHead,
     this.currentAddress,
@@ -17,6 +19,7 @@ class FamilyDetailModel {
 
   factory FamilyDetailModel.fromJson(Map<String, dynamic> json) {
     return FamilyDetailModel(
+      id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
       familyName: json['family_name'] ?? '',
       familyHead: json['family_head'],
       currentAddress: json['current_address'],
@@ -32,6 +35,7 @@ class FamilyDetailModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'family_name': familyName,
       'family_head': familyHead,
       'current_address': currentAddress,

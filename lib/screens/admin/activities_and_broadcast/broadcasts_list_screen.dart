@@ -56,7 +56,8 @@ class _BroadcastsListScreenState extends State<BroadcastsListScreen> {
       body: Column(
         children: [
           const InfoBanner(
-            message: 'Daftar pesan broadcast yang telah dikirim. Gunakan pencarian untuk menemukan broadcast tertentu. Klik item untuk melihat detail.',
+            message:
+                'Daftar pesan broadcast yang telah dikirim. Gunakan pencarian untuk menemukan broadcast tertentu. Klik item untuk melihat detail.',
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -65,12 +66,12 @@ class _BroadcastsListScreenState extends State<BroadcastsListScreen> {
               hintText: 'Cari broadcast...',
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _searchController.clear();
-                  _searchBroadcasts('');
-                },
-              )
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        _searchBroadcasts('');
+                      },
+                    )
                   : null,
               prefixIcon: const Icon(Icons.search),
               onChanged: _searchBroadcasts,
@@ -161,9 +162,9 @@ class _BroadcastCard extends StatelessWidget {
             children: [
               Text(
                 broadcast.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
@@ -183,7 +184,11 @@ class _BroadcastCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   if (broadcast.publishedAt != null) ...[
-                    const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       dateFormat.format(broadcast.publishedAt!),
