@@ -6,6 +6,7 @@ import '../../../constants/color_constant.dart';
 import '../../../constants/rem_constant.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/income_categories_provider.dart';
+import '../../../services/bill_service.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/info_banner.dart';
@@ -65,28 +66,37 @@ class _BillIncomeScreenState extends State<BillIncomeScreen> {
     });
 
     try {
-      // TODO: Implement bill creation logic here
-      // final authProvider = context.read<AuthProvider>();
-      // final success = await billService.createBill(
-      //   authProvider.token!,
-      //   categoryId: _selectedCategoryId!,
-      //   dueDate: _selectedDate!,
-      // );
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      final authProvider = context.read<AuthProvider>();
+      final billService = BillService();
+      
+      // Format periode to YYYY-MM (Year-Month format)
+      final formattedPeriode = 
+          '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}';
+      
+      // Create bills for all families
+      final result = await billService.createBillsForAllFamilies(
+        authProvider.token!,
+        incomeCategoryId: int.parse(_selectedCategoryId!),
+        periode: formattedPeriode,
+      );
 
       if (mounted) {
         final incomeProvider = context.read<IncomeCategoriesProvider>();
         final selectedCategory = incomeProvider.categories
             .firstWhere((cat) => cat.id.toString() == _selectedCategoryId);
 
+        // Get count from response if available
+        final createdCount = result['created_count'] ?? result['count'] ?? 0;
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Tagihan ${selectedCategory.name} berhasil dikirim ke semua keluarga aktif!',
+              createdCount > 0
+                  ? 'Tagihan ${selectedCategory.name} berhasil dikirim ke $createdCount keluarga!'
+                  : 'Tagihan ${selectedCategory.name} berhasil dikirim ke semua keluarga aktif!',
             ),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
           ),
         );
 
@@ -98,6 +108,7 @@ class _BillIncomeScreenState extends State<BillIncomeScreen> {
           SnackBar(
             content: Text('Gagal mengirim tagihan: $e'),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
           ),
         );
       }
