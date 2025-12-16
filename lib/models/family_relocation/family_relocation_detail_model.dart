@@ -27,10 +27,9 @@ class FamilyRelocationDetailModel {
           ? json['id']
           : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       relocationType: RelocationType.fromString(json['relocation_type'] ?? ''),
-      relocationDate: json['date'] is int
-          ? DateTime.fromMillisecondsSinceEpoch(json['date'])
-          : DateTime.tryParse(json['date'] ?? '') ??
-                DateTime.fromMillisecondsSinceEpoch(0),
+      relocationDate: json['relocation_date'] is int
+          ? DateTime.fromMillisecondsSinceEpoch(json['relocation_date'])
+          : DateTime.tryParse(json['relocation_date'] ?? '') ?? DateTime.now(),
       reason: json['reason'] ?? '',
       familyName: json['family_name'] ?? '',
       pastAddress: json['past_address'] ?? '',
