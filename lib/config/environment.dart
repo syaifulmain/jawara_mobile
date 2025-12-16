@@ -8,4 +8,9 @@ class Environment {
     'API_BASE_URL',
     defaultValue: 'http://192.168.1.48:8000/api',
   );
+
+  static const String klasifikasiBuahUrl = String.fromEnvironment(
+    'KLASIFIKASI_BUAH_API_URL',
+    defaultValue: 'http://192.168.1.48:8000/predict?mode=fast',
+  );
 }

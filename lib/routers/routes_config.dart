@@ -57,6 +57,9 @@ import '../screens/warga/activities/activities_list_this_mount.dart';
 import '../screens/warga/activities/activities_menu_screen.dart';
 import '../screens/warga/broadcast/broadcast_list_this_week_screen.dart';
 import '../screens/warga/broadcast/broadcast_menu_screen.dart';
+import '../screens/warga/fruit/fruit_menu_screen.dart';
+import '../screens/warga/fruit/fruit_classification_screen.dart';
+import '../screens/warga/fruit/fruit_image_list_screen.dart';
 import 'app_route_item.dart';
 import '../screens/home_screen.dart';
 
@@ -498,6 +501,26 @@ class RoutesConfig {
       name: 'add_family_relocation',
       label: 'Tambah Mutasi Keluarga',
       builder: (context, state) => const FamilyRelocationCreationScreen(),
+    ),
+
+    // FRUIT CLASSIFICATION ROUTES (USER ONLY)
+    AppRouteItem(
+      path: '/fruit-menu',
+      name: 'fruit_menu',
+      label: 'Klasifikasi Buah',
+      builder: (context, state) => const FruitMenuScreen(),
+    ),
+    AppRouteItem(
+      path: '/fruit-classification',
+      name: 'fruit_classification',
+      label: 'Klasifikasi Buah',
+      builder: (context, state) => const FruitClassificationScreen(),
+    ),
+    AppRouteItem(
+      path: '/fruit-image-list',
+      name: 'fruit_image_list',
+      label: 'Daftar Gambar Buah',
+      builder: (context, state) => const FruitImageListScreen(),
     ),
   ];
 }

@@ -38,6 +38,9 @@ class ApiConstants {
 
   static const String familyRelocations = '$baseUrl/family-relocations';
 
+  static const String fruitImgages = '$baseUrl/fruit-images';
+  static const String klasifikasiBuah = Environment.klasifikasiBuahUrl;
+
 
 
 // Helper untuk single todo

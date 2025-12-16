@@ -299,7 +299,8 @@ class HomeScreen extends StatelessWidget {
                       title: 'Kegiatan',
                       subtitle: 'Lihat kegiatan yang diikuti',
                       color: Colors.red,
-                      onTap: () => context.pushNamed('resident_activities_menu'),
+                      onTap: () =>
+                          context.pushNamed('resident_activities_menu'),
                     ),
                     // Broadcast
                     MenuListTile(
@@ -308,6 +309,15 @@ class HomeScreen extends StatelessWidget {
                       subtitle: 'Lihat broadcast terbaru',
                       color: Colors.orange,
                       onTap: () => context.pushNamed('resident_broadcast_menu'),
+                    ),
+
+                    // Klasifikasi Buah
+                    MenuListTile(
+                      icon: Icons.apple,
+                      title: 'Klasifikasi Buah',
+                      subtitle: 'Identifikasi jenis buah dengan foto',
+                      color: Colors.green,
+                      onTap: () => context.pushNamed('fruit_menu'),
                     ),
 
                     // Informasi Aspirasi warga

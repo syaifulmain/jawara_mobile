@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Android APK
         run: |
-          flutter build apk --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          flutter build apk --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }} --dart-define=KLASIFIKASI_BUAH_API_URL=${{ secrets.KLASIFIKASI_BUAH_API_URL }}
 
       # 1. Rename file default (app-release.apk) menjadi 'jawara-mobile.apk'
       - name: Rename APK to Jawara Mobile
