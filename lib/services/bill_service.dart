@@ -455,13 +455,17 @@ class BillService {
     try {
       final url = '${ApiConstants.bills}/$billId/upload-payment';
 
-      var request = http.MultipartRequest('PATCH', Uri.parse(url));
+      var request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
       
-      // Add image file
+      // Add image file - try both possible field names
       request.files.add(
         await http.MultipartFile.fromPath('payment_proof', imagePath),
       );
+      
+      // Add _method field for Laravel PATCH simulation
+      request.fields['_method'] = 'PATCH';
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
@@ -525,6 +529,62 @@ class BillService {
       }
     } catch (e) {
       throw ApiException('Failed to delete bill: $e');
+    }
+  }
+
+  // Create bills for all families (bulk create)
+  // POST /bills/generate with income_category_id and periode
+  Future<Map<String, dynamic>> createBillsForAllFamilies(
+    String token, {
+    required int incomeCategoryId,
+    required String periode, // Format: YYYY-MM (contoh: 2025-12)
+  }) async {
+    try {
+      final body = {
+        'income_category_id': incomeCategoryId,
+        'periode': periode,
+      };
+
+      print('DEBUG: Generate Bills Request');
+      print('URL: ${ApiConstants.bills}/generate');
+      print('Body: ${jsonEncode(body)}');
+
+      final response = await http.post(
+        Uri.parse('${ApiConstants.bills}/generate'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(body),
+      );
+
+      print('DEBUG: Response Status: ${response.statusCode}');
+      print('DEBUG: Response Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data;
+      } else {
+        String errorMessage = 'Failed to create bills';
+        try {
+          final errorData = jsonDecode(response.body);
+          errorMessage = errorData['message'] ?? errorMessage;
+          
+          // If there's additional error details
+          if (errorData['errors'] != null) {
+            errorMessage += '\nDetails: ${errorData['errors']}';
+          }
+        } catch (e) {
+          errorMessage = 'Server error (${response.statusCode}): ${response.body}';
+        }
+        throw ApiException(errorMessage);
+      }
+    } catch (e) {
+      if (e is ApiException) {
+        rethrow;
+      }
+      throw ApiException('Failed to create bills: $e');
     }
   }
 }
